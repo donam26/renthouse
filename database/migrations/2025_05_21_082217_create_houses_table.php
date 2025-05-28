@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('location')->nullable(); // VD Tokyo, OSAKA, etc.
             $table->decimal('distance', 10, 2)->nullable(); // Khoảng cách đi bộ
             $table->string('transportation')->nullable(); // Phương tiện đi lại (xe đạp, tàu, ...)
-            $table->decimal('rent_price', 15, 2); // Giá thuê
-            $table->decimal('deposit_price', 15, 2)->nullable(); // Giá đặt cọc
-            $table->enum('house_type', ['1r', '1k', '1DK', '2K', '2DK', '3DK'])->nullable(); // Dạng nhà
+            $table->decimal('rent_price', 15, 2)->nullable(); // Giá thuê (yên/tháng)
+            $table->decimal('deposit_price', 15, 2)->nullable(); // Tiền đặt cọc
+            $table->enum('house_type', ['1K', '2K-2DK'])->nullable(); // Dạng nhà
             $table->enum('status', ['available', 'rented'])->default('available'); // Tình trạng (còn trống/đã thuê)
             $table->text('description')->nullable(); // Mô tả ngắn
             $table->string('image_path')->nullable(); // Đường dẫn ảnh nhà

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->json('amenities')->nullable()->after('cost_details')->comment('Tiện ích: điều hòa, tủ lạnh');
             
             // Chỉnh sửa trường house_type để chứa nhiều loại hơn
-            $table->enum('house_type', ['1R', '1K', '1DK', '1LDK', '2K', '2DK', '2LDK', '3DK', '3LDK'])
+            $table->enum('house_type', ['1K', '2K-2DK'])
                   ->default('1K')
                   ->change();
         });

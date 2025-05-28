@@ -98,12 +98,9 @@
                 <div>
                     <label for="house_type" class="form-label">Dạng nhà</label>
                     <select id="house_type" name="house_type" class="input-field">
-                        <option value="">Tất cả dạng nhà</option>
-                        <option value="1r" {{ request('house_type') == '1r' ? 'selected' : '' }}>1r</option>
-                        <option value="1k" {{ request('house_type') == '1k' ? 'selected' : '' }}>1k</option>
-                        <option value="1DK" {{ request('house_type') == '1DK' ? 'selected' : '' }}>1DK</option>
-                        <option value="2K" {{ request('house_type') == '2K' ? 'selected' : '' }}>2K</option>
-                        <option value="2DK" {{ request('house_type') == '2DK' ? 'selected' : '' }}>2DK</option>
+                        <option value="">Tất cả</option>
+                        <option value="1K" {{ request('house_type') == '1K' ? 'selected' : '' }}>1K</option>
+                        <option value="2K-2DK" {{ request('house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
                     </select>
                 </div>
             </div>
@@ -123,7 +120,7 @@
                         </select>
                     </div>
                     <button type="submit" class="btn-primary flex items-center">
-                        <i class="fas fa-search mr-2"></i> Lọc kết quả
+                        <i class="fas fa-search mr-2"></i> Apply
                     </button>
                 </div>
             </div>

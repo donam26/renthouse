@@ -46,9 +46,17 @@
     
     <!-- Tìm kiếm và lọc -->
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-        <div class="flex items-center mb-4">
-            <i class="fas fa-filter text-indigo-600 mr-2"></i>
-            <h2 class="text-lg font-medium text-gray-800">Bộ lọc tìm kiếm</h2>
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center">
+                <i class="fas fa-filter text-indigo-600 mr-2"></i>
+                <h2 class="text-lg font-medium text-gray-800">Bộ lọc tìm kiếm</h2>
+            </div>
+            
+            <button 
+                onclick="shareSearchResults()" 
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center">
+                <i class="fas fa-share-alt mr-2"></i> Chia sẻ kết quả tìm kiếm
+            </button>
         </div>
         
         <form action="{{ route('houses.index') }}" method="GET">
@@ -108,7 +116,7 @@
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
                     <div class="flex flex-wrap gap-2">
-                        @foreach(['1r', '1k', '1DK', '2K', '2DK'] as $type)
+                        @foreach(['1K', '2K-2DK'] as $type)
                             <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}">
                                 <input type="radio" name="house_type" value="{{ $type }}" class="hidden" {{ request('house_type') == $type ? 'checked' : '' }}>
                                 {{ $type }}
@@ -122,7 +130,8 @@
                     <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái</label>
                     <div class="space-y-2">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="status" value="available" class="sr-only" {{ request('status') == 'available' ? 'checked' : '' }}>
+                            <input type="radio" name="status" value="available" class="sr-only status-input" {{ request('status') == 'available' ? 'checked' : '' }}
+                                onclick="updateRadioStyle(this, 'status')">
                             <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'available' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
                                 <span class="{{ request('status') == 'available' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
                             </span>
@@ -133,7 +142,8 @@
                         </label>
                         
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="status" value="rented" class="sr-only" {{ request('status') == 'rented' ? 'checked' : '' }}>
+                            <input type="radio" name="status" value="rented" class="sr-only status-input" {{ request('status') == 'rented' ? 'checked' : '' }}
+                                onclick="updateRadioStyle(this, 'status')">
                             <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'rented' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
                                 <span class="{{ request('status') == 'rented' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
                             </span>
@@ -152,7 +162,8 @@
                     <label class="block mb-2 text-sm font-medium text-gray-700">Phương tiện đi lại</label>
                     <div class="flex space-x-8">
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="transportation" value="walking" class="sr-only" {{ request('transportation') == 'walking' ? 'checked' : '' }}>
+                            <input type="radio" name="transportation" value="walking" class="sr-only transport-input" {{ request('transportation') == 'walking' ? 'checked' : '' }}
+                                onclick="updateRadioStyle(this, 'transport')">
                             <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'walking' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
                                 <span class="{{ request('transportation') == 'walking' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
                             </span>
@@ -163,7 +174,8 @@
                         </label>
                         
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="transportation" value="bicycle" class="sr-only" {{ request('transportation') == 'bicycle' ? 'checked' : '' }}>
+                            <input type="radio" name="transportation" value="bicycle" class="sr-only transport-input" {{ request('transportation') == 'bicycle' ? 'checked' : '' }}
+                                onclick="updateRadioStyle(this, 'transport')">
                             <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'bicycle' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
                                 <span class="{{ request('transportation') == 'bicycle' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
                             </span>
@@ -174,7 +186,8 @@
                         </label>
                         
                         <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="transportation" value="train" class="sr-only" {{ request('transportation') == 'train' ? 'checked' : '' }}>
+                            <input type="radio" name="transportation" value="train" class="sr-only transport-input" {{ request('transportation') == 'train' ? 'checked' : '' }}
+                                onclick="updateRadioStyle(this, 'transport')">
                             <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'train' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
                                 <span class="{{ request('transportation') == 'train' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
                             </span>
@@ -203,7 +216,7 @@
                         <i class="fas fa-undo mr-2"></i> Đặt lại
                     </a>
                     <button type="submit" class="flex items-center justify-center py-2 px-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                        <i class="fas fa-search mr-2"></i> Lọc kết quả
+                        <i class="fas fa-search mr-2"></i> Apply
                     </button>
                 </div>
             </div>
@@ -262,7 +275,13 @@
                     
                     <!-- Phần thông tin -->
                     <div class="p-5">
-                        <h3 class="text-lg font-bold text-gray-800 mb-2 truncate group-hover:text-indigo-600 transition-colors">{{ $house->name }}</h3>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2 truncate group-hover:text-indigo-600 transition-colors">
+                            @if(isset($searchKeyword) && !empty($searchKeyword))
+                                {{ $searchKeyword }}
+                            @else
+                                {{ $house->name }}
+                            @endif
+                        </h3>
                         
                         <div class="mb-3">
                             <p class="text-gray-600 flex items-start mb-1">
@@ -368,3 +387,72 @@
         </style>
     @endif
 @endsection 
+
+@push('scripts')
+<script>
+    function shareSearchResults() {
+        // Lấy URL hiện tại
+        let currentUrl = window.location.href;
+        
+        // Tạo URL chia sẻ từ URL hiện tại
+        let shareUrl = new URL('{{ route('houses.shared.search') }}');
+        
+        // Lấy tất cả tham số từ URL hiện tại
+        let urlParams = new URL(currentUrl).searchParams;
+        
+        // Thêm user_id vào URL chia sẻ
+        shareUrl.searchParams.append('user_id', '{{ Auth::id() }}');
+        
+        // Thêm các tham số tìm kiếm vào URL chia sẻ
+        for (let param of urlParams.entries()) {
+            shareUrl.searchParams.append(param[0], param[1]);
+        }
+        
+        // Sao chép vào clipboard
+        navigator.clipboard.writeText(shareUrl.toString())
+            .then(() => {
+                alert('Đã sao chép đường dẫn chia sẻ vào clipboard!');
+            })
+            .catch(err => {
+                console.error('Không thể sao chép: ', err);
+                alert('Không thể sao chép đường dẫn. Vui lòng thử lại.');
+            });
+    }
+    
+    function updateRadioStyle(inputElement, type) {
+        // Reset tất cả các nút radio cùng loại
+        let group = document.querySelectorAll('.' + type + '-input');
+        group.forEach(input => {
+            let parent = input.parentElement;
+            let indicator = parent.querySelector('span:first-of-type');
+            let dot = indicator.querySelector('span');
+            
+            // Bỏ style được chọn
+            indicator.classList.remove('bg-indigo-600', 'border-indigo-600');
+            indicator.classList.add('bg-white', 'border', 'border-gray-300');
+            
+            // Xóa dot (chấm tròn bên trong)
+            if (dot) {
+                dot.className = ''; // Xóa tất cả class
+            }
+        });
+        
+        // Áp dụng style cho nút được chọn
+        let parent = inputElement.parentElement;
+        let indicator = parent.querySelector('span:first-of-type');
+        let dot = indicator.querySelector('span');
+        
+        // Thêm style được chọn
+        indicator.classList.remove('bg-white', 'border', 'border-gray-300');
+        indicator.classList.add('bg-indigo-600', 'border-indigo-600');
+        
+        // Thêm dot (chấm tròn bên trong)
+        if (dot) {
+            dot.className = 'w-2 h-2 bg-white rounded-full';
+        }
+        
+        // Đảm bảo input radio được chọn thực sự
+        inputElement.checked = true;
+    }
+</script>
+@endpush 

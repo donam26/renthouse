@@ -78,7 +78,7 @@
                 <div class="mt-6">
                     <h2 class="text-xl font-bold mb-4">Dạng nhà</h2>
                     <div class="flex flex-wrap gap-2">
-                        @foreach(['1R', '1K', '1DK', '1LDK', '2K', '2DK', '2LDK', '3DK', '3LDK'] as $type)
+                        @foreach(['1K', '2K-2DK'] as $type)
                             <span class="px-4 py-2 text-sm rounded-md {{ $house->house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
                                 {{ $type }}
                             </span>

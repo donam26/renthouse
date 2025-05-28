@@ -137,20 +137,20 @@
                         @enderror
                     </div>
 
-                    <!-- Dạng nhà -->
+                    <!-- Loại nhà -->
                     <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
-                        <div class="grid grid-cols-3 gap-2">
-                            @foreach(['1R', '1K', '1DK', '1LDK', '2K', '2DK', '2LDK', '3DK', '3LDK'] as $type)
-                                <label class="flex items-center justify-center p-2 border border-gray-300 rounded-md {{ old('house_type', $house->house_type) == $type ? 'bg-indigo-600 text-white' : '' }} hover:bg-indigo-100 cursor-pointer transition-colors">
-                                    <input type="radio" name="house_type" value="{{ $type }}" class="hidden house-type-input" 
-                                        {{ old('house_type', $house->house_type) == $type ? 'checked' : '' }}>
-                                    <span>{{ $type }}</span>
-                                </label>
+                        <x-input-label for="house_type" :value="__('Loại nhà')" />
+                        <div class="mt-2 grid grid-cols-2 gap-3">
+                            @foreach(['1K', '2K-2DK'] as $type)
+                            <label class="flex items-center justify-center p-2 border border-gray-300 rounded-md {{ old('house_type', $house->house_type) == $type ? 'bg-indigo-600 text-white' : '' }} hover:bg-indigo-100 cursor-pointer transition-colors">
+                                <input type="radio" name="house_type" value="{{ $type }}" class="hidden house-type-input"
+                                    {{ old('house_type', $house->house_type) == $type ? 'checked' : '' }}>
+                                {{ $type }}
+                            </label>
                             @endforeach
                         </div>
                         @error('house_type')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            <div class="text-red-500 mt-1 text-sm">{{ $message }}</div>
                         @enderror
                     </div>
 

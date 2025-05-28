@@ -50,3 +50,6 @@ Route::get('/share/{shareLink}', [HouseController::class, 'showByShareLink'])
 Route::get('/{username}', [HouseController::class, 'showByUsername'])
     ->middleware(['auth'])
     ->name('houses.by.username');
+
+// Chia sẻ kết quả tìm kiếm nhà
+Route::get('/houses/shared/search', [App\Http\Controllers\HouseController::class, 'sharedSearch'])->name('houses.shared.search');

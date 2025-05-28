@@ -48,15 +48,8 @@
                         <div class="mb-4">
                             <x-input-label for="house_type" :value="__('Loại nhà')" />
                             <select id="house_type" name="house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
-                                <option value="1R" {{ old('house_type') == '1R' ? 'selected' : '' }}>1R</option>
                                 <option value="1K" {{ old('house_type') == '1K' ? 'selected' : '' }}>1K</option>
-                                <option value="1DK" {{ old('house_type') == '1DK' ? 'selected' : '' }}>1DK</option>
-                                <option value="1LDK" {{ old('house_type') == '1LDK' ? 'selected' : '' }}>1LDK</option>
-                                <option value="2K" {{ old('house_type') == '2K' ? 'selected' : '' }}>2K</option>
-                                <option value="2DK" {{ old('house_type') == '2DK' ? 'selected' : '' }}>2DK</option>
-                                <option value="2LDK" {{ old('house_type') == '2LDK' ? 'selected' : '' }}>2LDK</option>
-                                <option value="3DK" {{ old('house_type') == '3DK' ? 'selected' : '' }}>3DK</option>
-                                <option value="3LDK" {{ old('house_type') == '3LDK' ? 'selected' : '' }}>3LDK</option>
+                                <option value="2K-2DK" {{ old('house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
                             </select>
                             <x-input-error :messages="$errors->get('house_type')" class="mt-2" />
                         </div>

@@ -15,29 +15,26 @@ class HouseController extends Controller
      */
     public function index(Request $request)
     {
-        $query = House::query()->where('user_id', Auth::id());
-        
-        // Tìm kiếm
+        // Lưu từ khóa tìm kiếm nếu có
+        $searchKeyword = null;
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%");
-            });
+            $searchKeyword = $request->search;
         }
         
-        // Lọc theo dạng nhà
+        // Tạo query cơ bản
+        $query = House::query()->where('user_id', Auth::id());
+        
+        // Lọc theo dạng nhà (nếu có)
         if ($request->filled('house_type')) {
             $query->where('house_type', $request->house_type);
         }
         
-        // Lọc theo trạng thái
+        // Lọc theo trạng thái (nếu có)
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
         
-        // Lọc theo khoảng giá thuê
+        // Lọc theo khoảng giá thuê (nếu có)
         if ($request->filled('min_price')) {
             $query->where('rent_price', '>=', $request->min_price);
         }
@@ -46,18 +43,18 @@ class HouseController extends Controller
             $query->where('rent_price', '<=', $request->max_price);
         }
         
-        // Lọc theo giá đặt cọc
+        // Lọc theo giá đặt cọc (nếu có)
         if ($request->filled('deposit_price')) {
             $query->where('deposit_price', '>=', $request->deposit_price);
         }
         
-        // Lọc theo khoảng cách đến ga
+        // Lọc theo khoảng cách đến ga (nếu có)
         if ($request->filled('distance_to_station')) {
             $distance = $request->distance_to_station;
             $query->whereRaw("JSON_EXTRACT(room_details, '$.distance_to_station') <= ?", [$distance]);
         }
         
-        // Lọc theo phương tiện di chuyển
+        // Lọc theo phương tiện di chuyển (nếu có)
         if ($request->filled('transportation')) {
             // Chuyển đổi từ giá trị code sang tên hiển thị tiếng Việt
             $transportationValueMap = [
@@ -89,13 +86,18 @@ class HouseController extends Controller
                 $query->orderBy('created_at', 'desc'); // Mặc định: newest
         }
         
-        $houses = $query->get();
+        // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
+        if ($searchKeyword) {
+            $houses = $query->inRandomOrder()->limit(10)->get();
+        } else {
+            $houses = $query->get();
+        }
         
         // Đếm số lượng nhà theo trạng thái
         $availableCount = House::where('user_id', Auth::id())->where('status', 'available')->count();
         $rentedCount = House::where('user_id', Auth::id())->where('status', 'rented')->count();
         
-        return view('houses.index', compact('houses', 'availableCount', 'rentedCount'));
+        return view('houses.index', compact('houses', 'availableCount', 'rentedCount', 'searchKeyword'));
     }
 
     /**
@@ -111,30 +113,26 @@ class HouseController extends Controller
             abort(403, 'Bạn không có quyền xem danh sách nhà của người dùng này');
         }
         
-        // Tạo query để lọc
-        $query = House::query()->where('user_id', $user->id);
-        
-        // Tìm kiếm
+        // Lưu từ khóa tìm kiếm nếu có
+        $searchKeyword = null;
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%")
-                  ->orWhere('location', 'like', "%{$search}%");
-            });
+            $searchKeyword = $request->search;
         }
         
-        // Lọc theo dạng nhà
+        // Tạo query cơ bản
+        $query = House::query()->where('user_id', $user->id);
+        
+        // Lọc theo dạng nhà (nếu có)
         if ($request->filled('house_type')) {
             $query->where('house_type', $request->house_type);
         }
         
-        // Lọc theo trạng thái
+        // Lọc theo trạng thái (nếu có)
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
         
-        // Lọc theo khoảng giá thuê
+        // Lọc theo khoảng giá thuê (nếu có)
         if ($request->filled('min_price')) {
             $query->where('rent_price', '>=', $request->min_price);
         }
@@ -143,13 +141,13 @@ class HouseController extends Controller
             $query->where('rent_price', '<=', $request->max_price);
         }
         
-        // Lọc theo khoảng cách đến ga
+        // Lọc theo khoảng cách đến ga (nếu có)
         if ($request->filled('distance_to_station')) {
             $distance = $request->distance_to_station;
             $query->whereRaw("JSON_EXTRACT(room_details, '$.distance_to_station') <= ?", [$distance]);
         }
         
-        // Lọc theo phương tiện di chuyển
+        // Lọc theo phương tiện di chuyển (nếu có)
         if ($request->filled('transportation')) {
             // Chuyển đổi từ giá trị code sang tên hiển thị tiếng Việt
             $transportationValueMap = [
@@ -181,9 +179,14 @@ class HouseController extends Controller
                 $query->orderBy('created_at', 'desc'); // Mặc định: newest
         }
         
-        $houses = $query->get();
+        // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
+        if ($searchKeyword) {
+            $houses = $query->inRandomOrder()->limit(10)->get();
+        } else {
+            $houses = $query->get();
+        }
         
-        return view('houses.show-by-username', compact('houses', 'user'));
+        return view('houses.show-by-username', compact('houses', 'user', 'searchKeyword'));
     }
 
     /**
@@ -207,7 +210,7 @@ class HouseController extends Controller
             'rent_price' => 'required|numeric|min:0',
             'deposit_price' => 'nullable|numeric|min:0',
             'initial_cost' => 'nullable|numeric|min:0',
-            'house_type' => 'required|string|in:1R,1K,1DK,1LDK,2K,2DK,2LDK,3DK,3LDK',
+            'house_type' => 'required|string|in:1K,2K-2DK',
             'status' => 'required|in:available,rented',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -346,7 +349,7 @@ class HouseController extends Controller
             'rent_price' => 'required|numeric|min:0',
             'deposit_price' => 'nullable|numeric|min:0',
             'initial_cost' => 'nullable|numeric|min:0',
-            'house_type' => 'required|string|in:1R,1K,1DK,1LDK,2K,2DK,2LDK,3DK,3LDK',
+            'house_type' => 'required|string|in:1K,2K-2DK',
             'status' => 'required|in:available,rented',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -506,5 +509,101 @@ class HouseController extends Controller
         
         // Không kiểm tra authorize ở đây để cho phép truy cập công khai
         return view('houses.show-share', compact('house', 'images'));
+    }
+
+    /**
+     * Hiển thị kết quả tìm kiếm nhà được chia sẻ
+     */
+    public function sharedSearch(Request $request)
+    {
+        // Lấy user_id từ tham số URL
+        $userId = $request->user_id;
+        if (!$userId) {
+            return redirect()->route('login')->with('error', 'Không tìm thấy người dùng');
+        }
+
+        // Tìm người dùng
+        $user = User::findOrFail($userId);
+        
+        // Lưu từ khóa tìm kiếm nếu có
+        $searchKeyword = null;
+        if ($request->filled('search')) {
+            $searchKeyword = $request->search;
+        }
+        
+        // Tạo query cơ bản
+        $query = House::query()->where('user_id', $userId);
+        
+        // Lọc theo dạng nhà (nếu có)
+        if ($request->filled('house_type')) {
+            $query->where('house_type', $request->house_type);
+        }
+        
+        // Lọc theo trạng thái (nếu có)
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        // Lọc theo khoảng giá thuê (nếu có)
+        if ($request->filled('min_price')) {
+            $query->where('rent_price', '>=', $request->min_price);
+        }
+        
+        if ($request->filled('max_price')) {
+            $query->where('rent_price', '<=', $request->max_price);
+        }
+        
+        // Lọc theo khoảng cách đến ga (nếu có)
+        if ($request->filled('distance_to_station')) {
+            $distance = $request->distance_to_station;
+            $query->whereRaw("JSON_EXTRACT(room_details, '$.distance_to_station') <= ?", [$distance]);
+        }
+        
+        // Lọc theo phương tiện di chuyển (nếu có)
+        if ($request->filled('transportation')) {
+            // Chuyển đổi từ giá trị code sang tên hiển thị tiếng Việt
+            $transportationValueMap = [
+                'walking' => 'Đi bộ',
+                'bicycle' => 'Xe đạp', 
+                'train' => 'Tàu'
+            ];
+            
+            // Chuyển đổi giá trị nếu nó là một trong các mã code (walking, bicycle, train)
+            $transportation = array_key_exists($request->transportation, $transportationValueMap) 
+                ? $transportationValueMap[$request->transportation] 
+                : $request->transportation;
+                
+            $query->whereRaw("JSON_EXTRACT(room_details, '$.transportation') = ?", [$transportation]);
+        }
+        
+        // Sắp xếp
+        switch ($request->sort_by) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'price_low':
+                $query->orderBy('rent_price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('rent_price', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc'); // Mặc định: newest
+        }
+        
+        // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
+        if ($searchKeyword) {
+            $houses = $query->inRandomOrder()->limit(10)->get();
+        } else {
+            $houses = $query->get();
+        }
+        
+        // Lấy lại tất cả tham số tìm kiếm để truyền cho view
+        $searchParams = $request->only([
+            'search', 'house_type', 'status', 'min_price', 'max_price', 
+            'distance_to_station', 'transportation', 'sort_by'
+        ]);
+        
+        return view('houses.shared-search', compact('houses', 'user', 'searchKeyword', 'searchParams'));
     }
 }

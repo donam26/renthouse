@@ -72,11 +72,8 @@
                             <select id="house_type" name="house_type" required
                                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('house_type') border-red-500 @enderror">
                                 <option value="">-- Chọn dạng nhà --</option>
-                                <option value="1r" {{ old('house_type') == '1r' ? 'selected' : '' }}>1r</option>
-                                <option value="1k" {{ old('house_type') == '1k' ? 'selected' : '' }}>1k</option>
-                                <option value="1DK" {{ old('house_type') == '1DK' ? 'selected' : '' }}>1DK</option>
-                                <option value="2K" {{ old('house_type') == '2K' ? 'selected' : '' }}>2K</option>
-                                <option value="2DK" {{ old('house_type') == '2DK' ? 'selected' : '' }}>2DK</option>
+                                <option value="1K" {{ old('house_type') == '1K' ? 'selected' : '' }}>1K</option>
+                                <option value="2K-2DK" {{ old('house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
                             </select>
                         </div>
                         @error('house_type')
