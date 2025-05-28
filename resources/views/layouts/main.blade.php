@@ -189,12 +189,7 @@
                                 </div>
                                 <span>Đăng nhập</span>
                             </a>
-                            <a href="{{ route('register') }}" class="btn-primary">
-                                <div class="icon-wrapper text-white">
-                                    <i class="fas fa-user-plus"></i>
-                                </div>
-                                <span>Đăng ký</span>
-                            </a>
+                          
                         @endauth
                     </div>
                     
@@ -258,12 +253,7 @@
                             </div>
                             <span>Đăng nhập</span>
                         </a>
-                        <a href="{{ route('register') }}" class="block navbar-item py-3">
-                            <div class="icon-wrapper text-indigo-500">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <span>Đăng ký</span>
-                        </a>
+                        
                     @endauth
                 </div>
             </div>
@@ -297,7 +287,6 @@
                             <li><a href="{{ route('houses.index') }}" class="text-gray-300 hover:text-white transition">Nhà của tôi</a></li>
                             @guest
                             <li><a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition">Đăng nhập</a></li>
-                            <li><a href="{{ route('register') }}" class="text-gray-300 hover:text-white transition">Đăng ký</a></li>
                             @endguest
                         </ul>
                     </div>

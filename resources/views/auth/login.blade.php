@@ -201,19 +201,7 @@
                             </span>
                         </button>
                     </form>
-                    
-                    <div class="divider">
-                        <span>hoặc</span>
-                    </div>
-                    
-                    <div class="text-center">
-                        <p class="text-base text-gray-600">
-                            Chưa có tài khoản?
-                            <a href="{{ route('register') }}" class="font-bold text-indigo-600 hover:text-indigo-700 transition-colors ml-1">
-                                Đăng ký ngay
-                            </a>
-                        </p>
-                    </div>
+                  
                 </div>
             </div>
         </div>

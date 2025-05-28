@@ -31,7 +31,7 @@
                     </div>
                     <div class="flex items-center space-x-4">
                         <a href="{{ route('login') }}" class="px-4 py-2 text-indigo-600 hover:text-indigo-800">Đăng nhập</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Đăng ký</a>
+                        <!-- <a href="{{ route('register') }}" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">Đăng ký</a> -->
                     </div>
                 </div>
             </header>

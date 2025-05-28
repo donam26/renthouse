@@ -146,6 +146,22 @@
                             @enderror
                         </div>
                         
+                        <!-- Username -->
+                        <div>
+                            <label for="username" class="block text-base font-medium text-gray-700 mb-2">Tên người dùng <span class="text-gray-500 text-sm">(tùy chọn)</span></label>
+                            <div class="input-container">
+                                <span class="input-icon">
+                                    <i class="fas fa-at"></i>
+                                </span>
+                                <input id="username" type="text" name="username" value="{{ old('username') }}" autocomplete="username" 
+                                    class="form-input" placeholder="Nhập tên người dùng">
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Nếu không nhập, hệ thống sẽ tự tạo từ email của bạn</p>
+                            @error('username')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        
                         <!-- Email Address -->
                         <div>
                             <label for="email" class="block text-base font-medium text-gray-700 mb-2">Email</label>

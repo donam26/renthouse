@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Str;
 
 class RegisteredUserController extends Controller
 {
@@ -34,11 +35,24 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'username' => ['nullable', 'string', 'max:255', 'unique:users,username'],
         ]);
+
+        // Tạo username từ email nếu không được cung cấp
+        $username = $request->username ?? Str::before($request->email, '@');
+        
+        // Đảm bảo username là duy nhất
+        $baseUsername = $username;
+        $counter = 1;
+        while (User::where('username', $username)->exists()) {
+            $username = $baseUsername . $counter;
+            $counter++;
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'username' => $username,
             'password' => Hash::make($request->password),
         ]);
 
@@ -46,6 +60,6 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('houses.by.username', Auth::user()->username)->with('success', 'Đăng ký tài khoản thành công');
     }
 }

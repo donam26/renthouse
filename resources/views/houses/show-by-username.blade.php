@@ -66,145 +66,164 @@
     </div>
 
     <!-- Filter Section -->
-    <div class="bg-white rounded-xl shadow-md p-6 mb-8" x-data="{ openFilter: false }">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold flex items-center text-gray-800">
-                <i class="fas fa-filter mr-2 text-indigo-500"></i> Bộ lọc tìm kiếm
-            </h2>
-            <button @click="openFilter = !openFilter" class="text-gray-500 hover:text-indigo-600 focus:outline-none md:hidden">
-                <i x-show="!openFilter" class="fas fa-chevron-down"></i>
-                <i x-show="openFilter" class="fas fa-chevron-up"></i>
-            </button>
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+        <div class="flex items-center mb-4">
+            <i class="fas fa-filter text-indigo-600 mr-2"></i>
+            <h2 class="text-lg font-medium text-gray-800">Bộ lọc tìm kiếm</h2>
         </div>
-
-        <form action="{{ route('houses.by.username', $user->username) }}" method="GET" 
-            :class="{'hidden md:block': !openFilter, 'block': openFilter}">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <form action="{{ route('houses.by.username', $user->username) }}" method="GET">
+            <!-- Tìm kiếm tên, địa chỉ -->
+            <div class="mb-6">
+                <label for="search" class="block mb-2 text-sm font-medium text-gray-700">Tìm kiếm</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <i class="fas fa-search text-gray-400"></i>
+                    </div>
+                    <input type="text" name="search" id="search" value="{{ request('search') }}" 
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        placeholder="Tìm theo tên, địa chỉ...">
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <!-- Khoảng cách -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Khoảng cách</h3>
-                    <div class="flex rounded-md shadow-sm">
-                        <input type="text" name="distance" value="{{ request('distance') }}" 
-                            class="flex-grow px-4 py-3 rounded-l-lg border border-r-0 border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    <label for="distance_to_station" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách</label>
+                    <div class="relative">
+                        <input type="text" name="distance_to_station" id="distance_to_station" 
+                            value="{{ request('distance_to_station') }}"
+                            class="block w-full pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                             placeholder="Nhập khoảng cách">
-                        <span class="inline-flex items-center px-4 rounded-r-lg border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 text-sm">
                             vđ 5Phút
-                        </span>
+                        </div>
                     </div>
                 </div>
-
-                <!-- Giá thuê -->
+                
+                <!-- Giá thuê từ -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Giá thuê (tự điền)</h3>
-                    <div class="flex rounded-md shadow-sm">
-                        <span class="inline-flex items-center px-4 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                            VND
-                        </span>
-                        <input type="text" name="rent_price" value="{{ request('rent_price') }}" 
-                            class="flex-grow px-4 py-3 rounded-r-lg border border-l-0 border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="50000">
+                    <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê (từ điển)</label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                        <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
+                            class="block w-full rounded-none sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="3000">
                     </div>
                 </div>
-
-                <!-- Giá đặt cọc -->
+                
+                <!-- Giá thuê đến -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Giá đặt cọc</h3>
-                    <div class="flex rounded-md shadow-sm">
-                        <span class="inline-flex items-center px-4 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                            VND
-                        </span>
-                        <input type="text" name="deposit_price" value="{{ request('deposit_price') }}" 
-                            class="flex-grow px-4 py-3 rounded-r-lg border border-l-0 border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="100000">
+                    <label for="max_price" class="block mb-2 text-sm font-medium text-gray-700">Đến</label>
+                    <div class="flex">
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                        <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" 
+                            class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                            placeholder="10000">
                     </div>
                 </div>
             </div>
-
-            <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <!-- Dạng nhà -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Dạng nhà</h3>
-                    <div class="grid grid-cols-5 gap-2">
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
+                    <div class="flex flex-wrap gap-2">
                         @foreach(['1r', '1k', '1DK', '2K', '2DK'] as $type)
-                            <label class="relative flex items-center justify-center">
-                                <input type="checkbox" name="house_type[]" value="{{ $type }}" 
-                                    {{ in_array($type, (array)request('house_type', [])) ? 'checked' : '' }}
-                                    class="absolute opacity-0 w-full h-full peer">
-                                <div class="w-full py-2.5 text-center border border-gray-300 rounded-lg text-sm text-gray-700 
-                                    peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 
-                                    peer-checked:font-medium transition-all duration-200 cursor-pointer">
-                                    {{ $type }}
-                                </div>
+                            <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}">
+                                <input type="radio" name="house_type" value="{{ $type }}" class="hidden" {{ request('house_type') == $type ? 'checked' : '' }}>
+                                {{ $type }}
                             </label>
                         @endforeach
                     </div>
                 </div>
-
-                <!-- Phương tiện đi lại -->
-                <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Phương tiện đi lại</h3>
-                    <div class="space-y-2">
-                        @foreach(['Đi bộ', 'Xe đạp', 'Tàu'] as $transport)
-                            <label class="relative flex items-center">
-                                <input type="radio" name="transportation" value="{{ $transport }}"
-                                    {{ request('transportation') == $transport ? 'checked' : '' }} 
-                                    class="h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                                <div class="ml-3 flex items-center text-sm text-gray-700">
-                                    @if($transport == 'Xe đạp')
-                                        <i class="fas fa-bicycle text-indigo-500 mr-2"></i>
-                                    @elseif($transport == 'Tàu')
-                                        <i class="fas fa-train text-indigo-500 mr-2"></i>
-                                    @else
-                                        <i class="fas fa-walking text-indigo-500 mr-2"></i>
-                                    @endif
-                                    {{ $transport }}
-                                </div>
-                            </label>
-                        @endforeach
-                    </div>
-                </div>
-
+                
                 <!-- Trạng thái -->
                 <div>
-                    <h3 class="text-sm font-medium text-gray-700 mb-3">Trạng thái</h3>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái</label>
                     <div class="space-y-2">
-                        <label class="relative flex items-center">
-                            <input type="radio" name="status" value="available" 
-                                {{ request('status') == 'available' ? 'checked' : '' }}
-                                class="h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                            <div class="ml-3 flex items-center text-sm">
-                                <span class="inline-block h-3 w-3 rounded-full bg-green-500 mr-2"></span>
-                                Còn trống
-                            </div>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="status" value="available" class="sr-only" {{ request('status') == 'available' ? 'checked' : '' }}>
+                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'available' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                <span class="{{ request('status') == 'available' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                            </span>
+                            <span class="flex items-center">
+                                <span class="w-3 h-3 mr-2 bg-green-500 rounded-full"></span>
+                                <span class="text-sm text-gray-700">Còn trống</span>
+                            </span>
                         </label>
-                        <label class="relative flex items-center">
-                            <input type="radio" name="status" value="rented"
-                                {{ request('status') == 'rented' ? 'checked' : '' }} 
-                                class="h-5 w-5 text-indigo-600 border-gray-300 focus:ring-indigo-500">
-                            <div class="ml-3 flex items-center text-sm">
-                                <span class="inline-block h-3 w-3 rounded-full bg-red-500 mr-2"></span>
-                                Đã thuê
-                            </div>
+                        
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="status" value="rented" class="sr-only" {{ request('status') == 'rented' ? 'checked' : '' }}>
+                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'rented' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                <span class="{{ request('status') == 'rented' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                            </span>
+                            <span class="flex items-center">
+                                <span class="w-3 h-3 mr-2 bg-red-500 rounded-full"></span>
+                                <span class="text-sm text-gray-700">Đã thuê</span>
+                            </span>
                         </label>
                     </div>
                 </div>
             </div>
-
-            <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-200">
-                <button type="reset" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 focus:outline-none focus:underline">
-                    <i class="fas fa-undo mr-1"></i> Đặt lại
-                </button>
-                <div class="flex items-center space-x-2">
-                    <div class="inline-flex items-center">
-                        <span class="text-gray-500 text-sm mr-2">Sắp xếp theo:</span>
-                        <select name="sort_by" class="text-sm border-gray-300 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 pl-3 pr-8 shadow-sm bg-white">
-                            <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
-                            <option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>Cũ nhất</option>
-                            <option value="price_low" {{ request('sort_by') == 'price_low' ? 'selected' : '' }}>Giá thấp đến cao</option>
-                            <option value="price_high" {{ request('sort_by') == 'price_high' ? 'selected' : '' }}>Giá cao đến thấp</option>
-                        </select>
+            
+            <div class="mb-6">
+                <!-- Phương tiện đi lại -->
+                <div>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Phương tiện đi lại</label>
+                    <div class="flex space-x-8">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="transportation" value="walking" class="sr-only" {{ request('transportation') == 'walking' ? 'checked' : '' }}>
+                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'walking' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                <span class="{{ request('transportation') == 'walking' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-walking text-indigo-600 mr-2"></i>
+                                <span class="text-sm text-gray-700">Đi bộ</span>
+                            </span>
+                        </label>
+                        
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="transportation" value="bicycle" class="sr-only" {{ request('transportation') == 'bicycle' ? 'checked' : '' }}>
+                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'bicycle' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                <span class="{{ request('transportation') == 'bicycle' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-bicycle text-indigo-600 mr-2"></i>
+                                <span class="text-sm text-gray-700">Xe đạp</span>
+                            </span>
+                        </label>
+                        
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="radio" name="transportation" value="train" class="sr-only" {{ request('transportation') == 'train' ? 'checked' : '' }}>
+                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'train' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                <span class="{{ request('transportation') == 'train' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                            </span>
+                            <span class="flex items-center">
+                                <i class="fas fa-train text-indigo-600 mr-2"></i>
+                                <span class="text-sm text-gray-700">Tàu</span>
+                            </span>
+                        </label>
                     </div>
-                    <button type="submit" class="px-6 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition shadow-md flex items-center">
+                </div>
+            </div>
+            
+            <div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <label class="block text-sm font-medium text-gray-700 mr-3">Sắp xếp theo:</label>
+                    <select id="sort_by" name="sort_by" class="py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
+                        <option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>Cũ nhất</option>
+                        <option value="price_low" {{ request('sort_by') == 'price_low' ? 'selected' : '' }}>Giá thấp đến cao</option>
+                        <option value="price_high" {{ request('sort_by') == 'price_high' ? 'selected' : '' }}>Giá cao đến thấp</option>
+                    </select>
+                </div>
+                
+                <div class="flex space-x-3">
+                    <a href="{{ route('houses.by.username', $user->username) }}" class="inline-flex items-center py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-undo mr-2"></i> Đặt lại
+                    </a>
+                    <button type="submit" class="flex items-center justify-center py-2 px-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
                         <i class="fas fa-search mr-2"></i> Lọc kết quả
                     </button>
                 </div>

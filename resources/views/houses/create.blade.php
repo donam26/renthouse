@@ -10,342 +10,314 @@
 @endsection
 
 @section('content')
-    <div class="card p-6 md:p-8">
-        <div class="border-b border-gray-200 pb-4 mb-6">
-            <h2 class="text-lg font-semibold text-gray-800">
-                <i class="fas fa-clipboard-list text-indigo-500 mr-2"></i>
-                Thông tin nhà cho thuê
-            </h2>
-            <p class="text-sm text-gray-500 mt-1">Vui lòng điền đầy đủ các thông tin cần thiết</p>
+    <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="p-6 bg-white border-b border-gray-200">
+                <form method="POST" action="{{ route('houses.store') }}" enctype="multipart/form-data">
+                    @csrf
+
+                    <!-- Thông tin cơ bản -->
+                    <div class="text-lg font-medium text-gray-900 mb-4">Thông tin cơ bản</div>
+                    
+                    <!-- Tên nhà -->
+                    <div class="mb-4">
+                        <x-input-label for="name" :value="__('Tên nhà')" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    </div>
+
+                    <!-- Địa chỉ -->
+                    <div class="mb-4">
+                        <x-input-label for="address" :value="__('Địa chỉ')" />
+                        <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required />
+                        <x-input-error :messages="$errors->get('address')" class="mt-2" />
+                    </div>
+
+                    <!-- Khu vực -->
+                    <div class="mb-4">
+                        <x-input-label for="location" :value="__('Khu vực (Tokyo, Osaka, ...)')" />
+                        <x-text-input id="location" class="block mt-1 w-full" type="text" name="location" :value="old('location')" />
+                        <x-input-error :messages="$errors->get('location')" class="mt-2" />
+                    </div>
+
+                    <!-- Chi tiết phòng -->
+                    <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Chi tiết phòng</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Loại nhà -->
+                        <div class="mb-4">
+                            <x-input-label for="house_type" :value="__('Loại nhà')" />
+                            <select id="house_type" name="house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                                <option value="1R" {{ old('house_type') == '1R' ? 'selected' : '' }}>1R</option>
+                                <option value="1K" {{ old('house_type') == '1K' ? 'selected' : '' }}>1K</option>
+                                <option value="1DK" {{ old('house_type') == '1DK' ? 'selected' : '' }}>1DK</option>
+                                <option value="1LDK" {{ old('house_type') == '1LDK' ? 'selected' : '' }}>1LDK</option>
+                                <option value="2K" {{ old('house_type') == '2K' ? 'selected' : '' }}>2K</option>
+                                <option value="2DK" {{ old('house_type') == '2DK' ? 'selected' : '' }}>2DK</option>
+                                <option value="2LDK" {{ old('house_type') == '2LDK' ? 'selected' : '' }}>2LDK</option>
+                                <option value="3DK" {{ old('house_type') == '3DK' ? 'selected' : '' }}>3DK</option>
+                                <option value="3LDK" {{ old('house_type') == '3LDK' ? 'selected' : '' }}>3LDK</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('house_type')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Diện tích -->
+                        <div class="mb-4">
+                            <x-input-label for="size" :value="__('Diện tích (m²)')" />
+                            <x-text-input id="size" class="block mt-1 w-full" type="number" name="size" :value="old('size')" step="0.01" min="1" required />
+                            <x-input-error :messages="$errors->get('size')" class="mt-2" />
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Tầng -->
+                        <div class="mb-4">
+                            <x-input-label for="floor" :value="__('Tầng')" />
+                            <x-text-input id="floor" class="block mt-1 w-full" type="number" name="floor" :value="old('floor')" min="1" />
+                            <x-input-error :messages="$errors->get('floor')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Có gác lửng -->
+                        <div class="mb-4">
+                            <div class="block mt-4">
+                                <label for="has_loft" class="inline-flex items-center">
+                                    <input id="has_loft" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="has_loft" value="1" {{ old('has_loft') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Có gác lửng') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Trạng thái -->
+                        <div class="mb-4">
+                            <x-input-label for="status" :value="__('Trạng thái')" />
+                            <select id="status" name="status" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                                <option value="available" {{ old('status') == 'available' ? 'selected' : '' }}>Còn trống</option>
+                                <option value="rented" {{ old('status') == 'rented' ? 'selected' : '' }}>Đã cho thuê</option>
+                            </select>
+                            <x-input-error :messages="$errors->get('status')" class="mt-2" />
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Ga gần nhất -->
+                        <div class="mb-4">
+                            <x-input-label for="nearest_station" :value="__('Ga gần nhất')" />
+                            <x-text-input id="nearest_station" class="block mt-1 w-full" type="text" name="nearest_station" :value="old('nearest_station')" />
+                            <x-input-error :messages="$errors->get('nearest_station')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Khoảng cách đến ga -->
+                        <div class="mb-4">
+                            <x-input-label for="distance_to_station" :value="__('Khoảng cách đến ga (phút đi bộ)')" />
+                            <x-text-input id="distance_to_station" class="block mt-1 w-full" type="number" name="distance_to_station" :value="old('distance_to_station')" min="0" />
+                            <x-input-error :messages="$errors->get('distance_to_station')" class="mt-2" />
+                        </div>
+                    </div>
+                    
+                    <!-- Phương tiện đi lại -->
+                    <div class="mb-4">
+                        <x-input-label for="transportation" :value="__('Phương tiện đi lại')" />
+                        <div class="mt-2 flex space-x-4">
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="transportation" value="Đi bộ" class="text-indigo-600 border-gray-300" {{ old('transportation') == 'Đi bộ' ? 'checked' : '' }} checked>
+                                <span class="ml-2 text-sm text-gray-600"><i class="fas fa-walking mr-1"></i> Đi bộ</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="transportation" value="Xe đạp" class="text-indigo-600 border-gray-300" {{ old('transportation') == 'Xe đạp' ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600"><i class="fas fa-bicycle mr-1"></i> Xe đạp</span>
+                            </label>
+                            <label class="inline-flex items-center">
+                                <input type="radio" name="transportation" value="Tàu" class="text-indigo-600 border-gray-300" {{ old('transportation') == 'Tàu' ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600"><i class="fas fa-train mr-1"></i> Tàu</span>
+                            </label>
+                        </div>
+                        <x-input-error :messages="$errors->get('transportation')" class="mt-2" />
+                    </div>
+                    
+                    <!-- Chi tiết chi phí -->
+                    <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Chi tiết chi phí</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Giá thuê -->
+                        <div class="mb-4">
+                            <x-input-label for="rent_price" :value="__('Giá thuê (yên/tháng)')" />
+                            <x-text-input id="rent_price" class="block mt-1 w-full" type="number" name="rent_price" :value="old('rent_price')" min="0" required />
+                            <x-input-error :messages="$errors->get('rent_price')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Tiền đặt cọc -->
+                        <div class="mb-4">
+                            <x-input-label for="deposit_price" :value="__('Tiền đặt cọc (yên)')" />
+                            <x-text-input id="deposit_price" class="block mt-1 w-full" type="number" name="deposit_price" :value="old('deposit_price')" min="0" />
+                            <x-input-error :messages="$errors->get('deposit_price')" class="mt-2" />
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Chi phí ban đầu -->
+                        <div class="mb-4">
+                            <x-input-label for="initial_cost" :value="__('Chi phí ban đầu tổng cộng (yên)')" />
+                            <x-text-input id="initial_cost" class="block mt-1 w-full" type="number" name="initial_cost" :value="old('initial_cost')" min="0" />
+                            <x-input-error :messages="$errors->get('initial_cost')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Phí đỗ xe -->
+                        <div class="mb-4">
+                            <x-input-label for="parking_fee" :value="__('Phí đỗ xe (yên/tháng)')" />
+                            <x-text-input id="parking_fee" class="block mt-1 w-full" type="number" name="parking_fee" :value="old('parking_fee')" min="0" />
+                            <x-input-error :messages="$errors->get('parking_fee')" class="mt-2" />
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Tiền lễ -->
+                        <div class="mb-4">
+                            <x-input-label for="key_money" :value="__('Tiền lễ (yên)')" />
+                            <x-text-input id="key_money" class="block mt-1 w-full" type="number" name="key_money" :value="old('key_money')" min="0" />
+                            <x-input-error :messages="$errors->get('key_money')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Phí bảo lãnh -->
+                        <div class="mb-4">
+                            <x-input-label for="guarantee_fee" :value="__('Phí bảo lãnh (yên)')" />
+                            <x-text-input id="guarantee_fee" class="block mt-1 w-full" type="number" name="guarantee_fee" :value="old('guarantee_fee')" min="0" />
+                            <x-input-error :messages="$errors->get('guarantee_fee')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Phí bảo hiểm -->
+                        <div class="mb-4">
+                            <x-input-label for="insurance_fee" :value="__('Phí bảo hiểm (yên)')" />
+                            <x-text-input id="insurance_fee" class="block mt-1 w-full" type="number" name="insurance_fee" :value="old('insurance_fee')" min="0" />
+                            <x-input-error :messages="$errors->get('insurance_fee')" class="mt-2" />
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Phí hồ sơ -->
+                        <div class="mb-4">
+                            <x-input-label for="document_fee" :value="__('Phí hồ sơ (yên)')" />
+                            <x-text-input id="document_fee" class="block mt-1 w-full" type="number" name="document_fee" :value="old('document_fee')" min="0" />
+                            <x-input-error :messages="$errors->get('document_fee')" class="mt-2" />
+                        </div>
+                        
+                        <!-- Tiền thuê tháng đầu đã bao gồm -->
+                        <div class="mb-4">
+                            <div class="block mt-4">
+                                <label for="rent_included" class="inline-flex items-center">
+                                    <input id="rent_included" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="rent_included" value="1" {{ old('rent_included', '1') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Tiền thuê tháng đầu đã bao gồm trong chi phí ban đầu') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Tiện ích -->
+                    <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Tiện ích</div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Điều hòa -->
+                        <div class="mb-4">
+                            <div class="block">
+                                <label for="amenities[air_conditioner]" class="inline-flex items-center">
+                                    <input id="amenities[air_conditioner]" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="amenities[air_conditioner]" value="1" {{ old('amenities.air_conditioner') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Điều hòa') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Tủ lạnh -->
+                        <div class="mb-4">
+                            <div class="block">
+                                <label for="amenities[refrigerator]" class="inline-flex items-center">
+                                    <input id="amenities[refrigerator]" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="amenities[refrigerator]" value="1" {{ old('amenities.refrigerator') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Tủ lạnh') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Máy giặt -->
+                        <div class="mb-4">
+                            <div class="block">
+                                <label for="amenities[washing_machine]" class="inline-flex items-center">
+                                    <input id="amenities[washing_machine]" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="amenities[washing_machine]" value="1" {{ old('amenities.washing_machine') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Máy giặt') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Internet -->
+                        <div class="mb-4">
+                            <div class="block">
+                                <label for="amenities[internet]" class="inline-flex items-center">
+                                    <input id="amenities[internet]" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="amenities[internet]" value="1" {{ old('amenities.internet') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Internet') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Nội thất -->
+                        <div class="mb-4">
+                            <div class="block">
+                                <label for="amenities[furniture]" class="inline-flex items-center">
+                                    <input id="amenities[furniture]" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="amenities[furniture]" value="1" {{ old('amenities.furniture') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Nội thất') }}</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mô tả và ảnh -->
+                    <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Mô tả và ảnh</div>
+                    
+                    <!-- Mô tả -->
+                    <div class="mb-4">
+                        <x-input-label for="description" :value="__('Mô tả')" />
+                        <textarea id="description" name="description" rows="4" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">{{ old('description') }}</textarea>
+                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                    </div>
+                    
+                    <!-- Ảnh chính -->
+                    <div class="mb-4">
+                        <x-input-label for="image" :value="__('Ảnh chính')" />
+                        <input type="file" id="image" name="image" accept="image/*" 
+                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer">
+                        <p class="text-xs text-gray-500 mt-1">Chấp nhận các định dạng: JPG, PNG, GIF. Kích thước tối đa: 2MB</p>
+                        <x-input-error :messages="$errors->get('image')" class="mt-2" />
+
+                        <!-- Preview ảnh chính -->
+                        <div id="image-preview" class="mt-2 hidden w-full max-w-xs h-48 rounded-lg overflow-hidden border border-gray-300">
+                            <img src="" alt="Ảnh xem trước" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    
+                    <!-- Ảnh bổ sung -->
+                    <div class="mb-4">
+                        <x-input-label for="additional_images" :value="__('Ảnh bổ sung')" />
+                        <input type="file" id="additional_images" name="additional_images[]" class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer" accept="image/*" multiple>
+                        <p class="text-xs text-gray-500 mt-1">Bạn có thể chọn nhiều ảnh cùng lúc. Chấp nhận các định dạng: JPG, PNG, GIF. Kích thước tối đa: 2MB mỗi ảnh</p>
+                        <x-input-error :messages="$errors->get('additional_images.*')" class="mt-2" />
+
+                        <!-- Preview ảnh bổ sung -->
+                        <div id="additional-images-preview" class="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4">
+                        </div>
+                    </div>
+                    
+                    <!-- Link chia sẻ -->
+                    <div class="mb-4">
+                        <x-input-label for="share_link" :value="__('Link chia sẻ (tùy chọn)')" />
+                        <x-text-input id="share_link" class="block mt-1 w-full" type="text" name="share_link" :value="old('share_link')" />
+                        <x-input-error :messages="$errors->get('share_link')" class="mt-2" />
+                        <p class="mt-1 text-sm text-gray-500">Nếu để trống, hệ thống sẽ tự động tạo link</p>
+                    </div>
+                    
+                    <!-- Nút submit -->
+                    <div class="flex items-center justify-end mt-4">
+                        <x-primary-button class="ml-4">
+                            {{ __('Thêm nhà') }}
+                        </x-primary-button>
+                    </div>
+                </form>
+            </div>
         </div>
-        
-        <form action="{{ route('houses.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-            @csrf
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Cột bên trái -->
-                <div class="space-y-6">
-                    <div class="mb-6">
-                        <h3 class="text-md font-semibold text-gray-700 mb-4 flex items-center">
-                            <i class="fas fa-info-circle text-indigo-500 mr-2"></i>
-                            Thông tin cơ bản
-                        </h3>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Tên nhà <span class="text-red-500">*</span></label>
-                                <input type="text" name="name" id="name" value="{{ old('name') }}" 
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                    placeholder="Nhập tên nhà" required>
-                                @error('name')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div>
-                                <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Địa chỉ <span class="text-red-500">*</span></label>
-                                <input type="text" name="address" id="address" value="{{ old('address') }}" 
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                    placeholder="Nhập địa chỉ đầy đủ" required>
-                                @error('address')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div>
-                                <label for="location" class="block text-sm font-medium text-gray-700 mb-1">Vị trí</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-map-marker-alt text-gray-400"></i>
-                                    </div>
-                                    <input type="text" name="location" id="location" value="{{ old('location') }}"
-                                        class="w-full rounded-md border-gray-300 pl-10 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                        placeholder="Vị trí (ví dụ: Tokyo, OSAKA, etc.)">
-                                </div>
-                                @error('location')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="distance" class="block text-sm font-medium text-gray-700 mb-1">Khoảng cách (m)</label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i class="fas fa-ruler text-gray-400"></i>
-                                        </div>
-                                        <input type="number" step="0.01" min="0" name="distance" id="distance" value="{{ old('distance') }}"
-                                            class="w-full rounded-md border-gray-300 pl-10 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                            placeholder="Nhập khoảng cách">
-                                    </div>
-                                    @error('distance')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <div>
-                                    <label for="transportation" class="block text-sm font-medium text-gray-700 mb-1">Phương tiện</label>
-                                    <select name="transportation" id="transportation" 
-                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition">
-                                        <option value="">-- Chọn phương tiện --</option>
-                                        <option value="Xe đạp" {{ old('transportation') === 'Xe đạp' ? 'selected' : '' }}>Xe đạp</option>
-                                        <option value="Tàu" {{ old('transportation') === 'Tàu' ? 'selected' : '' }}>Tàu</option>
-                                        <option value="Xe buýt" {{ old('transportation') === 'Xe buýt' ? 'selected' : '' }}>Xe buýt</option>
-                                        <option value="Đi bộ" {{ old('transportation') === 'Đi bộ' ? 'selected' : '' }}>Đi bộ</option>
-                                    </select>
-                                    @error('transportation')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-md font-semibold text-gray-700 mb-4 flex items-center">
-                            <i class="fas fa-dollar-sign text-indigo-500 mr-2"></i>
-                            Thông tin giá cả
-                        </h3>
-                        
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="rent_price" class="block text-sm font-medium text-gray-700 mb-1">Giá thuê (VND) <span class="text-red-500">*</span></label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i class="fas fa-tag text-gray-400"></i>
-                                        </div>
-                                        <input type="number" name="rent_price" id="rent_price" value="{{ old('rent_price') }}"
-                                            class="w-full rounded-md border-gray-300 pl-10 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                            placeholder="Nhập giá thuê" required>
-                                    </div>
-                                    @error('rent_price')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <div>
-                                    <label for="deposit_price" class="block text-sm font-medium text-gray-700 mb-1">Giá đặt cọc (VND)</label>
-                                    <div class="relative">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <i class="fas fa-money-bill-wave text-gray-400"></i>
-                                        </div>
-                                        <input type="number" name="deposit_price" id="deposit_price" value="{{ old('deposit_price') }}"
-                                            class="w-full rounded-md border-gray-300 pl-10 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                            placeholder="Nhập giá đặt cọc">
-                                    </div>
-                                    @error('deposit_price')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Cột bên phải -->
-                <div class="space-y-6">
-                    <div class="mb-6">
-                        <h3 class="text-md font-semibold text-gray-700 mb-4 flex items-center">
-                            <i class="fas fa-home text-indigo-500 mr-2"></i>
-                            Thông tin nhà
-                        </h3>
-                        
-                        <div class="space-y-4">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label for="house_type" class="block text-sm font-medium text-gray-700 mb-1">Dạng nhà</label>
-                                    <select name="house_type" id="house_type" 
-                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition">
-                                        <option value="">-- Chọn loại nhà --</option>
-                                        <option value="1r" {{ old('house_type') === '1r' ? 'selected' : '' }}>1r</option>
-                                        <option value="1k" {{ old('house_type') === '1k' ? 'selected' : '' }}>1k</option>
-                                        <option value="1DK" {{ old('house_type') === '1DK' ? 'selected' : '' }}>1DK</option>
-                                        <option value="2K" {{ old('house_type') === '2K' ? 'selected' : '' }}>2K</option>
-                                        <option value="2DK" {{ old('house_type') === '2DK' ? 'selected' : '' }}>2DK</option>
-                                        <option value="3DK" {{ old('house_type') === '3DK' ? 'selected' : '' }}>3DK</option>
-                                    </select>
-                                    @error('house_type')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                                
-                                <div>
-                                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Tình trạng <span class="text-red-500">*</span></label>
-                                    <select name="status" id="status" 
-                                        class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition" required>
-                                        <option value="available" {{ old('status') === 'available' ? 'selected' : '' }}>Còn trống</option>
-                                        <option value="rented" {{ old('status') === 'rented' ? 'selected' : '' }}>Đã thuê</option>
-                                    </select>
-                                    @error('status')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                    @enderror
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
-                                <textarea name="description" id="description" rows="4"
-                                    class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                    placeholder="Nhập mô tả chi tiết về nhà cho thuê">{{ old('description') }}</textarea>
-                                @error('description')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <div>
-                                <label for="share_link" class="block text-sm font-medium text-gray-700 mb-1">Đường dẫn chia sẻ</label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i class="fas fa-link text-gray-400"></i>
-                                    </div>
-                                    <input type="text" name="share_link" id="share_link" value="{{ old('share_link') }}"
-                                        class="w-full rounded-md border-gray-300 pl-10 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-30 transition"
-                                        placeholder="URL liên kết chia sẻ">
-                                </div>
-                                @error('share_link')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
-                            </div>
-                            
-                            <!-- Ảnh -->
-                            <div class="mb-6">
-                                <h3 class="text-md font-semibold text-gray-700 mb-4 flex items-center">
-                                    <i class="fas fa-images text-indigo-500 mr-2"></i>
-                                    Hình ảnh
-                                </h3>
-                                
-                                <div class="space-y-4">
-                                    <!-- Ảnh chính -->
-                                    <div>
-                                        <label for="image" class="block text-sm font-medium text-gray-700 mb-1">Ảnh chính</label>
-                                        <input type="file" name="image" id="image" accept="image/*" 
-                                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors">
-                                        <p class="mt-1 text-xs text-gray-500">PNG, JPG hoặc GIF (tối đa 2MB)</p>
-                                        @error('image')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    
-                                    <!-- Ảnh bổ sung -->
-                                    <div>
-                                        <label for="additional_images" class="block text-sm font-medium text-gray-700 mb-1">Ảnh bổ sung</label>
-                                        <input type="file" name="additional_images[]" id="additional_images" accept="image/*" multiple
-                                            class="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors">
-                                        <p class="mt-1 text-xs text-gray-500">Chọn nhiều ảnh cùng lúc. PNG, JPG hoặc GIF (tối đa 2MB mỗi ảnh)</p>
-                                        @error('additional_images.*')
-                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                    
-                                    <!-- Hiển thị xem trước ảnh -->
-                                    <div class="mt-2" id="image-preview-container">
-                                        <p class="text-sm font-medium text-gray-700 mb-2">Xem trước ảnh:</p>
-                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="image-preview">
-                                            <!-- JavaScript sẽ thêm các xem trước ảnh vào đây -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="pt-5 border-t border-gray-200">
-                <div class="flex justify-end space-x-3">
-                    <a href="{{ route('houses.index') }}" class="btn-secondary inline-flex items-center">
-                        <i class="fas fa-times mr-2"></i> Hủy bỏ
-                    </a>
-                    <button type="submit" class="btn-primary inline-flex items-center">
-                        <i class="fas fa-save mr-2"></i> Lưu nhà
-                    </button>
-                </div>
-            </div>
-        </form>
     </div>
-    
-    <script>
-        // Xử lý chọn loại nhà
-        document.querySelectorAll('.house-type-input').forEach(input => {
-            input.addEventListener('change', function() {
-                // Reset tất cả các label về trạng thái không chọn
-                document.querySelectorAll('.house-type-input').forEach(radio => {
-                    radio.parentElement.classList.remove('bg-indigo-600', 'text-white');
-                });
-                
-                // Đánh dấu label được chọn
-                if (this.checked) {
-                    this.parentElement.classList.add('bg-indigo-600', 'text-white');
-                }
-            });
-        });
-        
-        // Xử lý xem trước ảnh
-        document.addEventListener('DOMContentLoaded', function() {
-            const mainImageInput = document.getElementById('image');
-            const additionalImagesInput = document.getElementById('additional_images');
-            const previewContainer = document.getElementById('image-preview');
-            
-            // Xem trước ảnh chính
-            mainImageInput.addEventListener('change', function() {
-                previewContainer.innerHTML = ''; // Xóa các xem trước cũ
-                
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        const previewDiv = document.createElement('div');
-                        previewDiv.className = 'relative';
-                        
-                        previewDiv.innerHTML = `
-                            <div class="h-40 rounded-lg overflow-hidden shadow-md">
-                                <img src="${e.target.result}" class="w-full h-full object-cover">
-                            </div>
-                            <div class="mt-1 text-xs text-center">
-                                <span class="inline-block px-2 py-1 bg-green-100 text-green-800 rounded-full">Ảnh chính</span>
-                            </div>
-                        `;
-                        
-                        previewContainer.appendChild(previewDiv);
-                    }
-                    
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-            
-            // Xem trước ảnh bổ sung
-            additionalImagesInput.addEventListener('change', function() {
-                // Giữ lại ảnh chính nếu có
-                const mainImagePreview = previewContainer.querySelector('.inline-block.px-2.py-1.bg-green-100');
-                if (!mainImagePreview) {
-                    previewContainer.innerHTML = '';
-                }
-                
-                if (this.files) {
-                    Array.from(this.files).forEach((file, index) => {
-                        const reader = new FileReader();
-                        
-                        reader.onload = function(e) {
-                            const previewDiv = document.createElement('div');
-                            previewDiv.className = 'relative';
-                            
-                            previewDiv.innerHTML = `
-                                <div class="h-40 rounded-lg overflow-hidden shadow-md">
-                                    <img src="${e.target.result}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="mt-1 text-xs text-center">
-                                    <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 rounded-full">Ảnh phụ ${index + 1}</span>
-                                </div>
-                            `;
-                            
-                            previewContainer.appendChild(previewDiv);
-                        }
-                        
-                        reader.readAsDataURL(file);
-                    });
-                }
-            });
-        });
-    </script>
 @endsection 
