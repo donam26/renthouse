@@ -76,147 +76,204 @@
             <button 
                 onclick="shareSearchResults()" 
                 class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center">
-                <i class="fas fa-share-alt mr-2"></i> Chia sẻ kết quả tìm kiếm
+                <i class="fas fa-share-alt mr-2"></i> Share Link
             </button>
         </div>
         
         <form action="{{ route('houses.by.username', $user->username) }}" method="GET">
             <!-- Tìm kiếm tên, địa chỉ -->
             <div class="mb-6">
-                <label for="search" class="block mb-2 text-sm font-medium text-gray-700">Tìm kiếm</label>
+                <label for="search" class="block mb-2 text-sm font-medium text-gray-700">Tên apply</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <i class="fas fa-search text-gray-400"></i>
                     </div>
                     <input type="text" name="search" id="search" value="{{ request('search') }}" 
                         class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Tìm theo tên, địa chỉ...">
+                        placeholder="Tên, địa chỉ...">
                 </div>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                <!-- Khoảng cách -->
-                <div>
-                    <label for="distance_to_station" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách</label>
-                    <div class="relative">
-                        <input type="text" name="distance_to_station" id="distance_to_station" 
-                            value="{{ request('distance_to_station') }}"
-                            class="block w-full pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                            placeholder="Nhập khoảng cách">
-                        <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 text-sm">
-                            vđ 5Phút
+
+            <!-- NHÓM 1: THÔNG TIN GA TÀU VÀ DI CHUYỂN -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Thông tin ga tàu và di chuyển</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                    <!-- Ga Chính -->
+                    <div>
+                        <label for="ga_chinh" class="block mb-2 text-sm font-medium text-gray-700">Ga chính</label>
+                        <input type="text" name="ga_chinh" id="ga_chinh" 
+                            value="{{ request('ga_chinh') }}"
+                            class="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Nhập tên ga chính">
+                    </div>
+                    
+                    <!-- Ga Bên Cạnh -->
+                    <div>
+                        <label for="ga_ben_canh" class="block mb-2 text-sm font-medium text-gray-700">Ga bên cạnh</label>
+                        <input type="text" name="ga_ben_canh" id="ga_ben_canh" 
+                            value="{{ request('ga_ben_canh') }}"
+                            class="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Nhập tên ga bên cạnh">
+                    </div>
+                    
+                    <!-- Ga Đi Tàu Tới -->
+                    <div>
+                        <label for="ga_di_tau_toi" class="block mb-2 text-sm font-medium text-gray-700">Ga đi tàu tới</label>
+                        <input type="text" name="ga_di_tau_toi" id="ga_di_tau_toi" 
+                            value="{{ request('ga_di_tau_toi') }}"
+                            class="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            placeholder="Nhập tên ga đi tàu tới">
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Khoảng cách -->
+                    <div>
+                        <label for="distance_to_station" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách</label>
+                        <div class="relative">
+                            <input type="text" name="distance_to_station" id="distance_to_station" 
+                                value="{{ request('distance_to_station') }}"
+                                class="block w-full pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                placeholder="Nhập khoảng cách">
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 text-sm">
+                                vđ 5Phút
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Phương tiện đi lại -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Phương tiện đi lại</label>
+                        <div class="flex space-x-8">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="transportation" value="walking" class="sr-only transport-input" {{ request('transportation') == 'walking' ? 'checked' : '' }}
+                                    onclick="updateRadioStyle(this, 'transport')">
+                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'walking' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                    <span class="{{ request('transportation') == 'walking' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-walking text-indigo-600 mr-2"></i>
+                                    <span class="text-sm text-gray-700">Đi bộ</span>
+                                </span>
+                            </label>
+                            
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="transportation" value="bicycle" class="sr-only transport-input" {{ request('transportation') == 'bicycle' ? 'checked' : '' }}
+                                    onclick="updateRadioStyle(this, 'transport')">
+                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'bicycle' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                    <span class="{{ request('transportation') == 'bicycle' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-bicycle text-indigo-600 mr-2"></i>
+                                    <span class="text-sm text-gray-700">Xe đạp</span>
+                                </span>
+                            </label>
+                            
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="transportation" value="train" class="sr-only transport-input" {{ request('transportation') == 'train' ? 'checked' : '' }}
+                                    onclick="updateRadioStyle(this, 'transport')">
+                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'train' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                    <span class="{{ request('transportation') == 'train' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                                </span>
+                                <span class="flex items-center">
+                                    <i class="fas fa-train text-indigo-600 mr-2"></i>
+                                    <span class="text-sm text-gray-700">Tàu</span>
+                                </span>
+                            </label>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- NHÓM 2: THÔNG TIN GIÁ CẢ -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Apply giá cả</h3>
                 
-                <!-- Giá thuê từ -->
-                <div>
-                    <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê (từ điển)</label>
-                    <div class="flex">
-                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
-                        <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
-                            class="block w-full rounded-none sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="3000">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                    <!-- Giá thuê -->
+                    <div>
+                        <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê mới</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                            <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
+                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="50000">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Giá sẽ tăng thêm 1000 cho mỗi nhà tiếp theo</p>
                     </div>
-                </div>
-                
-                <!-- Giá thuê đến -->
-                <div>
-                    <label for="max_price" class="block mb-2 text-sm font-medium text-gray-700">Đến</label>
-                    <div class="flex">
-                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
-                        <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" 
-                            class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                            placeholder="10000">
+                    
+                    <!-- Giá đầu vào -->
+                    <div>
+                        <label for="min_deposit" class="block mb-2 text-sm font-medium text-gray-700">Giá đầu vào mới</label>
+                        <div class="flex">
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                            <input type="number" name="min_deposit" id="min_deposit" value="{{ request('min_deposit') }}" 
+                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                                placeholder="100000">
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Sẽ cộng thêm 30K-100K ngẫu nhiên</p>
                     </div>
                 </div>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <!-- Dạng nhà -->
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['1K', '2K-2DK'] as $type)
-                            <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}">
-                                <input type="radio" name="house_type" value="{{ $type }}" class="hidden" {{ request('house_type') == $type ? 'checked' : '' }}>
-                                {{ $type }}
+            <!-- NHÓM 3: THÔNG TIN NHÀ -->
+            <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Thông tin nhà</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Dạng nhà -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
+                        <div class="flex flex-wrap gap-2">
+                            @foreach(['1K', '2K-2DK'] as $type)
+                                <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}">
+                                    <input type="radio" name="house_type" value="{{ $type }}" class="hidden" {{ request('house_type') == $type ? 'checked' : '' }}>
+                                    {{ $type }}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    
+                    <!-- Trạng thái -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái</label>
+                        <div class="space-y-2">
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="status" value="available" class="sr-only status-input" {{ request('status') == 'available' ? 'checked' : '' }}
+                                    onclick="updateRadioStyle(this, 'status')">
+                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'available' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                    <span class="{{ request('status') == 'available' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                                </span>
+                                <span class="flex items-center">
+                                    <span class="w-3 h-3 mr-2 bg-green-500 rounded-full"></span>
+                                    <span class="text-sm text-gray-700">Còn trống</span>
+                                </span>
                             </label>
-                        @endforeach
+                            
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="radio" name="status" value="rented" class="sr-only status-input" {{ request('status') == 'rented' ? 'checked' : '' }}
+                                    onclick="updateRadioStyle(this, 'status')">
+                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'rented' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
+                                    <span class="{{ request('status') == 'rented' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
+                                </span>
+                                <span class="flex items-center">
+                                    <span class="w-3 h-3 mr-2 bg-red-500 rounded-full"></span>
+                                    <span class="text-sm text-gray-700">Đã thuê</span>
+                                </span>
+                            </label>
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Trạng thái -->
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái</label>
-                    <div class="space-y-2">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="status" value="available" class="sr-only status-input" {{ request('status') == 'available' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'status')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'available' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('status') == 'available' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <span class="w-3 h-3 mr-2 bg-green-500 rounded-full"></span>
-                                <span class="text-sm text-gray-700">Còn trống</span>
-                            </span>
-                        </label>
-                        
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="status" value="rented" class="sr-only status-input" {{ request('status') == 'rented' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'status')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'rented' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('status') == 'rented' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <span class="w-3 h-3 mr-2 bg-red-500 rounded-full"></span>
-                                <span class="text-sm text-gray-700">Đã thuê</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="mb-6">
-                <!-- Phương tiện đi lại -->
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-700">Phương tiện đi lại</label>
-                    <div class="flex space-x-8">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="transportation" value="walking" class="sr-only transport-input" {{ request('transportation') == 'walking' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'transport')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'walking' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('transportation') == 'walking' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <i class="fas fa-walking text-indigo-600 mr-2"></i>
-                                <span class="text-sm text-gray-700">Đi bộ</span>
-                            </span>
-                        </label>
-                        
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="transportation" value="bicycle" class="sr-only transport-input" {{ request('transportation') == 'bicycle' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'transport')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'bicycle' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('transportation') == 'bicycle' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <i class="fas fa-bicycle text-indigo-600 mr-2"></i>
-                                <span class="text-sm text-gray-700">Xe đạp</span>
-                            </span>
-                        </label>
-                        
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="transportation" value="train" class="sr-only transport-input" {{ request('transportation') == 'train' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'transport')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('transportation') == 'train' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('transportation') == 'train' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <i class="fas fa-train text-indigo-600 mr-2"></i>
-                                <span class="text-sm text-gray-700">Tàu</span>
-                            </span>
-                        </label>
+
+                    <!-- Là công ty (Chuyển thành checkbox) -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Công ty</label>
+                        <div>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="is_company" value="1" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" {{ request('is_company') == '1' ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-700">Chọn để hiển thị công ty</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -315,13 +372,28 @@
                                     </div>
                                 </div>
                                 
+                                <!-- Giá thuê -->
                                 <div class="col-span-3 md:col-span-1">
                                     <p class="text-sm text-gray-600">Giá thuê:</p>
-                                    <p class="font-bold text-green-600 text-lg">{{ number_format($house->rent_price) }} <span class="text-sm font-normal">VND</span></p>
+                                    <p class="font-bold text-green-600 text-lg">
+                                        @if(isset($house->adjusted_rent_price))
+                                            {{ number_format($house->adjusted_rent_price) }}
+                                        @else
+                                            {{ number_format($house->rent_price) }}
+                                        @endif
+                                        <span class="text-sm font-normal">VND</span>
+                                    </p>
                                     
                                     @if ($house->deposit_price)
                                     <p class="text-sm text-gray-600 mt-1">Đặt cọc:</p>
-                                    <p class="font-medium text-gray-800">{{ number_format($house->deposit_price) }} <span class="text-sm">VND</span></p>
+                                    <p class="font-medium text-gray-800">
+                                        @if(isset($house->adjusted_deposit_price))
+                                            {{ number_format($house->adjusted_deposit_price) }}
+                                        @else
+                                            {{ number_format($house->deposit_price) }}
+                                        @endif
+                                        <span class="text-sm">VND</span>
+                                    </p>
                                     @endif
                                 </div>
                             </div>

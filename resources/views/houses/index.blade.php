@@ -55,7 +55,7 @@
             <button 
                 onclick="shareSearchResults()" 
                 class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center">
-                <i class="fas fa-share-alt mr-2"></i> Chia sẻ kết quả tìm kiếm
+                <i class="fas fa-share-alt mr-2"></i> Share Link
             </button>
         </div>
         

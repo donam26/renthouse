@@ -135,14 +135,57 @@
                                     
                                     <div class="col-span-3 md:col-span-1">
                                         <p class="text-sm text-gray-600">Giá thuê:</p>
-                                        <p class="font-bold text-green-600 text-lg">{{ number_format($house->rent_price) }} <span class="text-sm font-normal">yên</span></p>
+                                        <p class="font-bold text-green-600 text-lg">
+                                            @if(isset($house->adjusted_rent_price))
+                                                {{ number_format($house->adjusted_rent_price) }}
+                                            @else
+                                                {{ number_format($house->rent_price) }}
+                                            @endif
+                                            <span class="text-sm font-normal">VND</span>
+                                        </p>
                                         
                                         @if ($house->deposit_price)
                                         <p class="text-sm text-gray-600 mt-1">Đặt cọc:</p>
-                                        <p class="font-medium text-gray-800">{{ number_format($house->deposit_price) }} <span class="text-sm">yên</span></p>
+                                        <p class="font-medium text-gray-800">
+                                            @if(isset($house->adjusted_deposit_price))
+                                                {{ number_format($house->adjusted_deposit_price) }}
+                                            @else
+                                                {{ number_format($house->deposit_price) }}
+                                            @endif
+                                            <span class="text-sm">VND</span>
+                                        </p>
                                         @endif
                                     </div>
                                 </div>
+                                
+                                <!-- Thông tin ga tàu -->
+                                @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi'))
+                                <div class="mb-4 bg-gray-50 p-3 rounded-md">
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin ga tàu:</p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                        @if (request('ga_chinh'))
+                                        <div>
+                                            <p class="text-xs text-gray-500">Ga chính:</p>
+                                            <p class="text-sm font-medium text-indigo-700">{{ request('ga_chinh') }}</p>
+                                        </div>
+                                        @endif
+                                        
+                                        @if (request('ga_ben_canh'))
+                                        <div>
+                                            <p class="text-xs text-gray-500">Ga bên cạnh:</p>
+                                            <p class="text-sm font-medium text-indigo-700">{{ request('ga_ben_canh') }}</p>
+                                        </div>
+                                        @endif
+                                        
+                                        @if (request('ga_di_tau_toi'))
+                                        <div>
+                                            <p class="text-xs text-gray-500">Ga đi tàu tới:</p>
+                                            <p class="text-sm font-medium text-indigo-700">{{ request('ga_di_tau_toi') }}</p>
+                                        </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                @endif
                                 
                                 <!-- Dạng nhà -->
                                 <div class="mb-4">

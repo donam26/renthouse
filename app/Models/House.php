@@ -18,6 +18,9 @@ class House extends Model
         'user_id',
         'name',
         'address',
+        'ga_chinh',
+        'ga_ben_canh',
+        'ga_di_tau_toi',
         'location',
         'size',
         'rent_price',
@@ -25,6 +28,7 @@ class House extends Model
         'initial_cost',
         'house_type',
         'status',
+        'is_company',
         'description',
         'image_path',
         'share_link',
@@ -46,6 +50,7 @@ class House extends Model
         'room_details' => 'array',
         'cost_details' => 'array',
         'amenities' => 'array',
+        'is_company' => 'boolean',
     ];
 
     /**

@@ -23,53 +23,7 @@ class HouseController extends Controller
         
         // Tạo query cơ bản
         $query = House::query()->where('user_id', Auth::id());
-        
-        // Lọc theo dạng nhà (nếu có)
-        if ($request->filled('house_type')) {
-            $query->where('house_type', $request->house_type);
-        }
-        
-        // Lọc theo trạng thái (nếu có)
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        
-        // Lọc theo khoảng giá thuê (nếu có)
-        if ($request->filled('min_price')) {
-            $query->where('rent_price', '>=', $request->min_price);
-        }
-        
-        if ($request->filled('max_price')) {
-            $query->where('rent_price', '<=', $request->max_price);
-        }
-        
-        // Lọc theo giá đặt cọc (nếu có)
-        if ($request->filled('deposit_price')) {
-            $query->where('deposit_price', '>=', $request->deposit_price);
-        }
-        
-        // Lọc theo khoảng cách đến ga (nếu có)
-        if ($request->filled('distance_to_station')) {
-            $distance = $request->distance_to_station;
-            $query->whereRaw("JSON_EXTRACT(room_details, '$.distance_to_station') <= ?", [$distance]);
-        }
-        
-        // Lọc theo phương tiện di chuyển (nếu có)
-        if ($request->filled('transportation')) {
-            // Chuyển đổi từ giá trị code sang tên hiển thị tiếng Việt
-            $transportationValueMap = [
-                'walking' => 'Đi bộ',
-                'bicycle' => 'Xe đạp', 
-                'train' => 'Tàu'
-            ];
-            
-            // Chuyển đổi giá trị nếu nó là một trong các mã code (walking, bicycle, train)
-            $transportation = array_key_exists($request->transportation, $transportationValueMap) 
-                ? $transportationValueMap[$request->transportation] 
-                : $request->transportation; // Nếu không thì giữ nguyên giá trị (trường hợp đã là tiếng Việt)
-                
-            $query->whereRaw("JSON_EXTRACT(room_details, '$.transportation') = ?", [$transportation]);
-        }
+     
         
         // Sắp xếp
         switch ($request->sort_by) {
@@ -122,30 +76,25 @@ class HouseController extends Controller
         // Tạo query cơ bản
         $query = House::query()->where('user_id', $user->id);
         
-        // Lọc theo dạng nhà (nếu có)
-        if ($request->filled('house_type')) {
-            $query->where('house_type', $request->house_type);
+    
+      
+        // KHÔNG lọc theo giá thuê hay giá đầu vào nữa
+        // Chỉ sắp xếp theo các tiêu chí khác
+        switch ($request->sort_by) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'price_low':
+                $query->orderBy('rent_price', 'asc');
+                break;
+            case 'price_high':
+                $query->orderBy('rent_price', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc'); // Mặc định: newest
         }
         
-        // Lọc theo trạng thái (nếu có)
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
         
-        // Lọc theo khoảng giá thuê (nếu có)
-        if ($request->filled('min_price')) {
-            $query->where('rent_price', '>=', $request->min_price);
-        }
-        
-        if ($request->filled('max_price')) {
-            $query->where('rent_price', '<=', $request->max_price);
-        }
-        
-        // Lọc theo khoảng cách đến ga (nếu có)
-        if ($request->filled('distance_to_station')) {
-            $distance = $request->distance_to_station;
-            $query->whereRaw("JSON_EXTRACT(room_details, '$.distance_to_station') <= ?", [$distance]);
-        }
         
         // Lọc theo phương tiện di chuyển (nếu có)
         if ($request->filled('transportation')) {
@@ -164,26 +113,32 @@ class HouseController extends Controller
             $query->whereRaw("JSON_EXTRACT(room_details, '$.transportation') = ?", [$transportation]);
         }
         
-        // Sắp xếp
-        switch ($request->sort_by) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'price_low':
-                $query->orderBy('rent_price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('rent_price', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc'); // Mặc định: newest
+        // Lấy danh sách nhà
+        $houses = $query->get();
+        
+        // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
+        if ($request->filled('min_price') && $houses->count() > 0) {
+            $basePrice = (float)$request->min_price;
+            $increment = 1000;
+            
+            // Áp dụng giá mới cho tất cả nhà
+            foreach ($houses as $index => $house) {
+                // Sử dụng thuộc tính động để tránh lỗi
+                $house->setAttribute('adjusted_rent_price', $basePrice + ($index * $increment));
+            }
         }
         
-        // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
-        if ($searchKeyword) {
-            $houses = $query->inRandomOrder()->limit(10)->get();
-        } else {
-            $houses = $query->get();
+        // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào
+        if ($request->filled('min_deposit') && $houses->count() > 0) {
+            $baseDeposit = (float)$request->min_deposit;
+            
+            // Áp dụng giá đầu vào mới cho tất cả nhà
+            foreach ($houses as $index => $house) {
+                // Tạo giá ngẫu nhiên trong khoảng 30000-100000
+                $randomAmount = rand(30000, 100000);
+                // Cộng giá đầu vào với giá ngẫu nhiên
+                $house->setAttribute('adjusted_deposit_price', $baseDeposit + $randomAmount);
+            }
         }
         
         return view('houses.show-by-username', compact('houses', 'user', 'searchKeyword'));
@@ -534,49 +489,9 @@ class HouseController extends Controller
         // Tạo query cơ bản
         $query = House::query()->where('user_id', $userId);
         
-        // Lọc theo dạng nhà (nếu có)
-        if ($request->filled('house_type')) {
-            $query->where('house_type', $request->house_type);
-        }
-        
-        // Lọc theo trạng thái (nếu có)
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        
-        // Lọc theo khoảng giá thuê (nếu có)
-        if ($request->filled('min_price')) {
-            $query->where('rent_price', '>=', $request->min_price);
-        }
-        
-        if ($request->filled('max_price')) {
-            $query->where('rent_price', '<=', $request->max_price);
-        }
-        
-        // Lọc theo khoảng cách đến ga (nếu có)
-        if ($request->filled('distance_to_station')) {
-            $distance = $request->distance_to_station;
-            $query->whereRaw("JSON_EXTRACT(room_details, '$.distance_to_station') <= ?", [$distance]);
-        }
-        
-        // Lọc theo phương tiện di chuyển (nếu có)
-        if ($request->filled('transportation')) {
-            // Chuyển đổi từ giá trị code sang tên hiển thị tiếng Việt
-            $transportationValueMap = [
-                'walking' => 'Đi bộ',
-                'bicycle' => 'Xe đạp', 
-                'train' => 'Tàu'
-            ];
-            
-            // Chuyển đổi giá trị nếu nó là một trong các mã code (walking, bicycle, train)
-            $transportation = array_key_exists($request->transportation, $transportationValueMap) 
-                ? $transportationValueMap[$request->transportation] 
-                : $request->transportation;
-                
-            $query->whereRaw("JSON_EXTRACT(room_details, '$.transportation') = ?", [$transportation]);
-        }
-        
-        // Sắp xếp
+    
+        // KHÔNG lọc theo giá thuê hay giá đầu vào nữa
+        // Chỉ sắp xếp theo các tiêu chí khác
         switch ($request->sort_by) {
             case 'oldest':
                 $query->orderBy('created_at', 'asc');
@@ -590,18 +505,41 @@ class HouseController extends Controller
             default:
                 $query->orderBy('created_at', 'desc'); // Mặc định: newest
         }
+      
+      
+        // Lấy danh sách nhà
+        $houses = $query->get();
         
-        // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
-        if ($searchKeyword) {
-            $houses = $query->inRandomOrder()->limit(10)->get();
-        } else {
-            $houses = $query->get();
+        // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
+        if ($request->filled('min_price') && $houses->count() > 0) {
+            $basePrice = (float)$request->min_price;
+            $increment = 1000;
+            
+            // Áp dụng giá mới cho tất cả nhà
+            foreach ($houses as $index => $house) {
+                // Sử dụng thuộc tính động để tránh lỗi
+                $house->setAttribute('adjusted_rent_price', $basePrice + ($index * $increment));
+            }
+        }
+        
+        // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào
+        if ($request->filled('min_deposit') && $houses->count() > 0) {
+            $baseDeposit = (float)$request->min_deposit;
+            
+            // Áp dụng giá đầu vào mới cho tất cả nhà
+            foreach ($houses as $index => $house) {
+                // Tạo giá ngẫu nhiên trong khoảng 30000-100000
+                $randomAmount = rand(30000, 100000);
+                // Cộng giá đầu vào với giá ngẫu nhiên
+                $house->setAttribute('adjusted_deposit_price', $baseDeposit + $randomAmount);
+            }
         }
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'status', 'min_price', 'max_price', 
-            'distance_to_station', 'transportation', 'sort_by'
+            'search', 'house_type', 'status', 'min_price', 'min_deposit', 
+            'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
+            'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
         
         return view('houses.shared-search', compact('houses', 'user', 'searchKeyword', 'searchParams'));
