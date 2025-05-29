@@ -73,13 +73,10 @@ class HouseController extends Controller
             $searchKeyword = $request->search;
         }
         
-        // Tạo query cơ bản
+        // Tạo query cơ bản - lấy tất cả nhà của user
         $query = House::query()->where('user_id', $user->id);
         
-    
-      
-        // KHÔNG lọc theo giá thuê hay giá đầu vào nữa
-        // Chỉ sắp xếp theo các tiêu chí khác
+        // Sắp xếp theo các tiêu chí
         switch ($request->sort_by) {
             case 'oldest':
                 $query->orderBy('created_at', 'asc');
@@ -94,26 +91,7 @@ class HouseController extends Controller
                 $query->orderBy('created_at', 'desc'); // Mặc định: newest
         }
         
-        
-        
-        // Lọc theo phương tiện di chuyển (nếu có)
-        if ($request->filled('transportation')) {
-            // Chuyển đổi từ giá trị code sang tên hiển thị tiếng Việt
-            $transportationValueMap = [
-                'walking' => 'Đi bộ',
-                'bicycle' => 'Xe đạp', 
-                'train' => 'Tàu'
-            ];
-            
-            // Chuyển đổi giá trị nếu nó là một trong các mã code (walking, bicycle, train)
-            $transportation = array_key_exists($request->transportation, $transportationValueMap) 
-                ? $transportationValueMap[$request->transportation] 
-                : $request->transportation; // Nếu không thì giữ nguyên giá trị (trường hợp đã là tiếng Việt)
-                
-            $query->whereRaw("JSON_EXTRACT(room_details, '$.transportation') = ?", [$transportation]);
-        }
-        
-        // Lấy danh sách nhà
+        // Lấy tất cả nhà, không lọc theo transportation
         $houses = $query->get();
         
         // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
@@ -123,7 +101,6 @@ class HouseController extends Controller
             
             // Áp dụng giá mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                // Sử dụng thuộc tính động để tránh lỗi
                 $house->setAttribute('adjusted_rent_price', $basePrice + ($index * $increment));
             }
         }
@@ -136,12 +113,18 @@ class HouseController extends Controller
             foreach ($houses as $index => $house) {
                 // Tạo giá ngẫu nhiên trong khoảng 30000-100000
                 $randomAmount = rand(30000, 100000);
-                // Cộng giá đầu vào với giá ngẫu nhiên
                 $house->setAttribute('adjusted_deposit_price', $baseDeposit + $randomAmount);
             }
         }
         
-        return view('houses.show-by-username', compact('houses', 'user', 'searchKeyword'));
+        // Lấy lại tất cả tham số tìm kiếm để truyền cho view
+        $searchParams = $request->only([
+            'search', 'house_type', 'status', 'min_price', 'min_deposit', 
+            'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
+            'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
+        ]);
+        
+        return view('houses.show-by-username', compact('houses', 'user', 'searchKeyword', 'searchParams'));
     }
 
     /**

@@ -108,29 +108,29 @@
                                 <!-- Thông tin cơ bản -->
                                 <div class="grid grid-cols-3 gap-2 mb-4">
                                     <div class="col-span-3 md:col-span-1">
-                                        @if (isset($house->room_details['distance_to_station']) && $house->room_details['distance_to_station'])
-                                        <p class="text-sm text-gray-600">Khoảng cách:</p>
-                                        <p class="font-medium text-gray-800">{{ $house->room_details['distance_to_station'] }} phút đi bộ</p>
-                                        @endif
-                                        
-                                        <div class="mt-2 flex items-center">
-                                            <span class="text-sm text-gray-600 mr-2">Đi bộ:</span>
-                                            @if (isset($house->room_details['transportation']))
-                                                @if ($house->room_details['transportation'] == 'Xe đạp')
-                                                    <span class="flex items-center text-indigo-700">
-                                                        <i class="fas fa-bicycle mr-1"></i> Xe đạp
-                                                    </span>
-                                                @elseif ($house->room_details['transportation'] == 'Tàu')
-                                                    <span class="flex items-center text-indigo-700">
-                                                        <i class="fas fa-train mr-1"></i> Tàu
-                                                    </span>
-                                                @else
-                                                    <span class="flex items-center text-indigo-700">
-                                                        <i class="fas fa-walking mr-1"></i> Đi bộ
-                                                    </span>
-                                                @endif
+                                        <!-- Khoảng trống để giữ cấu trúc layout -->
+                                        @if (request('transportation'))
+                                        <p class="text-sm text-gray-600">Phương tiện đi lại:</p>
+                                        <p class="font-medium text-gray-800">
+                                            @if (request('transportation') == 'walking')
+                                                <span class="flex items-center text-indigo-700">
+                                                    <i class="fas fa-walking mr-1"></i> Đi bộ
+                                                </span>
+                                            @elseif (request('transportation') == 'bicycle')
+                                                <span class="flex items-center text-indigo-700">
+                                                    <i class="fas fa-bicycle mr-1"></i> Xe đạp
+                                                </span>
+                                            @elseif (request('transportation') == 'train')
+                                                <span class="flex items-center text-indigo-700">
+                                                    <i class="fas fa-train mr-1"></i> Tàu
+                                                </span>
+                                            @else
+                                                <span class="flex items-center text-indigo-700">
+                                                    {{ request('transportation') }}
+                                                </span>
                                             @endif
-                                        </div>
+                                        </p>
+                                        @endif
                                     </div>
                                     
                                     <div class="col-span-3 md:col-span-1">
@@ -159,9 +159,9 @@
                                 </div>
                                 
                                 <!-- Thông tin ga tàu -->
-                                @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi'))
+                                @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance_to_station'))
                                 <div class="mb-4 bg-gray-50 p-3 rounded-md">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin ga tàu:</p>
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin áp dụng:</p>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                         @if (request('ga_chinh'))
                                         <div>
@@ -183,11 +183,33 @@
                                             <p class="text-sm font-medium text-indigo-700">{{ request('ga_di_tau_toi') }}</p>
                                         </div>
                                         @endif
+                                        
+                                        @if (request('distance_to_station'))
+                                        <div>
+                                            <p class="text-xs text-gray-500">Khoảng cách:</p>
+                                            <p class="text-sm font-medium text-indigo-700">{{ request('distance_to_station') }} phút đi bộ</p>
+                                        </div>
+                                        @endif
+                                        
+                                        @if (request('house_type'))
+                                        <div>
+                                            <p class="text-xs text-gray-500">Dạng nhà:</p>
+                                            <p class="text-sm font-medium text-indigo-700">{{ request('house_type') }}</p>
+                                        </div>
+                                        @endif
+                                        
+                                        @if (request('is_company') == '1')
+                                        <div>
+                                            <p class="text-xs text-gray-500">Địa điểm:</p>
+                                            <p class="text-sm font-medium text-indigo-700">Công ty</p>
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 @endif
                                 
                                 <!-- Dạng nhà -->
+                                @if (!request('house_type'))
                                 <div class="mb-4">
                                     <p class="text-sm text-gray-600 mb-1">Dạng nhà:</p>
                                     <div class="flex space-x-2">
@@ -198,6 +220,7 @@
                                         @endforeach
                                     </div>
                                 </div>
+                                @endif
                                 
                                 <!-- Địa chỉ -->
                                 <div class="mb-4">

@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
                     <!-- Khoảng cách -->
                     <div>
                         <label for="distance_to_station" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách</label>
@@ -141,9 +141,8 @@
                             </div>
                         </div>
                     </div>
-                    
                     <!-- Phương tiện đi lại -->
-                    <div>
+                    <div class="md:col-span-2">
                         <label class="block mb-2 text-sm font-medium text-gray-700">Phương tiện đi lại</label>
                         <div class="flex space-x-8">
                             <label class="inline-flex items-center cursor-pointer">
@@ -180,6 +179,17 @@
                                     <i class="fas fa-train text-indigo-600 mr-2"></i>
                                     <span class="text-sm text-gray-700">Tàu</span>
                                 </span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Là công ty (Chuyển từ NHÓM 3) -->
+                    <div>
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Công ty</label>
+                        <div>
+                            <label class="inline-flex items-center cursor-pointer">
+                                <input type="checkbox" name="is_company" value="1" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" {{ request('is_company') == '1' ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-700">Hiển thị công ty</span>
                             </label>
                         </div>
                     </div>
@@ -264,17 +274,6 @@
                             </label>
                         </div>
                     </div>
-
-                    <!-- Là công ty (Chuyển thành checkbox) -->
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Công ty</label>
-                        <div>
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input type="checkbox" name="is_company" value="1" class="form-checkbox h-5 w-5 text-indigo-600 rounded border-gray-300 focus:ring-indigo-500" {{ request('is_company') == '1' ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-700">Chọn để hiển thị công ty</span>
-                            </label>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -351,25 +350,29 @@
                             <!-- Thông tin cơ bản -->
                             <div class="grid grid-cols-3 gap-2 mb-4">
                                 <div class="col-span-3 md:col-span-1">
-                                    <p class="text-sm text-gray-600">Khoảng cách:</p>
-                                    <p class="font-medium text-gray-800">{{ $house->distance ? $house->distance . 'm' : '200.00m' }}</p>
-                                    
-                                    <div class="mt-2 flex items-center">
-                                        <span class="text-sm text-gray-600 mr-2">Đi bộ:</span>
-                                        @if ($house->transportation == 'Xe đạp')
+                                    <!-- Khoảng trống để giữ cấu trúc layout -->
+                                    @if (request('transportation'))
+                                    <p class="text-sm text-gray-600">Phương tiện đi lại:</p>
+                                    <p class="font-medium text-gray-800">
+                                        @if (request('transportation') == 'walking')
+                                            <span class="flex items-center text-indigo-700">
+                                                <i class="fas fa-walking mr-1"></i> Đi bộ
+                                            </span>
+                                        @elseif (request('transportation') == 'bicycle')
                                             <span class="flex items-center text-indigo-700">
                                                 <i class="fas fa-bicycle mr-1"></i> Xe đạp
                                             </span>
-                                        @elseif ($house->transportation == 'Tàu')
+                                        @elseif (request('transportation') == 'train')
                                             <span class="flex items-center text-indigo-700">
                                                 <i class="fas fa-train mr-1"></i> Tàu
                                             </span>
                                         @else
                                             <span class="flex items-center text-indigo-700">
-                                                <i class="fas fa-walking mr-1"></i> Đi bộ
+                                                {{ request('transportation') }}
                                             </span>
                                         @endif
-                                    </div>
+                                    </p>
+                                    @endif
                                 </div>
                                 
                                 <!-- Giá thuê -->
@@ -398,7 +401,58 @@
                                 </div>
                             </div>
                             
+                            <!-- Thông tin ga tàu -->
+                            @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance_to_station'))
+                            <div class="mb-4 bg-gray-50 p-3 rounded-md">
+                                <p class="text-sm font-medium text-gray-700 mb-2">Thông tin áp dụng:</p>
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                                    @if (request('ga_chinh'))
+                                    <div>
+                                        <p class="text-xs text-gray-500">Ga chính:</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_chinh') }}</p>
+                                    </div>
+                                    @endif
+                                    
+                                    @if (request('ga_ben_canh'))
+                                    <div>
+                                        <p class="text-xs text-gray-500">Ga bên cạnh:</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_ben_canh') }}</p>
+                                    </div>
+                                    @endif
+                                    
+                                    @if (request('ga_di_tau_toi'))
+                                    <div>
+                                        <p class="text-xs text-gray-500">Ga đi tàu tới:</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_di_tau_toi') }}</p>
+                                    </div>
+                                    @endif
+                                    
+                                    @if (request('distance_to_station'))
+                                    <div>
+                                        <p class="text-xs text-gray-500">Khoảng cách:</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('distance_to_station') }} phút đi bộ</p>
+                                    </div>
+                                    @endif
+                                    
+                                    @if (request('house_type'))
+                                    <div>
+                                        <p class="text-xs text-gray-500">Dạng nhà:</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('house_type') }}</p>
+                                    </div>
+                                    @endif
+                                    
+                                    @if (request('is_company') == '1')
+                                    <div>
+                                        <p class="text-xs text-gray-500">Địa điểm:</p>
+                                        <p class="text-sm font-medium text-indigo-700">Công ty</p>
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                            @endif
+                            
                             <!-- Dạng nhà -->
+                            @if (!request('house_type'))
                             <div class="mb-4">
                                 <p class="text-sm text-gray-600 mb-1">Dạng nhà:</p>
                                 <div class="flex space-x-2">
@@ -409,6 +463,7 @@
                                     @endforeach
                                 </div>
                             </div>
+                            @endif
                             
                             <!-- Địa chỉ -->
                             <div class="mb-4">
