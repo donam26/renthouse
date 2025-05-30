@@ -236,9 +236,9 @@
                     <div>
                         <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
                         <div class="flex flex-wrap gap-2">
-                            @foreach(['1K', '2K-2DK'] as $type)
-                                <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}">
-                                    <input type="radio" name="house_type" value="{{ $type }}" class="hidden" {{ request('house_type') == $type ? 'checked' : '' }}>
+                            @foreach(['1r-1K', '2K-2DK'] as $type)
+                                <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseType(this)">
+                                    <input type="radio" name="house_type" value="{{ $type }}" class="hidden house-type-input" {{ request('house_type') == $type ? 'checked' : '' }}>
                                     {{ $type }}
                                 </label>
                             @endforeach
@@ -454,7 +454,7 @@
                             <div class="mb-4">
                                 <p class="text-sm text-gray-600 mb-1">Dạng nhà:</p>
                                 <div class="flex space-x-2">
-                                    @foreach(['1K', '2K-2DK'] as $type)
+                                    @foreach(['1r-1K', '2K-2DK'] as $type)
                                         <span class="px-3 py-1 text-xs rounded-md {{ $house->house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
                                             {{ $type }}
                                         </span>
@@ -574,6 +574,25 @@
         
         // Đảm bảo input radio được chọn thực sự
         inputElement.checked = true;
+    }
+    
+    function updateHouseType(labelElement) {
+        // Reset tất cả các nút dạng nhà
+        let allLabels = document.querySelectorAll('input[name="house_type"]').forEach(input => {
+            let label = input.parentElement;
+            label.classList.remove('bg-indigo-50', 'border-indigo-500', 'text-indigo-700');
+            label.classList.add('text-gray-700');
+        });
+        
+        // Đánh dấu label được chọn
+        labelElement.classList.remove('text-gray-700');
+        labelElement.classList.add('bg-indigo-50', 'border-indigo-500', 'text-indigo-700');
+        
+        // Đảm bảo input bên trong được chọn
+        let input = labelElement.querySelector('input');
+        if (input) {
+            input.checked = true;
+        }
     }
 </script>
 @endpush 
