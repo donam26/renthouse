@@ -74,13 +74,13 @@
                     <div class="mt-4 space-y-4">
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Giá thuê:</span>
-                            <span class="mt-1 text-sm text-gray-900 font-bold text-green-600">{{ number_format($house->rent_price) }} VND</span>
+                            <span class="mt-1 text-sm text-gray-900 font-bold text-green-600">{{ number_format($house->rent_price) }} ¥</span>
                         </div>
                         
                         @if($house->input_price)
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Tiền đầu vào:</span>
-                            <span class="mt-1 text-sm text-gray-900">{{ number_format($house->input_price) }} VND</span>
+                            <span class="mt-1 text-sm text-gray-900">{{ number_format($house->input_price) }} ¥</span>
                         </div>
                         @endif
                         

@@ -73,7 +73,7 @@
                 <div>
                     <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê (từ điển)</label>
                     <div class="flex">
-                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                         <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
                             class="block w-full rounded-none sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="3000">
@@ -84,7 +84,7 @@
                 <div>
                     <label for="max_price" class="block mb-2 text-sm font-medium text-gray-700">Đến</label>
                     <div class="flex">
-                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                        <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                         <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" 
                             class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                             placeholder="10000">

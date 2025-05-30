@@ -20,7 +20,7 @@
                   
                     <!-- Giá thuê -->
                     <div class="sm:col-span-2">
-                        <label for="rent_price" class="block text-sm font-medium text-gray-700">Giá thuê (VND)</label>
+                        <label for="rent_price" class="block text-sm font-medium text-gray-700">Giá thuê (¥)</label>
                         <div class="mt-1">
                             <input type="number" name="rent_price" id="rent_price" value="{{ old('rent_price') }}" required
                                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('rent_price') border-red-500 @enderror">
@@ -32,7 +32,7 @@
 
                     <!-- Giá đặt cọc -->
                     <div class="sm:col-span-2">
-                        <label for="input_price" class="block text-sm font-medium text-gray-700">Giá đặt cọc (VND)</label>
+                        <label for="input_price" class="block text-sm font-medium text-gray-700">Giá đặt cọc (¥)</label>
                         <div class="mt-1">
                             <input type="number" name="input_price" id="input_price" value="{{ old('input_price') }}"
                                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('input_price') border-red-500 @enderror">

@@ -73,22 +73,7 @@ class HouseController extends Controller
         
         // Tạo query cơ bản - lấy tất cả nhà của user
         $query = House::query()->where('user_id', $user->id);
-        
-        // Sắp xếp theo các tiêu chí
-        switch ($request->sort_by) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'price_low':
-                $query->orderBy('rent_price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('rent_price', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc'); // Mặc định: newest
-        }
-        
+     
         // Lấy tất cả nhà, không lọc theo transportation
         $houses = $query->get();
         
@@ -172,7 +157,7 @@ class HouseController extends Controller
             'input_price', 'house_type',
             'image_path', 'share_link',
             'ga_chinh', 'ga_ben_canh', 'ga_di_tau_toi',
-            'is_company',
+            'is_company', 'transportation', 'distance_to_station'
         ])->toArray();
     
         
@@ -290,7 +275,7 @@ class HouseController extends Controller
             'input_price', 'house_type', 
             'image_path', 'share_link',
             'ga_chinh', 'ga_ben_canh', 'ga_di_tau_toi',
-            'is_company',
+            'is_company', 'transportation', 'distance_to_station'
         ])->toArray();
         
         
@@ -417,5 +402,20 @@ class HouseController extends Controller
         ]);
         
         return view('houses.shared-search', compact('houses', 'user', 'searchKeyword', 'searchParams'));
+    }
+
+    /**
+     * Hiển thị thông tin nhà theo share_link (không cần đăng nhập)
+     */
+    public function showByShareLink($shareLink)
+    {
+        // Tìm nhà dựa vào share_link
+        $house = House::where('share_link', $shareLink)->firstOrFail();
+        
+        // Lấy tất cả ảnh của nhà
+        $images = $house->images;
+        
+        // Trả về view chi tiết nhà không yêu cầu đăng nhập
+        return view('houses.share', compact('house', 'images'));
     }
 }

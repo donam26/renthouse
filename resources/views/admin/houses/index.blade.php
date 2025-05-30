@@ -65,7 +65,7 @@
                     <label for="min_price" class="form-label">Giá thuê từ</label>
                     <div class="mt-1 flex rounded-md shadow-sm">
                         <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                            VND
+                        ¥
                         </span>
                         <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
                             class="flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -77,7 +77,7 @@
                     <label for="max_price" class="form-label">Đến</label>
                     <div class="mt-1 flex rounded-md shadow-sm">
                         <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                            VND
+                        ¥
                         </span>
                         <input type="number" name="max_price" id="max_price" value="{{ request('max_price') }}" 
                             class="flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
@@ -102,13 +102,7 @@
                 </button>
                 <div class="flex items-center space-x-2">
                     <div class="inline-flex items-center">
-                        <span class="text-gray-500 text-sm mr-2">Sắp xếp theo:</span>
-                        <select name="sort_by" class="text-sm border-gray-300 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 py-2 pl-3 pr-8 shadow-sm bg-white">
-                            <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
-                            <option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>Cũ nhất</option>
-                            <option value="price_low" {{ request('sort_by') == 'price_low' ? 'selected' : '' }}>Giá thấp đến cao</option>
-                            <option value="price_high" {{ request('sort_by') == 'price_high' ? 'selected' : '' }}>Giá cao đến thấp</option>
-                        </select>
+                       
                     </div>
                     <button type="submit" class="btn-primary flex items-center">
                         <i class="fas fa-search mr-2"></i> Apply
@@ -154,7 +148,7 @@
                                             </p>
                                             <p class="text-sm text-gray-500 mr-4 flex items-center">
                                                 <i class="fas fa-money-bill-wave mr-1 text-gray-400"></i>
-                                                {{ number_format($house->rent_price) }} VND
+                                                {{ number_format($house->rent_price) }} ¥
                                             </p>
                                             <p class="text-sm text-gray-500 flex items-center">
                                                 <i class="fas fa-calendar-alt mr-1 text-gray-400"></i>

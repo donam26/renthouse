@@ -189,7 +189,7 @@
                     <div>
                         <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê mới</label>
                         <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                             <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
                                 class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="50000">
@@ -201,7 +201,7 @@
                     <div>
                         <label for="min_deposit" class="block mb-2 text-sm font-medium text-gray-700">Giá đầu vào mới</label>
                         <div class="flex">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">VND</span>
+                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                             <input type="number" name="min_deposit" id="min_deposit" value="{{ request('min_deposit') }}" 
                                 class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                                 placeholder="100000">
@@ -234,13 +234,7 @@
             
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
-                    <label class="block text-sm font-medium text-gray-700 mr-3">Sắp xếp theo:</label>
-                    <select id="sort_by" name="sort_by" class="py-1 px-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="newest" {{ request('sort_by') == 'newest' ? 'selected' : '' }}>Mới nhất</option>
-                        <option value="oldest" {{ request('sort_by') == 'oldest' ? 'selected' : '' }}>Cũ nhất</option>
-                        <option value="price_low" {{ request('sort_by') == 'price_low' ? 'selected' : '' }}>Giá thấp đến cao</option>
-                        <option value="price_high" {{ request('sort_by') == 'price_high' ? 'selected' : '' }}>Giá cao đến thấp</option>
-                    </select>
+                 
                 </div>
                 
                 <div class="flex space-x-3">
@@ -295,36 +289,34 @@
                         
                         <!-- Phần thông tin (Chiếm 2/3 bên phải khi ở màn hình lớn) -->
                         <div class="md:col-span-2 p-5">
-                            <!-- Thông tin cơ bản -->
-                            <div class="grid grid-cols-3 gap-2 mb-4">
-                                <div class="col-span-3 md:col-span-1">
-                                    <!-- Khoảng trống để giữ cấu trúc layout -->
-                                    @if (request('transportation'))
+                            <!-- Phương tiện và giá -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                <!-- Phương tiện đi lại -->
+                                <div>
                                     <p class="text-sm text-gray-600">Phương tiện đi lại:</p>
                                     <p class="font-medium text-gray-800">
-                                        @if (request('transportation') == 'walking')
+                                        @if ($house->transportation == 'Đi bộ')
                                             <span class="flex items-center text-indigo-700">
                                                 <i class="fas fa-walking mr-1"></i> Đi bộ
                                             </span>
-                                        @elseif (request('transportation') == 'bicycle')
+                                        @elseif ($house->transportation == 'Xe đạp')
                                             <span class="flex items-center text-indigo-700">
                                                 <i class="fas fa-bicycle mr-1"></i> Xe đạp
                                             </span>
-                                        @elseif (request('transportation') == 'train')
+                                        @elseif ($house->transportation == 'Tàu')
                                             <span class="flex items-center text-indigo-700">
                                                 <i class="fas fa-train mr-1"></i> Tàu
                                             </span>
                                         @else
                                             <span class="flex items-center text-indigo-700">
-                                                {{ request('transportation') }}
+                                                <i class="fas fa-walking mr-1"></i> Đi bộ
                                             </span>
                                         @endif
                                     </p>
-                                    @endif
                                 </div>
                                 
                                 <!-- Giá thuê -->
-                                <div class="col-span-3 md:col-span-1">
+                                <div>
                                     <p class="text-sm text-gray-600">Giá thuê:</p>
                                     <p class="font-bold text-green-600 text-lg">
                                         @if(isset($house->adjusted_rent_price))
@@ -332,7 +324,7 @@
                                         @else
                                             {{ number_format($house->rent_price) }}
                                         @endif
-                                        <span class="text-sm font-normal">VND</span>
+                                        <span class="text-sm font-normal">¥</span>
                                     </p>
                                     
                                     <p class="text-sm text-gray-600 mt-1">Giá đầu vào:</p>
@@ -342,52 +334,51 @@
                                         @else
                                             {{ number_format($house->input_price) }}
                                         @endif
-                                        <span class="text-sm">VND</span>
+                                        <span class="text-sm">¥</span>
                                     </p>
                                 </div>
                             </div>
                             
-                            <!-- Thông tin ga tàu -->
-                            @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance_to_station'))
+                            <!-- Thông tin áp dụng -->
                             <div class="mb-4 bg-gray-50 p-3 rounded-md">
                                 <p class="text-sm font-medium text-gray-700 mb-2">Thông tin áp dụng:</p>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                    @if (request('ga_chinh'))
+                                    @if (request('ga_chinh') || $house->ga_chinh)
                                     <div>
                                         <p class="text-xs text-gray-500">Ga chính:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_chinh') }}</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_chinh') ?: $house->ga_chinh }}</p>
                                     </div>
                                     @endif
                                     
-                                    @if (request('ga_ben_canh'))
+                                    @if (request('ga_ben_canh') || $house->ga_ben_canh)
                                     <div>
                                         <p class="text-xs text-gray-500">Ga bên cạnh:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_ben_canh') }}</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_ben_canh') ?: $house->ga_ben_canh }}</p>
                                     </div>
                                     @endif
                                     
-                                    @if (request('ga_di_tau_toi'))
+                                    @if (request('ga_di_tau_toi') || $house->ga_di_tau_toi)
                                     <div>
                                         <p class="text-xs text-gray-500">Ga đi tàu tới:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_di_tau_toi') }}</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('ga_di_tau_toi') ?: $house->ga_di_tau_toi }}</p>
                                     </div>
                                     @endif
                                     
-                                    @if (request('distance_to_station'))
+                                    @if (request('distance_to_station') || $house->distance_to_station)
                                     <div>
                                         <p class="text-xs text-gray-500">Khoảng cách:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('distance_to_station') }} phút đi bộ</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('distance_to_station') ?: $house->distance_to_station }} phút đi bộ</p>
                                     </div>
                                     @endif
                                     
-                                    @if (request('house_type'))
+                                    @if (request('house_type') || $house->house_type)
                                     <div>
                                         <p class="text-xs text-gray-500">Dạng nhà:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('house_type') }}</p>
+                                        <p class="text-sm font-medium text-indigo-700">{{ request('house_type') ?: $house->house_type }}</p>
                                     </div>
                                     @endif
                                     
-                                    @if (request('is_company') == '1')
+                                    @if (request('is_company') == '1' || $house->is_company)
                                     <div>
                                         <p class="text-xs text-gray-500">Địa điểm:</p>
                                         <p class="text-sm font-medium text-indigo-700">Công ty</p>
@@ -395,27 +386,12 @@
                                     @endif
                                 </div>
                             </div>
-                            @endif
-                            
-                            <!-- Dạng nhà -->
-                            @if (!request('house_type'))
-                            <div class="mb-4">
-                                <p class="text-sm text-gray-600 mb-1">Dạng nhà:</p>
-                                <div class="flex space-x-2">
-                                    @foreach(['1r-1K', '2K-2DK'] as $type)
-                                        <span class="px-3 py-1 text-xs rounded-md {{ $house->house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
-                                            {{ $type }}
-                                        </span>
-                                    @endforeach
-                                </div>
-                            </div>
-                            @endif
-                            
+                      
                             <!-- Phần nút hành động -->
                             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                                <a href="{{ route('houses.show', $house) }}" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                                <a href="{{ route('houses.show', $house) }}" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium flex items-center shadow-sm transition-colors duration-200">
                                     <span>Xem chi tiết</span>
-                                    <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                                    <i class="fas fa-arrow-right ml-2 text-sm"></i>
                                 </a>
                                 
                                 @if (Auth::user()->id === $house->user_id)
@@ -446,19 +422,19 @@
 <script>
     function shareSearchResults() {
         // Lấy URL hiện tại
-        let currentUrl = window.location.href;
+        const currentUrl = window.location.href;
         
         // Tạo URL chia sẻ từ URL hiện tại
-        let shareUrl = new URL('{{ route('houses.shared.search') }}');
+        const shareUrl = new URL('{{ route('houses.shared.search') }}');
         
         // Lấy tất cả tham số từ URL hiện tại
-        let urlParams = new URL(currentUrl).searchParams;
+        const urlParams = new URL(currentUrl).searchParams;
         
         // Thêm user_id vào URL chia sẻ
         shareUrl.searchParams.append('user_id', '{{ $user->id }}');
         
         // Thêm các tham số tìm kiếm vào URL chia sẻ
-        for (let param of urlParams.entries()) {
+        for (const param of urlParams.entries()) {
             shareUrl.searchParams.append(param[0], param[1]);
         }
         

@@ -141,7 +141,7 @@
                                                 <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i> {{ $house->address }}
                                             </p>
                                             <p class="mt-1 text-sm text-gray-500">
-                                                <span class="font-medium">{{ number_format($house->rent_price) }} VND</span>
+                                                <span class="font-medium">{{ number_format($house->rent_price) }} ¥</span>
                                                 @if($house->house_type)
                                                     <span class="mx-2">|</span>
                                                     <span>{{ $house->house_type }}</span>

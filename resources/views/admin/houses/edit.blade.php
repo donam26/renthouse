@@ -66,7 +66,7 @@
                             <label for="rent_price" class="form-label">Giá thuê <span class="text-red-500">*</span></label>
                             <div class="mt-1 flex rounded-md shadow-sm">
                                 <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                                    VND
+                                ¥
                                 </span>
                                 <input type="number" name="rent_price" id="rent_price" value="{{ old('rent_price', $house->rent_price) }}" 
                                     class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 @error('rent_price') border-red-500 @enderror"
@@ -81,7 +81,7 @@
                             <label for="input_price" class="form-label">Tiền đầu vào</label>
                             <div class="mt-1 flex rounded-md shadow-sm">
                                 <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                                    VND
+                                ¥
                                 </span>
                                 <input type="number" name="input_price" id="input_price" value="{{ old('input_price', $house->input_price) }}" 
                                     class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 @error('input_price') border-red-500 @enderror"

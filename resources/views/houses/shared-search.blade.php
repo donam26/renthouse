@@ -134,7 +134,7 @@
                                             @else
                                                 {{ number_format($house->rent_price) }}
                                             @endif
-                                            <span class="text-sm font-normal">VND</span>
+                                            <span class="text-sm font-normal">¥</span>
                                         </p>
                                         
                                         <p class="text-sm text-gray-600 mt-1">Giá đầu vào:</p>
@@ -144,7 +144,7 @@
                                             @else
                                                 {{ number_format($house->input_price) }}
                                             @endif
-                                            <span class="text-sm">VND</span>
+                                            <span class="text-sm">¥</span>
                                         </p>
                                     </div>
                                 </div>
@@ -217,9 +217,9 @@
                                 <!-- Phần nút hành động -->
                                 @if ($house->share_link)
                                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                                    <a href="" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                                    <a href="{{ route('houses.share', $house->share_link) }}" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium flex items-center shadow-sm transition-colors duration-200">
                                         <span>Xem chi tiết</span>
-                                        <i class="fas fa-arrow-right ml-1 text-sm"></i>
+                                        <i class="fas fa-arrow-right ml-2 text-sm"></i>
                                     </a>
                                 </div>
                                 @endif
