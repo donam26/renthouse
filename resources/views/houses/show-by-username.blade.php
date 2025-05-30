@@ -3,19 +3,7 @@
 @section('title', 'Danh sách nhà cho thuê của ' . $user->name)
 
 @section('header')
-    <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
-        <div>
-            <h1 class="text-2xl md:text-3xl font-bold">Bất động sản của {{ $user->name }}</h1>
-            @if ($user->company_name)
-                <p class="text-gray-100 mt-1">{{ $user->company_name }}</p>
-            @endif
-        </div>
-        @if (Auth::id() === $user->id)
-            <a href="{{ route('houses.create') }}" class="btn-primary inline-flex items-center self-start">
-                <i class="fas fa-plus-circle mr-2"></i> Thêm nhà mới
-            </a>
-        @endif
-    </div>
+    
 @endsection
 
 @section('content')
@@ -27,11 +15,6 @@
             
             <div class="flex-grow text-center md:text-left">
                 <h2 class="text-2xl font-bold text-gray-800">{{ $user->name }}</h2>
-                @if ($user->company_name)
-                    <p class="text-gray-600 mt-1 flex items-center justify-center md:justify-start font-medium">
-                        <i class="fas fa-building mr-2 text-indigo-500"></i> {{ $user->company_name }}
-                    </p>
-                @endif
                 @if ($user->phone_number)
                     <p class="text-gray-600 mt-1 flex items-center justify-center md:justify-start">
                         <i class="fas fa-phone mr-2 text-indigo-500"></i> {{ $user->phone_number }}
@@ -52,11 +35,7 @@
                         <p class="font-bold text-gray-800 text-lg">{{ $houses->count() }}</p>
                     </div>
                 </div>
-                <div class="flex items-center">
-                    <div class="bg-green-100 rounded-full p-2 mr-3">
-                        <i class="fas fa-check-circle text-green-500"></i>
-                    </div>
-                </div>
+            
             </div>
         </div>
     </div>
@@ -190,21 +169,45 @@
                         <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê mới</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
-                            <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
-                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                placeholder="50000">
+                            <select name="min_price" id="min_price" 
+                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Chọn giá thuê</option>
+                                <option value="20000" {{ request('min_price') == '20000' ? 'selected' : '' }}>20,000</option>
+                                <option value="30000" {{ request('min_price') == '30000' ? 'selected' : '' }}>30,000</option>
+                                <option value="40000" {{ request('min_price') == '40000' ? 'selected' : '' }}>40,000</option>
+                                <option value="50000" {{ request('min_price') == '50000' ? 'selected' : '' }}>50,000</option>
+                                <option value="60000" {{ request('min_price') == '60000' ? 'selected' : '' }}>60,000</option>
+                                <option value="70000" {{ request('min_price') == '70000' ? 'selected' : '' }}>70,000</option>
+                                <option value="80000" {{ request('min_price') == '80000' ? 'selected' : '' }}>80,000</option>
+                                <option value="90000" {{ request('min_price') == '90000' ? 'selected' : '' }}>90,000</option>
+                                <option value="100000" {{ request('min_price') == '100000' ? 'selected' : '' }}>100,000</option>
+                                <option value="110000" {{ request('min_price') == '110000' ? 'selected' : '' }}>110,000</option>
+                                <option value="120000" {{ request('min_price') == '120000' ? 'selected' : '' }}>120,000</option>
+                            </select>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">Giá sẽ tăng thêm 1000 cho mỗi nhà tiếp theo</p>
                     </div>
                     
                     <!-- Giá đầu vào -->
                     <div>
-                        <label for="min_deposit" class="block mb-2 text-sm font-medium text-gray-700">Giá đầu vào mới</label>
+                        <label for="input_price" class="block mb-2 text-sm font-medium text-gray-700">Giá đầu vào mới</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
-                            <input type="number" name="min_deposit" id="min_deposit" value="{{ request('min_deposit') }}" 
-                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                placeholder="100000">
+                            <select name="input_price" id="input_price"
+                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Chọn giá đầu vào</option>
+                                <option value="20000" {{ request('input_price') == '20000' ? 'selected' : '' }}>20,000</option>
+                                <option value="30000" {{ request('input_price') == '30000' ? 'selected' : '' }}>30,000</option>
+                                <option value="40000" {{ request('input_price') == '40000' ? 'selected' : '' }}>40,000</option>
+                                <option value="50000" {{ request('input_price') == '50000' ? 'selected' : '' }}>50,000</option>
+                                <option value="60000" {{ request('input_price') == '60000' ? 'selected' : '' }}>60,000</option>
+                                <option value="70000" {{ request('input_price') == '70000' ? 'selected' : '' }}>70,000</option>
+                                <option value="80000" {{ request('input_price') == '80000' ? 'selected' : '' }}>80,000</option>
+                                <option value="90000" {{ request('input_price') == '90000' ? 'selected' : '' }}>90,000</option>
+                                <option value="100000" {{ request('input_price') == '100000' ? 'selected' : '' }}>100,000</option>
+                                <option value="110000" {{ request('input_price') == '110000' ? 'selected' : '' }}>110,000</option>
+                                <option value="120000" {{ request('input_price') == '120000' ? 'selected' : '' }}>120,000</option>
+                            </select>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">Sẽ cộng thêm 30K-100K ngẫu nhiên</p>
                     </div>
@@ -367,7 +370,14 @@
                                     @if (request('distance_to_station') || $house->distance_to_station)
                                     <div>
                                         <p class="text-xs text-gray-500">Khoảng cách:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('distance_to_station') ?: $house->distance_to_station }} phút đi bộ</p>
+                                        <p class="text-sm font-medium text-indigo-700">
+                                            @if(isset($house->adjusted_distance))
+                                                {{ $house->adjusted_distance }}
+                                            @else
+                                                {{ request('distance_to_station') ?: $house->distance_to_station }}
+                                            @endif
+                                            phút đi bộ
+                                        </p>
                                     </div>
                                     @endif
                                     

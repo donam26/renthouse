@@ -60,9 +60,6 @@
             <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-bold text-white">Bất động sản của {{ $user->name }}</h1>
-                    @if ($user->company_name)
-                        <p class="text-indigo-100 mt-1">{{ $user->company_name }}</p>
-                    @endif
                 </div>
             </div>
         </div>
@@ -178,7 +175,14 @@
                                         @if (request('distance_to_station'))
                                         <div>
                                             <p class="text-xs text-gray-500">Khoảng cách:</p>
-                                            <p class="text-sm font-medium text-indigo-700">{{ request('distance_to_station') }} phút đi bộ</p>
+                                            <p class="text-sm font-medium text-indigo-700">
+                                                @if(isset($house->adjusted_distance))
+                                                    {{ $house->adjusted_distance }}
+                                                @else
+                                                    {{ request('distance_to_station') }}
+                                                @endif
+                                                phút đi bộ
+                                            </p>
                                         </div>
                                         @endif
                                         

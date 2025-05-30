@@ -23,8 +23,7 @@ class UserController extends Controller
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('company_name', 'like', "%{$search}%");
+                  ->orWhere('email', 'like', "%{$search}%");
             });
         }
         
@@ -61,7 +60,6 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'company_name' => ['nullable', 'string', 'max:255'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'is_admin' => ['nullable', 'boolean'],
         ]);
@@ -70,7 +68,6 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'company_name' => $request->company_name,
             'phone_number' => $request->phone_number,
             'is_admin' => $request->has('is_admin') ? true : false,
             'username' => $this->generateUsername($request->name),
@@ -107,7 +104,6 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'company_name' => ['nullable', 'string', 'max:255'],
             'phone_number' => ['nullable', 'string', 'max:20'],
             'is_admin' => ['nullable', 'boolean'],
             'status' => ['required', 'in:active,inactive'],
@@ -124,7 +120,6 @@ class UserController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->company_name = $request->company_name;
         $user->phone_number = $request->phone_number;
         $user->is_admin = $request->has('is_admin') ? true : false;
         $user->save();

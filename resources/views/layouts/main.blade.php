@@ -121,18 +121,15 @@
                         <!-- Logo -->
                         <a href="{{ Auth::check() ? '/' . Auth::user()->username : '/' }}" class="flex-shrink-0 flex items-center">
                             <span class="text-2xl font-bold text-indigo-600">WIN<span class="text-gray-800">HOMES</span></span>
+                            @auth
+                            <span class="ml-2 text-xl uppercase text-gray-500 hidden sm:inline-block">{{ Auth::user()->name }}</span>
+                            @endauth
                         </a>
                     </div>
                     
                     <!-- Desktop Menu -->
                     <div class="hidden md:flex items-center space-x-3">
                         @auth
-                            <a href="/{{ Auth::user()->username }}" class="navbar-item">
-                                <div class="icon-wrapper text-indigo-500">
-                                    <i class="fas fa-home"></i>
-                                </div>
-                                <span>Nhà của tôi</span>
-                            </a>
                             <a href="{{ route('houses.create') }}" class="navbar-item">
                                 <div class="icon-wrapper text-indigo-500">
                                     <i class="fas fa-plus-circle"></i>
@@ -207,12 +204,6 @@
             <div x-show="mobileMenuOpen" class="md:hidden bg-white border-t shadow-lg" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 transform scale-y-90" x-transition:enter-end="opacity-100 transform scale-y-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 transform scale-y-100" x-transition:leave-end="opacity-0 transform scale-y-90">
                 <div class="px-2 pt-2 pb-3 space-y-1">
                     @auth
-                        <a href="/{{ Auth::user()->username }}" class="block navbar-item py-3">
-                            <div class="icon-wrapper text-indigo-500">
-                                <i class="fas fa-home"></i>
-                            </div>
-                            <span>Nhà của tôi</span>
-                        </a>
                         <a href="{{ route('houses.create') }}" class="block navbar-item py-3">
                             <div class="icon-wrapper text-indigo-500">
                                 <i class="fas fa-plus-circle"></i>
@@ -284,7 +275,6 @@
                         <h3 class="text-lg font-semibold mb-4">Liên kết nhanh</h3>
                         <ul class="space-y-2">
                             <li><a href="/" class="text-gray-300 hover:text-white transition">Trang chủ</a></li>
-                            <li><a href="{{ route('houses.index') }}" class="text-gray-300 hover:text-white transition">Nhà của tôi</a></li>
                             @guest
                             <li><a href="{{ route('login') }}" class="text-gray-300 hover:text-white transition">Đăng nhập</a></li>
                             @endguest

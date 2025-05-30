@@ -73,36 +73,53 @@ class HouseController extends Controller
         
         // Tạo query cơ bản - lấy tất cả nhà của user
         $query = House::query()->where('user_id', $user->id);
-     
+        
         // Lấy tất cả nhà, không lọc theo transportation
         $houses = $query->get();
         
         // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
         if ($request->filled('min_price') && $houses->count() > 0) {
             $basePrice = (float)$request->min_price;
-            $increment = 1000;
             
             // Áp dụng giá mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                $house->setAttribute('adjusted_rent_price', $basePrice + ($index * $increment));
+                // Tạo số ngẫu nhiên từ 1000 đến 10000
+                $randomAmount = rand(1000, 10000);
+                // Làm tròn đến đơn vị 1000
+                $adjustedRentPrice = round(($basePrice + $randomAmount) / 1000) * 1000;
+                $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
             }
         }
         
         // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào
-        if ($request->filled('min_deposit') && $houses->count() > 0) {
-            $baseDeposit = (float)$request->min_deposit;
+        if ($request->filled('input_price') && $houses->count() > 0) {
+            $baseDeposit = (float)$request->input_price;
             
             // Áp dụng giá đầu vào mới cho tất cả nhà
             foreach ($houses as $index => $house) {
                 // Tạo giá ngẫu nhiên trong khoảng 30000-100000
                 $randomAmount = rand(30000, 100000);
-                $house->setAttribute('adjusted_input_price', $baseDeposit + $randomAmount);
+                // Làm tròn đến đơn vị 1000
+                $adjustedInputPrice = round(($baseDeposit + $randomAmount) / 1000) * 1000;
+                $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
+            }
+        }
+        
+        // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách
+        if ($request->filled('distance_to_station') && $houses->count() > 0) {
+            $baseDistance = (int)$request->distance_to_station;
+            
+            // Áp dụng khoảng cách mới cho tất cả nhà
+            foreach ($houses as $house) {
+                // Tạo thêm số phút ngẫu nhiên từ 1-10
+                $randomMinutes = rand(1, 10);
+                $house->setAttribute('adjusted_distance', $baseDistance + $randomMinutes);
             }
         }
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'min_price', 'min_deposit', 
+            'search', 'house_type', 'min_price', 'input_price', 
             'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
@@ -372,31 +389,46 @@ class HouseController extends Controller
         // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
         if ($request->filled('min_price') && $houses->count() > 0) {
             $basePrice = (float)$request->min_price;
-            $increment = 1000;
             
             // Áp dụng giá mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                // Sử dụng thuộc tính động để tránh lỗi
-                $house->setAttribute('adjusted_rent_price', $basePrice + ($index * $increment));
+                // Tạo số ngẫu nhiên từ 1000 đến 10000
+                $randomAmount = rand(1000, 10000);
+                // Làm tròn đến đơn vị 1000
+                $adjustedRentPrice = round(($basePrice + $randomAmount) / 1000) * 1000;
+                $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
             }
         }
         
         // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào
-        if ($request->filled('min_deposit') && $houses->count() > 0) {
-            $baseDeposit = (float)$request->min_deposit;
+        if ($request->filled('input_price') && $houses->count() > 0) {
+            $baseDeposit = (float)$request->input_price;
             
             // Áp dụng giá đầu vào mới cho tất cả nhà
             foreach ($houses as $index => $house) {
                 // Tạo giá ngẫu nhiên trong khoảng 30000-100000
                 $randomAmount = rand(30000, 100000);
-                // Cộng giá đầu vào với giá ngẫu nhiên
-                $house->setAttribute('adjusted_input_price', $baseDeposit + $randomAmount);
+                // Làm tròn đến đơn vị 1000
+                $adjustedInputPrice = round(($baseDeposit + $randomAmount) / 1000) * 1000;
+                $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
+            }
+        }
+        
+        // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách
+        if ($request->filled('distance_to_station') && $houses->count() > 0) {
+            $baseDistance = (int)$request->distance_to_station;
+            
+            // Áp dụng khoảng cách mới cho tất cả nhà
+            foreach ($houses as $house) {
+                // Tạo thêm số phút ngẫu nhiên từ 1-10
+                $randomMinutes = rand(1, 10);
+                $house->setAttribute('adjusted_distance', $baseDistance + $randomMinutes);
             }
         }
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'min_price', 'min_deposit', 
+            'search', 'house_type', 'min_price', 'input_price', 
             'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);

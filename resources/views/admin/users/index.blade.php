@@ -96,11 +96,6 @@
                                                 <div class="text-sm text-gray-500">
                                                     {{ $user->email }}
                                                 </div>
-                                                @if($user->company_name)
-                                                    <div class="text-sm text-gray-500">
-                                                        <i class="fas fa-building text-xs mr-1"></i> {{ $user->company_name }}
-                                                    </div>
-                                                @endif
                                             </div>
                                         </div>
                                     </td>

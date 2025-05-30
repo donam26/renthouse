@@ -67,7 +67,6 @@ class AdminController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
             'phone_number' => 'nullable|string|max:20',
-            'company_name' => 'nullable|string|max:255',
             'is_admin' => 'boolean',
         ]);
         
@@ -97,7 +96,6 @@ class AdminController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
             'phone_number' => 'nullable|string|max:20',
-            'company_name' => 'nullable|string|max:255',
             'is_admin' => 'boolean',
         ]);
         
