@@ -42,10 +42,6 @@ require __DIR__.'/admin.php';
 
 require __DIR__.'/auth.php';
 
-// Route cho truy cập thông qua share_link - không cần đăng nhập
-Route::get('/share/{shareLink}', [HouseController::class, 'showByShareLink'])
-    ->name('houses.share');
-
 // Route cho hiển thị danh sách nhà theo username - đặt ở cuối để tránh xung đột
 Route::get('/{username}', [HouseController::class, 'showByUsername'])
     ->middleware(['auth'])

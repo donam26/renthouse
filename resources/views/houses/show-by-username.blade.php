@@ -56,10 +56,6 @@
                     <div class="bg-green-100 rounded-full p-2 mr-3">
                         <i class="fas fa-check-circle text-green-500"></i>
                     </div>
-                    <div>
-                        <span class="text-gray-500 text-sm">Đang cho thuê</span>
-                        <p class="font-bold text-gray-800 text-lg">{{ $houses->where('status', 'rented')->count() }}</p>
-                    </div>
                 </div>
             </div>
         </div>
@@ -70,7 +66,7 @@
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
                 <i class="fas fa-filter text-indigo-600 mr-2"></i>
-                <h2 class="text-lg font-medium text-gray-800">Bộ lọc tìm kiếm</h2>
+                <h2 class="text-lg font-medium text-gray-800">Giá trị apply</h2>
             </div>
             
             <button 
@@ -81,19 +77,7 @@
         </div>
         
         <form action="{{ route('houses.by.username', $user->username) }}" method="GET">
-            <!-- Tìm kiếm tên, địa chỉ -->
-            <div class="mb-6">
-                <label for="search" class="block mb-2 text-sm font-medium text-gray-700">Tên apply</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <i class="fas fa-search text-gray-400"></i>
-                    </div>
-                    <input type="text" name="search" id="search" value="{{ request('search') }}" 
-                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                        placeholder="Tên, địa chỉ...">
-                </div>
-            </div>
-
+          
             <!-- NHÓM 1: THÔNG TIN GA TÀU VÀ DI CHUYỂN -->
             <div class="bg-gray-50 p-4 rounded-lg mb-6">
                 <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Thông tin ga tàu và di chuyển</h3>
@@ -244,36 +228,7 @@
                             @endforeach
                         </div>
                     </div>
-                    
-                    <!-- Trạng thái -->
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái</label>
-                        <div class="space-y-2">
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input type="radio" name="status" value="available" class="sr-only status-input" {{ request('status') == 'available' ? 'checked' : '' }}
-                                    onclick="updateRadioStyle(this, 'status')">
-                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'available' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                    <span class="{{ request('status') == 'available' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                                </span>
-                                <span class="flex items-center">
-                                    <span class="w-3 h-3 mr-2 bg-green-500 rounded-full"></span>
-                                    <span class="text-sm text-gray-700">Còn trống</span>
-                                </span>
-                            </label>
-                            
-                            <label class="inline-flex items-center cursor-pointer">
-                                <input type="radio" name="status" value="rented" class="sr-only status-input" {{ request('status') == 'rented' ? 'checked' : '' }}
-                                    onclick="updateRadioStyle(this, 'status')">
-                                <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'rented' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                    <span class="{{ request('status') == 'rented' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                                </span>
-                                <span class="flex items-center">
-                                    <span class="w-3 h-3 mr-2 bg-red-500 rounded-full"></span>
-                                    <span class="text-sm text-gray-700">Đã thuê</span>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
+                 
                 </div>
             </div>
             
@@ -335,14 +290,7 @@
                                     <i class="fas fa-home text-6xl text-gray-300"></i>
                                 </div>
                             @endif
-                            
-                            <!-- Badge hiển thị trạng thái -->
-                            <div class="absolute top-3 left-3">
-                                <span class="px-3 py-1 text-xs font-bold rounded-full 
-                                    {{ $house->status === 'available' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }} shadow">
-                                    {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
-                                </span>
-                            </div>
+                         
                         </div>
                         
                         <!-- Phần thông tin (Chiếm 2/3 bên phải khi ở màn hình lớn) -->
@@ -389,10 +337,10 @@
                                     
                                     <p class="text-sm text-gray-600 mt-1">Giá đầu vào:</p>
                                     <p class="font-medium text-gray-800">
-                                        @if(isset($house->adjusted_deposit_price))
-                                            {{ number_format($house->adjusted_deposit_price) }}
+                                        @if(isset($house->adjusted_input_price))
+                                            {{ number_format($house->adjusted_input_price) }}
                                         @else
-                                            {{ number_format($house->deposit_price) }}
+                                            {{ number_format($house->input_price) }}
                                         @endif
                                         <span class="text-sm">VND</span>
                                     </p>
@@ -462,21 +410,6 @@
                                 </div>
                             </div>
                             @endif
-                            
-                            <!-- Địa chỉ -->
-                            <div class="mb-4">
-                                <h3 class="font-bold text-lg text-gray-800">
-                                    @if(isset($searchKeyword) && !empty($searchKeyword))
-                                        {{ $searchKeyword }}
-                                    @else
-                                        {{ $house->name }}
-                                    @endif
-                                </h3>
-                                <p class="text-gray-600 flex items-start mt-1">
-                                    <i class="fas fa-map-marker-alt mt-1 mr-2 text-indigo-500"></i>
-                                    <span>{{ $house->address }}</span>
-                                </p>
-                            </div>
                             
                             <!-- Phần nút hành động -->
                             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">

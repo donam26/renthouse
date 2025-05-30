@@ -20,7 +20,7 @@
     <div class="filter-container" x-data="{ openFilter: false }">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold flex items-center text-gray-800">
-                <i class="fas fa-filter mr-2 text-indigo-500"></i> Bộ lọc tìm kiếm
+                <i class="fas fa-filter mr-2 text-indigo-500"></i> Giá trị apply
             </h2>
             <button @click="openFilter = !openFilter" class="text-gray-500 hover:text-indigo-600 focus:outline-none md:hidden">
                 <i x-show="!openFilter" class="fas fa-chevron-down"></i>
@@ -57,15 +57,6 @@
                     </select>
                 </div>
 
-                <!-- Lọc theo trạng thái -->
-                <div>
-                    <label for="status" class="form-label">Trạng thái</label>
-                    <select id="status" name="status" class="input-field">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>Còn trống</option>
-                        <option value="rented" {{ request('status') == 'rented' ? 'selected' : '' }}>Đã thuê</option>
-                    </select>
-                </div>
             </div>
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -148,9 +139,6 @@
                                     <div>
                                         <div class="flex items-center">
                                             <p class="text-sm font-medium text-indigo-600 truncate">{{ $house->name }}</p>
-                                            <span class="ml-2 badge {{ $house->status === 'available' ? 'badge-success' : 'badge-danger' }}">
-                                                {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
-                                            </span>
                                             <span class="ml-2 badge badge-info">
                                                 {{ $house->house_type }}
                                             </span>

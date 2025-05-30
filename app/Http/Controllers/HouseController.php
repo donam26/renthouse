@@ -47,11 +47,9 @@ class HouseController extends Controller
             $houses = $query->get();
         }
         
-        // Đếm số lượng nhà theo trạng thái
-        $availableCount = House::where('user_id', Auth::id())->where('status', 'available')->count();
-        $rentedCount = House::where('user_id', Auth::id())->where('status', 'rented')->count();
+     
         
-        return view('houses.index', compact('houses', 'availableCount', 'rentedCount', 'searchKeyword'));
+        return view('houses.index', compact('houses', 'searchKeyword'));
     }
 
     /**
@@ -113,13 +111,13 @@ class HouseController extends Controller
             foreach ($houses as $index => $house) {
                 // Tạo giá ngẫu nhiên trong khoảng 30000-100000
                 $randomAmount = rand(30000, 100000);
-                $house->setAttribute('adjusted_deposit_price', $baseDeposit + $randomAmount);
+                $house->setAttribute('adjusted_input_price', $baseDeposit + $randomAmount);
             }
         }
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'status', 'min_price', 'min_deposit', 
+            'search', 'house_type', 'min_price', 'min_deposit', 
             'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
@@ -141,37 +139,17 @@ class HouseController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'size' => 'required|numeric|min:1|max:1000',
             'rent_price' => 'required|numeric|min:0',
-            'deposit_price' => 'nullable|numeric|min:0',
-            'initial_cost' => 'nullable|numeric|min:0',
-            'house_type' => 'required|string|in:1K,2K-2DK',
-            'status' => 'required|in:available,rented',
-            'description' => 'nullable|string',
+            'input_price' => 'nullable|numeric|min:0',
+            'house_type' => 'required|string|in:1r-1K,2K-2DK',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'share_link' => 'nullable|string|max:255',
-            
-            // Các trường JSON
-            'floor' => 'nullable|integer|min:1|max:50',
-            'has_loft' => 'nullable|boolean',
-            'nearest_station' => 'nullable|string|max:255',
-            'distance_to_station' => 'nullable|numeric|min:0|max:60',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
-            
-            'deposit' => 'nullable|numeric|min:0',
-            'key_money' => 'nullable|numeric|min:0',
-            'guarantee_fee' => 'nullable|numeric|min:0',
-            'insurance_fee' => 'nullable|numeric|min:0',
-            'document_fee' => 'nullable|numeric|min:0',
-            'parking_fee' => 'nullable|numeric|min:0',
-            'rent_included' => 'nullable|boolean',
-            
-            'amenities' => 'nullable|array',
-            'amenities.*' => 'nullable|boolean',
+            'ga_chinh' => 'nullable|string|max:255',
+            'ga_ben_canh' => 'nullable|string|max:255',
+            'ga_di_tau_toi' => 'nullable|string|max:255',
+            'is_company' => 'nullable|boolean',
         ]);
 
         // Xử lý upload file ảnh chính
@@ -187,40 +165,16 @@ class HouseController extends Controller
         if (empty($validated['share_link'])) {
             $validated['share_link'] = uniqid('house_');
         }
-        
-        // Chuẩn bị các trường JSON
-        $roomDetails = [
-            'floor' => $request->floor,
-            'has_loft' => $request->has('has_loft') ? (bool)$request->has_loft : false,
-            'nearest_station' => $request->nearest_station,
-            'distance_to_station' => $request->distance_to_station,
-            'transportation' => $request->transportation,
-        ];
-        
-        $costDetails = [
-            'deposit' => $request->deposit,
-            'key_money' => $request->key_money,
-            'guarantee_fee' => $request->guarantee_fee,
-            'insurance_fee' => $request->insurance_fee,
-            'document_fee' => $request->document_fee,
-            'parking_fee' => $request->parking_fee,
-            'rent_included' => $request->has('rent_included') ? (bool)$request->rent_included : true,
-        ];
-        
-        // Xử lý các tiện ích từ form
-        $amenities = $request->amenities ?? [];
-        
+       
         // Lọc bỏ các trường không thuộc về bảng houses
         $houseData = collect($validated)->only([
-            'user_id', 'name', 'address', 'location', 'size', 'rent_price', 
-            'deposit_price', 'initial_cost', 'house_type', 'status', 
-            'description', 'image_path', 'share_link'
+            'user_id', 'rent_price', 
+            'input_price', 'house_type',
+            'image_path', 'share_link',
+            'ga_chinh', 'ga_ben_canh', 'ga_di_tau_toi',
+            'is_company',
         ])->toArray();
-        
-        // Thêm các trường JSON
-        $houseData['room_details'] = $roomDetails;
-        $houseData['cost_details'] = $costDetails;
-        $houseData['amenities'] = $amenities;
+    
         
         $house = House::create($houseData);
         
@@ -280,40 +234,20 @@ class HouseController extends Controller
         $this->authorize('update', $house);
 
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'size' => 'required|numeric|min:1|max:1000',
             'rent_price' => 'required|numeric|min:0',
-            'deposit_price' => 'nullable|numeric|min:0',
-            'initial_cost' => 'nullable|numeric|min:0',
-            'house_type' => 'required|string|in:1K,2K-2DK',
-            'status' => 'required|in:available,rented',
-            'description' => 'nullable|string',
+            'input_price' => 'nullable|numeric|min:0',
+            'house_type' => 'required|string|in:1r-1K,2K-2DK',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images_to_delete' => 'nullable|array',
             'images_to_delete.*' => 'nullable|integer',
             'primary_image_id' => 'nullable|integer',
             'share_link' => 'nullable|string|max:255',
-            
-            // Các trường JSON
-            'floor' => 'nullable|integer|min:1|max:50',
-            'has_loft' => 'nullable|boolean',
-            'nearest_station' => 'nullable|string|max:255',
-            'distance_to_station' => 'nullable|numeric|min:0|max:60',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
-            
-            'deposit' => 'nullable|numeric|min:0',
-            'key_money' => 'nullable|numeric|min:0',
-            'guarantee_fee' => 'nullable|numeric|min:0',
-            'insurance_fee' => 'nullable|numeric|min:0',
-            'document_fee' => 'nullable|numeric|min:0',
-            'parking_fee' => 'nullable|numeric|min:0',
-            'rent_included' => 'nullable|boolean',
-            
-            'amenities' => 'nullable|array',
-            'amenities.*' => 'nullable|boolean',
+            'ga_chinh' => 'nullable|string|max:255',
+            'ga_ben_canh' => 'nullable|string|max:255',
+            'ga_di_tau_toi' => 'nullable|string|max:255',
+            'is_company' => 'nullable|boolean',
         ]);
 
         // Xử lý upload file ảnh mới
@@ -350,45 +284,15 @@ class HouseController extends Controller
             }
         }
         
-        // Chuẩn bị các trường JSON
-        // Lấy giá trị hiện tại
-        $currentRoomDetails = $house->room_details ?? $house->getDefaultRoomDetails();
-        $currentCostDetails = $house->cost_details ?? $house->getDefaultCostDetails();
-        $currentAmenities = $house->amenities ?? $house->getDefaultAmenities();
-        
-        // Cập nhật với giá trị mới
-        $roomDetails = array_merge($currentRoomDetails, [
-            'floor' => $request->floor,
-            'has_loft' => $request->has('has_loft') ? (bool)$request->has_loft : false,
-            'nearest_station' => $request->nearest_station,
-            'distance_to_station' => $request->distance_to_station,
-            'transportation' => $request->transportation,
-        ]);
-        
-        $costDetails = array_merge($currentCostDetails, [
-            'deposit' => $request->deposit,
-            'key_money' => $request->key_money,
-            'guarantee_fee' => $request->guarantee_fee,
-            'insurance_fee' => $request->insurance_fee,
-            'document_fee' => $request->document_fee,
-            'parking_fee' => $request->parking_fee,
-            'rent_included' => $request->has('rent_included') ? (bool)$request->rent_included : true,
-        ]);
-        
-        // Xử lý các tiện ích từ form
-        $amenities = $request->amenities ?? $currentAmenities;
-        
         // Lọc bỏ các trường không thuộc về bảng houses
         $houseData = collect($validated)->only([
-            'name', 'address', 'location', 'size', 'rent_price', 
-            'deposit_price', 'initial_cost', 'house_type', 'status', 
-            'description', 'image_path', 'share_link'
+            'rent_price', 
+            'input_price', 'house_type', 
+            'image_path', 'share_link',
+            'ga_chinh', 'ga_ben_canh', 'ga_di_tau_toi',
+            'is_company',
         ])->toArray();
         
-        // Thêm các trường JSON
-        $houseData['room_details'] = $roomDetails;
-        $houseData['cost_details'] = $costDetails;
-        $houseData['amenities'] = $amenities;
         
         // Cập nhật thông tin nhà
         $house->update($houseData);
@@ -434,19 +338,6 @@ class HouseController extends Controller
         $house->delete();
 
         return redirect()->route('houses.index')->with('success', 'Xóa nhà thành công');
-    }
-
-    /**
-     * Hiển thị chi tiết nhà thông qua share_link
-     */
-    public function showByShareLink(Request $request, $shareLink)
-    {
-        // Tìm nhà theo share_link
-        $house = House::where('share_link', $shareLink)->firstOrFail();
-        $images = $house->images;
-        
-        // Không kiểm tra authorize ở đây để cho phép truy cập công khai
-        return view('houses.show-share', compact('house', 'images'));
     }
 
     /**
@@ -514,13 +405,13 @@ class HouseController extends Controller
                 // Tạo giá ngẫu nhiên trong khoảng 30000-100000
                 $randomAmount = rand(30000, 100000);
                 // Cộng giá đầu vào với giá ngẫu nhiên
-                $house->setAttribute('adjusted_deposit_price', $baseDeposit + $randomAmount);
+                $house->setAttribute('adjusted_input_price', $baseDeposit + $randomAmount);
             }
         }
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'status', 'min_price', 'min_deposit', 
+            'search', 'house_type', 'min_price', 'min_deposit', 
             'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);

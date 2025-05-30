@@ -48,52 +48,58 @@
                 </div>
             @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Cột thông tin cơ bản -->
-                <div>
-                    <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin cơ bản</h2>
-                
-                    <!-- Tên nhà -->
+            <!-- Thông tin ga tàu -->
+            <div class="mb-6">
+                <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin ga tàu</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Ga chính -->
                     <div class="mb-4">
-                        <label for="name" class="block mb-2 text-sm font-medium text-gray-700">Tên gạ <span class="text-red-500">*</span></label>
-                        <input type="text" id="name" name="name" value="{{ old('name', $house->name) }}" required
-                            class="input-field @error('name') border-red-500 @enderror">
-                        @error('name')
+                        <label for="ga_chinh" class="block mb-2 text-sm font-medium text-gray-700">Ga chính</label>
+                        <input type="text" id="ga_chinh" name="ga_chinh" value="{{ old('ga_chinh', $house->ga_chinh) }}"
+                            class="input-field @error('ga_chinh') border-red-500 @enderror">
+                        @error('ga_chinh')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Vị trí -->
+                    
+                    <!-- Ga bên cạnh -->
                     <div class="mb-4">
-                        <label for="location" class="block mb-2 text-sm font-medium text-gray-700">Vị trí (VD: Tokyo, OSAKA, etc.)</label>
-                        <input type="text" id="location" name="location" value="{{ old('location', $house->location) }}"
-                            class="input-field @error('location') border-red-500 @enderror">
-                        @error('location')
+                        <label for="ga_ben_canh" class="block mb-2 text-sm font-medium text-gray-700">Ga bên cạnh</label>
+                        <input type="text" id="ga_ben_canh" name="ga_ben_canh" value="{{ old('ga_ben_canh', $house->ga_ben_canh) }}"
+                            class="input-field @error('ga_ben_canh') border-red-500 @enderror">
+                        @error('ga_ben_canh')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    <!-- Địa chỉ -->
+                    
+                    <!-- Ga đi tàu tới -->
                     <div class="mb-4">
-                        <label for="address" class="block mb-2 text-sm font-medium text-gray-700">Địa chỉ <span class="text-red-500">*</span></label>
-                        <input type="text" id="address" name="address" value="{{ old('address', $house->address) }}" required
-                            class="input-field @error('address') border-red-500 @enderror">
-                        @error('address')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Diện tích -->
-                    <div class="mb-4">
-                        <label for="size" class="block mb-2 text-sm font-medium text-gray-700">Diện tích (m²) <span class="text-red-500">*</span></label>
-                        <input type="number" step="0.01" id="size" name="size" value="{{ old('size', $house->size) }}" required
-                            class="input-field @error('size') border-red-500 @enderror">
-                        @error('size')
+                        <label for="ga_di_tau_toi" class="block mb-2 text-sm font-medium text-gray-700">Ga đi tàu tới</label>
+                        <input type="text" id="ga_di_tau_toi" name="ga_di_tau_toi" value="{{ old('ga_di_tau_toi', $house->ga_di_tau_toi) }}"
+                            class="input-field @error('ga_di_tau_toi') border-red-500 @enderror">
+                        @error('ga_di_tau_toi')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
                 </div>
+                
+                <!-- Là công ty -->
+                <div class="mt-4">
+                    <label for="is_company" class="block mb-2 text-sm font-medium text-gray-700">Là công ty</label>
+                    <div class="mt-2">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="is_company" name="is_company" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                {{ old('is_company', $house->is_company) ? 'checked' : '' }}>
+                            <span class="ml-2 text-sm text-gray-600">Nhà này thuộc công ty</span>
+                        </label>
+                    </div>
+                    @error('is_company')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Cột thông tin khác -->
                 <div>
                     <h2 class="text-xl font-bold mb-4 text-gray-800">Thông tin khác</h2>
@@ -111,28 +117,15 @@
                         @enderror
                     </div>
 
-                    <!-- Giá đặt cọc -->
+                    <!-- Giá đầu vào -->
                     <div class="mb-4">
-                        <label for="deposit_price" class="block mb-2 text-sm font-medium text-gray-700">Tiền đặt cọc (yên)</label>
+                        <label for="input_price" class="block mb-2 text-sm font-medium text-gray-700">Tiền đầu vào (yên)</label>
                         <div class="flex items-center">
                             <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="deposit_price" name="deposit_price" value="{{ old('deposit_price', $house->deposit_price) }}"
-                                class="input-field rounded-l-none @error('deposit_price') border-red-500 @enderror">
+                            <input type="number" id="input_price" name="input_price" value="{{ old('input_price', $house->input_price) }}"
+                                class="input-field rounded-l-none @error('input_price') border-red-500 @enderror">
                         </div>
-                        @error('deposit_price')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Chi phí ban đầu -->
-                    <div class="mb-4">
-                        <label for="initial_cost" class="block mb-2 text-sm font-medium text-gray-700">Chi phí ban đầu tổng cộng (yên)</label>
-                        <div class="flex items-center">
-                            <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="initial_cost" name="initial_cost" value="{{ old('initial_cost', $house->initial_cost) }}"
-                                class="input-field rounded-l-none @error('initial_cost') border-red-500 @enderror">
-                        </div>
-                        @error('initial_cost')
+                        @error('input_price')
                             <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -141,7 +134,7 @@
                     <div class="mb-4">
                         <x-input-label for="house_type" :value="__('Loại nhà')" />
                         <div class="mt-2 grid grid-cols-2 gap-3">
-                            @foreach(['1K', '2K-2DK'] as $type)
+                            @foreach(['1r-1K', '2K-2DK'] as $type)
                             <label class="flex items-center justify-center p-2 border border-gray-300 rounded-md {{ old('house_type', $house->house_type) == $type ? 'bg-indigo-600 text-white' : '' }} hover:bg-indigo-100 cursor-pointer transition-colors">
                                 <input type="radio" name="house_type" value="{{ $type }}" class="hidden house-type-input"
                                     {{ old('house_type', $house->house_type) == $type ? 'checked' : '' }}>
@@ -151,26 +144,6 @@
                         </div>
                         @error('house_type')
                             <div class="text-red-500 mt-1 text-sm">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <!-- Trạng thái -->
-                    <div class="mb-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái <span class="text-red-500">*</span></label>
-                        <div class="flex space-x-4">
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="status" value="available" class="text-indigo-600 focus:ring-indigo-500 h-5 w-5" 
-                                    {{ old('status', $house->status) == 'available' ? 'checked' : '' }} required>
-                                <span class="ml-2 text-gray-700">Còn trống</span>
-                            </label>
-                            <label class="inline-flex items-center">
-                                <input type="radio" name="status" value="rented" class="text-indigo-600 focus:ring-indigo-500 h-5 w-5" 
-                                    {{ old('status', $house->status) == 'rented' ? 'checked' : '' }}>
-                                <span class="ml-2 text-gray-700">Đã thuê</span>
-                            </label>
-                        </div>
-                        @error('status')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -185,221 +158,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Mô tả -->
-            <div class="mb-6 mt-2">
-                <h2 class="text-xl font-bold mb-4 text-gray-800">Mô tả</h2>
-                <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Nội dung khác</label>
-                <textarea id="description" name="description" rows="4"
-                    class="input-field @error('description') border-red-500 @enderror">{{ old('description', $house->description) }}</textarea>
-                @error('description')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                @enderror
-            </div>
-            
-            <!-- Chi tiết phòng -->
-            <div class="mb-6 mt-2">
-                <h2 class="text-xl font-bold mb-4 text-gray-800">Chi tiết phòng</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Tầng -->
-                    <div class="mb-4">
-                        <label for="floor" class="block mb-2 text-sm font-medium text-gray-700">Tầng</label>
-                        <input type="number" id="floor" name="floor" min="1" max="50" 
-                            value="{{ old('floor', $house->room_details['floor'] ?? '') }}"
-                            class="input-field @error('floor') border-red-500 @enderror">
-                        @error('floor')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <!-- Ga gần nhất -->
-                    <div class="mb-4">
-                        <label for="nearest_station" class="block mb-2 text-sm font-medium text-gray-700">Ga gần nhất</label>
-                        <input type="text" id="nearest_station" name="nearest_station" 
-                            value="{{ old('nearest_station', $house->room_details['nearest_station'] ?? '') }}"
-                            class="input-field @error('nearest_station') border-red-500 @enderror">
-                        @error('nearest_station')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Khoảng cách đến ga -->
-                    <div class="mb-4">
-                        <label for="distance_to_station" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách đến ga (phút đi bộ)</label>
-                        <input type="number" id="distance_to_station" name="distance_to_station" min="0" max="60" 
-                            value="{{ old('distance_to_station', $house->room_details['distance_to_station'] ?? '') }}"
-                            class="input-field @error('distance_to_station') border-red-500 @enderror">
-                        @error('distance_to_station')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <!-- Có gác lửng -->
-                    <div class="mb-4">
-                        <div class="flex items-center h-full mt-6">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="has_loft" value="1" 
-                                    {{ old('has_loft', isset($house->room_details['has_loft']) && $house->room_details['has_loft']) ? 'checked' : '' }}
-                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-sm text-gray-700">Có gác lửng</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chi tiết chi phí -->
-            <div class="mb-6 mt-2">
-                <h2 class="text-xl font-bold mb-4 text-gray-800">Chi tiết chi phí</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Tiền lễ -->
-                    <div class="mb-4">
-                        <label for="key_money" class="block mb-2 text-sm font-medium text-gray-700">Tiền lễ (yên)</label>
-                        <div class="flex items-center">
-                            <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="key_money" name="key_money" 
-                                value="{{ old('key_money', $house->cost_details['key_money'] ?? '') }}"
-                                class="input-field rounded-l-none @error('key_money') border-red-500 @enderror">
-                        </div>
-                        @error('key_money')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <!-- Phí bảo lãnh -->
-                    <div class="mb-4">
-                        <label for="guarantee_fee" class="block mb-2 text-sm font-medium text-gray-700">Phí bảo lãnh (yên)</label>
-                        <div class="flex items-center">
-                            <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="guarantee_fee" name="guarantee_fee" 
-                                value="{{ old('guarantee_fee', $house->cost_details['guarantee_fee'] ?? '') }}"
-                                class="input-field rounded-l-none @error('guarantee_fee') border-red-500 @enderror">
-                        </div>
-                        @error('guarantee_fee')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Phí bảo hiểm -->
-                    <div class="mb-4">
-                        <label for="insurance_fee" class="block mb-2 text-sm font-medium text-gray-700">Phí bảo hiểm (yên)</label>
-                        <div class="flex items-center">
-                            <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="insurance_fee" name="insurance_fee" 
-                                value="{{ old('insurance_fee', $house->cost_details['insurance_fee'] ?? '') }}"
-                                class="input-field rounded-l-none @error('insurance_fee') border-red-500 @enderror">
-                        </div>
-                        @error('insurance_fee')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <!-- Phí hồ sơ -->
-                    <div class="mb-4">
-                        <label for="document_fee" class="block mb-2 text-sm font-medium text-gray-700">Phí hồ sơ (yên)</label>
-                        <div class="flex items-center">
-                            <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="document_fee" name="document_fee" 
-                                value="{{ old('document_fee', $house->cost_details['document_fee'] ?? '') }}"
-                                class="input-field rounded-l-none @error('document_fee') border-red-500 @enderror">
-                        </div>
-                        @error('document_fee')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- Phí đỗ xe -->
-                    <div class="mb-4">
-                        <label for="parking_fee" class="block mb-2 text-sm font-medium text-gray-700">Phí đỗ xe (yên/tháng)</label>
-                        <div class="flex items-center">
-                            <span class="bg-gray-100 px-3 py-3 border border-gray-300 border-r-0 rounded-l-md text-gray-700">¥</span>
-                            <input type="number" id="parking_fee" name="parking_fee" 
-                                value="{{ old('parking_fee', $house->cost_details['parking_fee'] ?? '') }}"
-                                class="input-field rounded-l-none @error('parking_fee') border-red-500 @enderror">
-                        </div>
-                        @error('parking_fee')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    
-                    <!-- Tiền thuê tháng đầu đã bao gồm -->
-                    <div class="mb-4">
-                        <div class="flex items-center h-full mt-6">
-                            <label class="flex items-center">
-                                <input type="checkbox" name="rent_included" value="1" 
-                                    {{ old('rent_included', isset($house->cost_details['rent_included']) && $house->cost_details['rent_included']) ? 'checked' : '' }}
-                                    class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                                <span class="ml-2 text-sm text-gray-700">Tiền thuê tháng đầu đã bao gồm trong chi phí ban đầu</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tiện ích -->
-            <div class="mb-6 mt-2">
-                <h2 class="text-xl font-bold mb-4 text-gray-800">Tiện ích</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- Điều hòa -->
-                    <div class="mb-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="amenities[air_conditioner]" value="1" 
-                                {{ old('amenities.air_conditioner', isset($house->amenities['air_conditioner']) && $house->amenities['air_conditioner']) ? 'checked' : '' }}
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            <span class="ml-2 text-sm text-gray-700">Điều hòa</span>
-                        </label>
-                    </div>
-                    
-                    <!-- Tủ lạnh -->
-                    <div class="mb-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="amenities[refrigerator]" value="1" 
-                                {{ old('amenities.refrigerator', isset($house->amenities['refrigerator']) && $house->amenities['refrigerator']) ? 'checked' : '' }}
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            <span class="ml-2 text-sm text-gray-700">Tủ lạnh</span>
-                        </label>
-                    </div>
-                    
-                    <!-- Máy giặt -->
-                    <div class="mb-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="amenities[washing_machine]" value="1" 
-                                {{ old('amenities.washing_machine', isset($house->amenities['washing_machine']) && $house->amenities['washing_machine']) ? 'checked' : '' }}
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            <span class="ml-2 text-sm text-gray-700">Máy giặt</span>
-                        </label>
-                    </div>
-                    
-                    <!-- Internet -->
-                    <div class="mb-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="amenities[internet]" value="1" 
-                                {{ old('amenities.internet', isset($house->amenities['internet']) && $house->amenities['internet']) ? 'checked' : '' }}
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            <span class="ml-2 text-sm text-gray-700">Internet</span>
-                        </label>
-                    </div>
-                    
-                    <!-- Nội thất -->
-                    <div class="mb-4">
-                        <label class="flex items-center">
-                            <input type="checkbox" name="amenities[furniture]" value="1" 
-                                {{ old('amenities.furniture', isset($house->amenities['furniture']) && $house->amenities['furniture']) ? 'checked' : '' }}
-                                class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            <span class="ml-2 text-sm text-gray-700">Nội thất</span>
-                        </label>
-                    </div>
-                </div>
-            </div>
+           
 
             <!-- Ảnh nhà -->
             <div class="mb-6">
@@ -417,11 +176,11 @@
                                     </div>
                                     <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-2">
                                         <button type="button" class="p-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 cursor-pointer" 
-                                                onclick="setAsPrimary({{ $image->id }})" title="Đặt làm ảnh chính">
+                                                onclick="setAsPrimary('{{ $image->id }}')" title="Đặt làm ảnh chính">
                                             <i class="fas fa-star"></i>
                                         </button>
                                         <button type="button" class="p-2 bg-red-600 text-white rounded-full hover:bg-red-700 cursor-pointer" 
-                                                onclick="markForDeletion({{ $image->id }})" title="Đánh dấu xóa">
+                                                onclick="markForDeletion('{{ $image->id }}')" title="Đánh dấu xóa">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
@@ -565,7 +324,7 @@
                 list.innerHTML = '';
                 imagesToDelete.forEach(id => {
                     const item = document.createElement('li');
-                    item.innerHTML = `Ảnh #${id} <button type="button" onclick="markForDeletion(${id})" class="text-xs text-red-700 underline ml-2">Hủy</button>`;
+                    item.innerHTML = `Ảnh #${id} <button type="button" onclick="markForDeletion('${id}')" class="text-xs text-red-700 underline ml-2">Hủy</button>`;
                     list.appendChild(item);
                 });
             } else {

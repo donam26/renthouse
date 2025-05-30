@@ -93,14 +93,7 @@
                                         <i class="fas fa-home text-6xl text-gray-300"></i>
                                     </div>
                                 @endif
-                                
-                                <!-- Badge hiển thị trạng thái -->
-                                <div class="absolute top-3 left-3">
-                                    <span class="px-3 py-1 text-xs font-bold rounded-full 
-                                        {{ $house->status === 'available' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }} shadow">
-                                        {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
-                                    </span>
-                                </div>
+                           
                             </div>
                             
                             <!-- Phần thông tin (Chiếm 2/3 bên phải khi ở màn hình lớn) -->
@@ -146,10 +139,10 @@
                                         
                                         <p class="text-sm text-gray-600 mt-1">Giá đầu vào:</p>
                                         <p class="font-medium text-gray-800">
-                                            @if(isset($house->adjusted_deposit_price))
-                                                {{ number_format($house->adjusted_deposit_price) }}
+                                            @if(isset($house->adjusted_input_price))
+                                                {{ number_format($house->adjusted_input_price) }}
                                             @else
-                                                {{ number_format($house->deposit_price) }}
+                                                {{ number_format($house->input_price) }}
                                             @endif
                                             <span class="text-sm">VND</span>
                                         </p>
@@ -219,26 +212,12 @@
                                     </div>
                                 </div>
                                 @endif
-                                
-                                <!-- Địa chỉ -->
-                                <div class="mb-4">
-                                    <h3 class="font-bold text-lg text-gray-800">
-                                        @if(isset($searchKeyword) && !empty($searchKeyword))
-                                            {{ $searchKeyword }}
-                                        @else
-                                            {{ $house->name }}
-                                        @endif
-                                    </h3>
-                                    <p class="text-gray-600 flex items-start mt-1">
-                                        <i class="fas fa-map-marker-alt mt-1 mr-2 text-indigo-500"></i>
-                                        <span>{{ $house->address }}</span>
-                                    </p>
-                                </div>
+                            
                                 
                                 <!-- Phần nút hành động -->
                                 @if ($house->share_link)
                                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                                    <a href="{{ route('houses.share', $house->share_link) }}" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                                    <a href="" class="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
                                         <span>Xem chi tiết</span>
                                         <i class="fas fa-arrow-right ml-1 text-sm"></i>
                                     </a>

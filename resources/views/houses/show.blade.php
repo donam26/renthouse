@@ -78,7 +78,7 @@
                 <div class="mt-6">
                     <h2 class="text-xl font-bold mb-4">Dạng nhà</h2>
                     <div class="flex flex-wrap gap-2">
-                        @foreach(['1K', '2K-2DK'] as $type)
+                        @foreach(['1r-1K', '2K-2DK'] as $type)
                             <span class="px-4 py-2 text-sm rounded-md {{ $house->house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
                                 {{ $type }}
                             </span>
@@ -90,7 +90,7 @@
                 <div class="mt-6 p-4 bg-indigo-50 rounded-lg">
                     <h2 class="text-md font-bold text-indigo-700 mb-2">Chia sẻ nhà này</h2>
                     <div class="flex space-x-2">
-                        <a href="{{ route('houses.share', $house->share_link) }}" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex-1 text-center">
+                        <a href="" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex-1 text-center">
                             <i class="fas fa-external-link-alt mr-2"></i> Mở link
                         </a>
                         <button 
@@ -105,13 +105,7 @@
             
             <!-- Phần thông tin chi tiết -->
             <div class="p-6 border-l border-gray-200">
-                <div class="mb-6">
-                    <span class="inline-block px-3 py-1 text-sm font-bold rounded-full 
-                        {{ $house->status === 'available' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }} shadow">
-                        {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
-                    </span>
-                </div>
-                
+               
                 <h1 class="text-2xl font-bold text-gray-800 mb-4">{{ $house->name }}</h1>
                 
                 <div class="grid grid-cols-2 gap-6 mb-6">
@@ -122,51 +116,9 @@
                     
                     <div>
                         <h2 class="text-sm text-gray-600 mb-1">Giá đầu vào:</h2>
-                        <p class="text-xl font-bold text-gray-800">{{ number_format($house->deposit_price) }} <span class="text-sm font-normal">yên</span></p>
+                        <p class="text-xl font-bold text-gray-800">{{ number_format($house->input_price) }} <span class="text-sm font-normal">yên</span></p>
                     </div>
                 </div>
-                
-                <!-- Chi phí ban đầu -->
-                @if ($house->initial_cost)
-                <div class="mb-6 p-4 bg-yellow-50 rounded-md border border-yellow-100">
-                    <h2 class="text-md font-bold text-yellow-700 mb-2">Chi phí ban đầu:</h2>
-                    <p class="text-xl font-bold text-gray-800 mb-2">{{ number_format($house->initial_cost) }} <span class="text-sm font-normal">yên</span></p>
-                    
-                    <div class="grid grid-cols-2 gap-4 mt-3">
-                        @if (isset($house->cost_details['key_money']) && $house->cost_details['key_money'])
-                        <div>
-                            <h3 class="text-xs text-gray-500">Tiền lễ:</h3>
-                            <p class="text-gray-700">{{ number_format($house->cost_details['key_money']) }} yên</p>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->cost_details['guarantee_fee']) && $house->cost_details['guarantee_fee'])
-                        <div>
-                            <h3 class="text-xs text-gray-500">Phí bảo lãnh:</h3>
-                            <p class="text-gray-700">{{ number_format($house->cost_details['guarantee_fee']) }} yên</p>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->cost_details['insurance_fee']) && $house->cost_details['insurance_fee'])
-                        <div>
-                            <h3 class="text-xs text-gray-500">Phí bảo hiểm:</h3>
-                            <p class="text-gray-700">{{ number_format($house->cost_details['insurance_fee']) }} yên</p>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->cost_details['document_fee']) && $house->cost_details['document_fee'])
-                        <div>
-                            <h3 class="text-xs text-gray-500">Phí hồ sơ:</h3>
-                            <p class="text-gray-700">{{ number_format($house->cost_details['document_fee']) }} yên</p>
-                        </div>
-                        @endif
-                    </div>
-                    
-                    @if (isset($house->cost_details['rent_included']) && $house->cost_details['rent_included'])
-                    <p class="mt-3 text-sm text-gray-600">* Đã bao gồm tiền thuê tháng đầu</p>
-                    @endif
-                </div>
-                @endif
                 
                 <div class="mb-6">
                     <h2 class="text-sm text-gray-600 mb-1">Địa chỉ:</h2>
@@ -179,112 +131,6 @@
                     </div>
                     @endif
                 </div>
-                
-                <div class="grid grid-cols-2 gap-6 mb-6">
-                    <!-- Thông tin phòng -->
-                    <div>
-                        <h2 class="text-sm font-medium text-gray-700 mb-3">Thông tin phòng:</h2>
-                        <ul class="space-y-2">
-                            <li class="flex items-center">
-                                <span class="w-24 text-xs text-gray-500">Diện tích:</span>
-                                <span class="text-gray-800 font-medium">{{ $house->size }} m²</span>
-                            </li>
-                            
-                            @if (isset($house->room_details['floor']))
-                            <li class="flex items-center">
-                                <span class="w-24 text-xs text-gray-500">Tầng:</span>
-                                <span class="text-gray-800">{{ $house->room_details['floor'] }}</span>
-                            </li>
-                            @endif
-                            
-                            @if (isset($house->room_details['has_loft']) && $house->room_details['has_loft'])
-                            <li class="flex items-center">
-                                <span class="w-24 text-xs text-gray-500">Gác lửng:</span>
-                                <span class="text-gray-800"><i class="fas fa-check text-green-500"></i> Có</span>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                    
-                    <!-- Thông tin di chuyển -->
-                    <div>
-                        <h2 class="text-sm font-medium text-gray-700 mb-3">Thông tin di chuyển:</h2>
-                        <ul class="space-y-2">
-                            @if (isset($house->room_details['nearest_station']) && $house->room_details['nearest_station'])
-                            <li class="flex items-center">
-                                <span class="w-24 text-xs text-gray-500">Ga gần nhất:</span>
-                                <span class="text-gray-800">{{ $house->room_details['nearest_station'] }}</span>
-                            </li>
-                            @endif
-                            
-                            @if (isset($house->room_details['distance_to_station']) && $house->room_details['distance_to_station'])
-                            <li class="flex items-center">
-                                <span class="w-24 text-xs text-gray-500">Khoảng cách:</span>
-                                <span class="text-gray-800">{{ $house->room_details['distance_to_station'] }} phút đi bộ</span>
-                            </li>
-                            @endif
-                            
-                            @if (isset($house->cost_details['parking_fee']) && $house->cost_details['parking_fee'])
-                            <li class="flex items-center">
-                                <span class="w-24 text-xs text-gray-500">Phí đỗ xe:</span>
-                                <span class="text-gray-800">{{ number_format($house->cost_details['parking_fee']) }} yên/tháng</span>
-                            </li>
-                            @endif
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Tiện ích -->
-                @if ($house->amenities && count(array_filter((array)$house->amenities)) > 0)
-                <div class="mb-6">
-                    <h2 class="text-sm font-medium text-gray-700 mb-3">Tiện ích:</h2>
-                    <div class="grid grid-cols-2 gap-2">
-                        @if (isset($house->amenities['air_conditioner']) && $house->amenities['air_conditioner'])
-                        <div class="flex items-center p-2 bg-gray-50 rounded-md">
-                            <i class="fas fa-snowflake text-blue-500 mr-2"></i>
-                            <span class="text-sm">Điều hòa</span>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->amenities['refrigerator']) && $house->amenities['refrigerator'])
-                        <div class="flex items-center p-2 bg-gray-50 rounded-md">
-                            <i class="fas fa-cube text-blue-500 mr-2"></i>
-                            <span class="text-sm">Tủ lạnh</span>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->amenities['washing_machine']) && $house->amenities['washing_machine'])
-                        <div class="flex items-center p-2 bg-gray-50 rounded-md">
-                            <i class="fas fa-tshirt text-blue-500 mr-2"></i>
-                            <span class="text-sm">Máy giặt</span>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->amenities['internet']) && $house->amenities['internet'])
-                        <div class="flex items-center p-2 bg-gray-50 rounded-md">
-                            <i class="fas fa-wifi text-blue-500 mr-2"></i>
-                            <span class="text-sm">Internet</span>
-                        </div>
-                        @endif
-                        
-                        @if (isset($house->amenities['furniture']) && $house->amenities['furniture'])
-                        <div class="flex items-center p-2 bg-gray-50 rounded-md">
-                            <i class="fas fa-couch text-blue-500 mr-2"></i>
-                            <span class="text-sm">Nội thất</span>
-                        </div>
-                        @endif
-                    </div>
-                </div>
-                @endif
-                
-                @if ($house->description)
-                <div class="mb-6">
-                    <h2 class="text-sm text-gray-600 mb-1">Mô tả:</h2>
-                    <div class="bg-gray-50 p-4 rounded-md">
-                        <p class="text-gray-800 whitespace-pre-line">{{ $house->description }}</p>
-                    </div>
-                </div>
-                @endif
                 
                 <div class="pt-6 mt-6 border-t border-gray-200">
                     <h2 class="text-sm text-gray-600 mb-2">Chủ sở hữu:</h2>

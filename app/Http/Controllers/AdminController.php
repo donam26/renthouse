@@ -19,8 +19,6 @@ class AdminController extends Controller
         // Thống kê cơ bản
         $totalUsers = User::count();
         $totalHouses = House::count();
-        $availableHouses = House::where('status', 'available')->count();
-        $rentedHouses = House::where('status', 'rented')->count();
         
         // Top 5 người dùng có nhiều nhà nhất
         $topUsers = User::withCount('houses')
@@ -36,8 +34,6 @@ class AdminController extends Controller
         return view('admin.dashboard', compact(
             'totalUsers', 
             'totalHouses', 
-            'availableHouses', 
-            'rentedHouses', 
             'topUsers', 
             'housesByType'
         ));

@@ -17,30 +17,7 @@
                 @csrf
 
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                    <!-- Tên nhà -->
-                    <div class="sm:col-span-3">
-                        <label for="name" class="block text-sm font-medium text-gray-700">Tên nhà</label>
-                        <div class="mt-1">
-                            <input type="text" name="name" id="name" value="{{ old('name') }}" required
-                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('name') border-red-500 @enderror">
-                        </div>
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- Địa chỉ -->
-                    <div class="sm:col-span-3">
-                        <label for="address" class="block text-sm font-medium text-gray-700">Địa chỉ</label>
-                        <div class="mt-1">
-                            <input type="text" name="address" id="address" value="{{ old('address') }}" required
-                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('address') border-red-500 @enderror">
-                        </div>
-                        @error('address')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-
+                  
                     <!-- Giá thuê -->
                     <div class="sm:col-span-2">
                         <label for="rent_price" class="block text-sm font-medium text-gray-700">Giá thuê (VND)</label>
@@ -55,12 +32,12 @@
 
                     <!-- Giá đặt cọc -->
                     <div class="sm:col-span-2">
-                        <label for="deposit_price" class="block text-sm font-medium text-gray-700">Giá đặt cọc (VND)</label>
+                        <label for="input_price" class="block text-sm font-medium text-gray-700">Giá đặt cọc (VND)</label>
                         <div class="mt-1">
-                            <input type="number" name="deposit_price" id="deposit_price" value="{{ old('deposit_price') }}"
-                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('deposit_price') border-red-500 @enderror">
+                            <input type="number" name="input_price" id="input_price" value="{{ old('input_price') }}"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('input_price') border-red-500 @enderror">
                         </div>
-                        @error('deposit_price')
+                        @error('input_price')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>

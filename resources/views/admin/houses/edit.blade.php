@@ -39,36 +39,6 @@
                     </div>
 
                     <div>
-                        <label for="name" class="form-label">Tên nhà <span class="text-red-500">*</span></label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $house->name) }}" 
-                            class="input-field @error('name') border-red-500 @enderror" 
-                            placeholder="Nhập tên nhà cho thuê">
-                        @error('name')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="address" class="form-label">Địa chỉ <span class="text-red-500">*</span></label>
-                        <input type="text" name="address" id="address" value="{{ old('address', $house->address) }}" 
-                            class="input-field @error('address') border-red-500 @enderror" 
-                            placeholder="Nhập địa chỉ đầy đủ">
-                        @error('address')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="location" class="form-label">Vị trí</label>
-                        <input type="text" name="location" id="location" value="{{ old('location', $house->location) }}" 
-                            class="input-field @error('location') border-red-500 @enderror" 
-                            placeholder="Ví dụ: Gần trường đại học, chợ,...">
-                        @error('location')
-                            <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
                         <label for="user_id" class="form-label">Chủ nhà <span class="text-red-500">*</span></label>
                         <select name="user_id" id="user_id" class="input-field @error('user_id') border-red-500 @enderror">
                             <option value="">-- Chọn chủ nhà --</option>
@@ -108,16 +78,16 @@
                         </div>
 
                         <div>
-                            <label for="deposit_price" class="form-label">Tiền đặt cọc</label>
+                            <label for="input_price" class="form-label">Tiền đầu vào</label>
                             <div class="mt-1 flex rounded-md shadow-sm">
                                 <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                                     VND
                                 </span>
-                                <input type="number" name="deposit_price" id="deposit_price" value="{{ old('deposit_price', $house->deposit_price) }}" 
-                                    class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 @error('deposit_price') border-red-500 @enderror"
-                                    placeholder="Nhập tiền đặt cọc">
+                                <input type="number" name="input_price" id="input_price" value="{{ old('input_price', $house->input_price) }}" 
+                                    class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 @error('input_price') border-red-500 @enderror"
+                                    placeholder="Nhập tiền đầu vào">
                             </div>
-                            @error('deposit_price')
+                            @error('input_price')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
@@ -182,17 +152,8 @@
                 </div>
             </div>
 
-            <!-- Mô tả và hình ảnh -->
+            <!-- Ảnh nhà -->
             <div class="mt-8 space-y-6">
-                <div>
-                    <label for="description" class="form-label">Mô tả</label>
-                    <textarea name="description" id="description" rows="4" 
-                        class="input-field @error('description') border-red-500 @enderror" 
-                        placeholder="Nhập mô tả chi tiết về nhà cho thuê">{{ old('description', $house->description) }}</textarea>
-                    @error('description')
-                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
-                    @enderror
-                </div>
 
                 <div>
                     <label for="image" class="form-label">Hình ảnh</label>

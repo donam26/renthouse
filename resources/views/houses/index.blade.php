@@ -22,26 +22,7 @@
                 <p class="text-2xl font-bold">{{ $houses->count() }}</p>
             </div>
         </div>
-        
-        <div class="bg-white rounded-lg p-4 shadow-sm flex items-center border-l-4 border-green-500">
-            <div class="mr-4 bg-green-100 rounded-full p-3">
-                <i class="fas fa-check-circle text-green-500 text-xl"></i>
-            </div>
-            <div>
-                <h3 class="text-sm text-gray-500">Còn trống</h3>
-                <p class="text-2xl font-bold">{{ $availableCount }}</p>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-lg p-4 shadow-sm flex items-center border-l-4 border-red-500">
-            <div class="mr-4 bg-red-100 rounded-full p-3">
-                <i class="fas fa-user-check text-red-500 text-xl"></i>
-            </div>
-            <div>
-                <h3 class="text-sm text-gray-500">Đã cho thuê</h3>
-                <p class="text-2xl font-bold">{{ $rentedCount }}</p>
-            </div>
-        </div>
+      
     </div>
     
     <!-- Tìm kiếm và lọc -->
@@ -49,7 +30,7 @@
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center">
                 <i class="fas fa-filter text-indigo-600 mr-2"></i>
-                <h2 class="text-lg font-medium text-gray-800">Bộ lọc tìm kiếm</h2>
+                <h2 class="text-lg font-medium text-gray-800">Giá trị apply</h2>
             </div>
             
             <button 
@@ -124,36 +105,7 @@
                         @endforeach
                     </div>
                 </div>
-                
-                <!-- Trạng thái -->
-                <div>
-                    <label class="block mb-2 text-sm font-medium text-gray-700">Trạng thái</label>
-                    <div class="space-y-2">
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="status" value="available" class="sr-only status-input" {{ request('status') == 'available' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'status')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'available' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('status') == 'available' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <span class="w-3 h-3 mr-2 bg-green-500 rounded-full"></span>
-                                <span class="text-sm text-gray-700">Còn trống</span>
-                            </span>
-                        </label>
-                        
-                        <label class="inline-flex items-center cursor-pointer">
-                            <input type="radio" name="status" value="rented" class="sr-only status-input" {{ request('status') == 'rented' ? 'checked' : '' }}
-                                onclick="updateRadioStyle(this, 'status')">
-                            <span class="w-5 h-5 mr-2 rounded-full flex items-center justify-center {{ request('status') == 'rented' ? 'bg-indigo-600 border-indigo-600' : 'bg-white border border-gray-300' }}">
-                                <span class="{{ request('status') == 'rented' ? 'w-2 h-2 bg-white rounded-full' : '' }}"></span>
-                            </span>
-                            <span class="flex items-center">
-                                <span class="w-3 h-3 mr-2 bg-red-500 rounded-full"></span>
-                                <span class="text-sm text-gray-700">Đã thuê</span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
+           
             </div>
             
             <div class="mb-6">
@@ -252,10 +204,6 @@
                         
                         <!-- Thẻ trạng thái và loại nhà -->
                         <div class="absolute top-3 right-3 flex flex-col space-y-2">
-                            <span class="px-3 py-1 text-xs font-bold rounded-full shadow-md
-                                {{ $house->status === 'available' ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
-                                {{ $house->status === 'available' ? 'Còn trống' : 'Đã cho thuê' }}
-                            </span>
                             
                             @if ($house->house_type)
                                 <span class="px-3 py-1 text-xs font-bold bg-blue-500 text-white rounded-full shadow-md">
@@ -282,48 +230,6 @@
                                 {{ $house->name }}
                             @endif
                         </h3>
-                        
-                        <div class="mb-3">
-                            <p class="text-gray-600 flex items-start mb-1">
-                                <i class="fas fa-map-marker-alt w-5 text-indigo-500 mt-1"></i>
-                                <span class="truncate">{{ $house->address }}</span>
-                            </p>
-                            
-                            @if ($house->location)
-                                <p class="text-gray-500 text-sm flex items-center mb-1">
-                                    <i class="fas fa-location-dot w-5 text-gray-400"></i>
-                                    <span>{{ $house->location }}</span>
-                                </p>
-                            @endif
-                            
-                            @if (isset($house->room_details['nearest_station']) && $house->room_details['nearest_station'])
-                                <p class="text-gray-500 text-sm flex items-center">
-                                    <i class="fas fa-train w-5 text-gray-400"></i>
-                                    <span>{{ $house->room_details['nearest_station'] }}
-                                    @if (isset($house->room_details['distance_to_station']) && $house->room_details['distance_to_station'])
-                                        ({{ $house->room_details['distance_to_station'] }} phút đi bộ)
-                                    @endif
-                                    </span>
-                                </p>
-                            @endif
-                        </div>
-                        
-                        <!-- Tiện ích -->
-                        @if ($house->amenities && count(array_filter((array)$house->amenities)) > 0)
-                            <div class="flex flex-wrap gap-2 mb-4">
-                                @if (isset($house->amenities['air_conditioner']) && $house->amenities['air_conditioner'])
-                                    <span class="inline-flex items-center bg-indigo-100 text-indigo-800 text-xs px-2.5 py-1 rounded-full">
-                                        <i class="fas fa-snowflake mr-1.5"></i> Điều hòa
-                                    </span>
-                                @endif
-                                
-                                @if (isset($house->amenities['internet']) && $house->amenities['internet'])
-                                    <span class="inline-flex items-center bg-indigo-100 text-indigo-800 text-xs px-2.5 py-1 rounded-full">
-                                        <i class="fas fa-wifi mr-1.5"></i> Internet
-                                    </span>
-                                @endif
-                            </div>
-                        @endif
                         
                         <!-- Phần nút thao tác -->
                         <div class="flex justify-between items-center pt-4 border-t border-gray-100">

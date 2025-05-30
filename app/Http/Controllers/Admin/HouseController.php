@@ -17,25 +17,12 @@ class HouseController extends Controller
     {
         $query = House::query()->with('user');
         
-        // Tìm kiếm
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%");
-            });
-        }
-        
         // Lọc theo chủ nhà
         if ($request->filled('user_id')) {
             $query->where('user_id', $request->user_id);
         }
         
-        // Lọc theo trạng thái
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        
+     
         // Lọc theo dạng nhà
         if ($request->filled('house_type')) {
             $query->where('house_type', $request->house_type);
@@ -86,15 +73,12 @@ class HouseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
             'rent_price' => ['required', 'numeric', 'min:0'],
-            'deposit_price' => ['nullable', 'numeric', 'min:0'],
+            'input_price' => ['nullable', 'numeric', 'min:0'],
             'house_type' => ['required', 'in:1K,2K-2DK'],
             'distance' => ['nullable', 'numeric', 'min:0'],
             'transportation' => ['nullable', 'string', 'max:255'],
             'user_id' => ['required', 'exists:users,id'],
-            'status' => ['required', 'in:available,rented'],
             'image' => ['nullable', 'image', 'max:2048'],
             'additional_images.*' => ['nullable', 'image', 'max:2048'],
         ]);
@@ -167,15 +151,12 @@ class HouseController extends Controller
     public function update(Request $request, House $house)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'address' => ['required', 'string', 'max:255'],
             'rent_price' => ['required', 'numeric', 'min:0'],
-            'deposit_price' => ['nullable', 'numeric', 'min:0'],
+            'input_price' => ['nullable', 'numeric', 'min:0'],
             'house_type' => ['required', 'in:1K,2K-2DK'],
             'distance' => ['nullable', 'numeric', 'min:0'],
             'transportation' => ['nullable', 'string', 'max:255'],
             'user_id' => ['required', 'exists:users,id'],
-            'status' => ['required', 'in:available,rented'],
             'image' => ['nullable', 'image', 'max:2048'],
             'additional_images.*' => ['nullable', 'image', 'max:2048'],
             'images_to_delete' => ['nullable', 'array'],

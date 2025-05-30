@@ -17,11 +17,10 @@ class DashboardController extends Controller
     {
         $totalUsers = User::count();
         $totalHouses = House::count();
-        $rentedHouses = House::where('status', 'rented')->count();
         
         // Lấy các hoạt động gần đây (đây chỉ là ví dụ, bạn cần điều chỉnh theo mô hình Activity của bạn)
         $recentActivities = collect([]); // Thay thế bằng mô hình Activity nếu có
         
-        return view('admin.dashboard', compact('totalUsers', 'totalHouses', 'rentedHouses', 'recentActivities'));
+        return view('admin.dashboard', compact('totalUsers', 'totalHouses', 'recentActivities'));
     }
 } 

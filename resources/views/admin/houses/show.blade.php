@@ -28,9 +28,6 @@
                 <p class="mt-1 max-w-2xl text-sm text-gray-500">ID: {{ $house->id }}</p>
             </div>
             <div class="flex items-center space-x-2">
-                <span class="badge {{ $house->status === 'available' ? 'badge-success' : 'badge-danger' }}">
-                    {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
-                </span>
                 @if($house->house_type)
                 <span class="badge badge-info">
                     {{ $house->house_type }}
@@ -56,23 +53,7 @@
                 <div>
                     <h4 class="text-sm font-medium text-gray-500">Thông tin cơ bản</h4>
                     <div class="mt-4 space-y-4">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Tên nhà:</span>
-                            <span class="mt-1 text-sm text-gray-900">{{ $house->name }}</span>
-                        </div>
-                        
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Địa chỉ:</span>
-                            <span class="mt-1 text-sm text-gray-900">{{ $house->address }}</span>
-                        </div>
-                        
-                        @if($house->location)
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Vị trí:</span>
-                            <span class="mt-1 text-sm text-gray-900">{{ $house->location }}</span>
-                        </div>
-                        @endif
-                        
+                       
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Chủ nhà:</span>
                             <div class="mt-1 flex items-center">
@@ -96,10 +77,10 @@
                             <span class="mt-1 text-sm text-gray-900 font-bold text-green-600">{{ number_format($house->rent_price) }} VND</span>
                         </div>
                         
-                        @if($house->deposit_price)
+                        @if($house->input_price)
                         <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Tiền đặt cọc:</span>
-                            <span class="mt-1 text-sm text-gray-900">{{ number_format($house->deposit_price) }} VND</span>
+                            <span class="text-sm font-medium text-gray-500">Tiền đầu vào:</span>
+                            <span class="mt-1 text-sm text-gray-900">{{ number_format($house->input_price) }} VND</span>
                         </div>
                         @endif
                         
@@ -126,26 +107,10 @@
                     </div>
                 </div>
                 
-                @if($house->description)
-                <div class="col-span-1 md:col-span-2">
-                    <h4 class="text-sm font-medium text-gray-500">Mô tả</h4>
-                    <div class="mt-2 text-sm text-gray-900 bg-gray-50 p-4 rounded-md">
-                        {{ $house->description }}
-                    </div>
-                </div>
-                @endif
-                
+            
                 <div class="col-span-1 md:col-span-2">
                     <h4 class="text-sm font-medium text-gray-500">Thông tin khác</h4>
                     <div class="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Trạng thái:</span>
-                            <span class="mt-1 text-sm text-gray-900">
-                                <span class="badge {{ $house->status === 'available' ? 'badge-success' : 'badge-danger' }}">
-                                    {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
-                                </span>
-                            </span>
-                        </div>
                         
                         @if($house->share_link)
                         <div class="flex flex-col">
