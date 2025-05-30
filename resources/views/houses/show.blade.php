@@ -120,12 +120,10 @@
                         <p class="text-2xl font-bold text-green-600">{{ number_format($house->rent_price) }} <span class="text-base font-normal">yên/tháng</span></p>
                     </div>
                     
-                    @if ($house->deposit_price)
                     <div>
-                        <h2 class="text-sm text-gray-600 mb-1">Tiền đặt cọc:</h2>
+                        <h2 class="text-sm text-gray-600 mb-1">Giá đầu vào:</h2>
                         <p class="text-xl font-bold text-gray-800">{{ number_format($house->deposit_price) }} <span class="text-sm font-normal">yên</span></p>
                     </div>
-                    @endif
                 </div>
                 
                 <!-- Chi phí ban đầu -->

@@ -387,8 +387,7 @@
                                         <span class="text-sm font-normal">VND</span>
                                     </p>
                                     
-                                    @if ($house->deposit_price)
-                                    <p class="text-sm text-gray-600 mt-1">Đặt cọc:</p>
+                                    <p class="text-sm text-gray-600 mt-1">Giá đầu vào:</p>
                                     <p class="font-medium text-gray-800">
                                         @if(isset($house->adjusted_deposit_price))
                                             {{ number_format($house->adjusted_deposit_price) }}
@@ -397,7 +396,6 @@
                                         @endif
                                         <span class="text-sm">VND</span>
                                     </p>
-                                    @endif
                                 </div>
                             </div>
                             
