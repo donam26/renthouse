@@ -19,47 +19,94 @@
                     <!-- Thông tin cơ bản -->
                     <div class="text-lg font-medium text-gray-900 mb-4">Thông tin cơ bản</div>
                     
-                    <!-- Thông tin ga tàu -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                        <!-- Ga chính -->
-                        <div class="mb-4">
-                            <x-input-label for="ga_chinh" :value="__('Ga chính')" />
-                            <x-text-input id="ga_chinh" class="block mt-1 w-full" type="text" name="ga_chinh" :value="old('ga_chinh')" />
-                            <x-input-error :messages="$errors->get('ga_chinh')" class="mt-2" />
+                    <!-- Ga chính -->
+                    <div class="mb-6 border-b pb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <x-input-label for="ga_chinh" :value="__('Ga chính')" class="text-base font-semibold" />
                         </div>
-                        
-                        <!-- Ga bên cạnh -->
-                        <div class="mb-4">
-                            <x-input-label for="ga_ben_canh" :value="__('Ga bên cạnh')" />
-                            <x-text-input id="ga_ben_canh" class="block mt-1 w-full" type="text" name="ga_ben_canh" :value="old('ga_ben_canh')" />
-                            <x-input-error :messages="$errors->get('ga_ben_canh')" class="mt-2" />
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="col-span-2">
+                                <x-text-input id="ga_chinh" class="block w-full" type="text" name="ga_chinh" :value="old('ga_chinh')" placeholder="Nhập tên ga chính" />
+                                <x-input-error :messages="$errors->get('ga_chinh')" class="mt-1" />
+                            </div>
+                            <div>
+                                <select id="ga_chinh_house_type" name="ga_chinh_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                    <option value="1R-1K" {{ old('ga_chinh_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ old('ga_chinh_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('ga_chinh_house_type')" class="mt-1" />
+                            </div>
                         </div>
-                        
-                        <!-- Ga đi tàu tới -->
-                        <div class="mb-4">
-                            <x-input-label for="ga_di_tau_toi" :value="__('Ga đi tàu tới')" />
-                            <x-text-input id="ga_di_tau_toi" class="block mt-1 w-full" type="text" name="ga_di_tau_toi" :value="old('ga_di_tau_toi')" />
-                            <x-input-error :messages="$errors->get('ga_di_tau_toi')" class="mt-2" />
+                    </div>
+                    
+                    <!-- Ga bên cạnh -->
+                    <div class="mb-6 border-b pb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <x-input-label for="ga_ben_canh" :value="__('Ga bên cạnh')" class="text-base font-semibold" />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="col-span-2">
+                                <x-text-input id="ga_ben_canh" class="block w-full" type="text" name="ga_ben_canh" :value="old('ga_ben_canh')" placeholder="Nhập tên ga bên cạnh" />
+                                <x-input-error :messages="$errors->get('ga_ben_canh')" class="mt-1" />
+                            </div>
+                            <div>
+                                <select id="ga_ben_canh_house_type" name="ga_ben_canh_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                    <option value="1R-1K" {{ old('ga_ben_canh_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ old('ga_ben_canh_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('ga_ben_canh_house_type')" class="mt-1" />
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Ga đi tàu tới -->
+                    <div class="mb-6 border-b pb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <x-input-label for="ga_di_tau_toi" :value="__('Ga đi tàu tới')" class="text-base font-semibold" />
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="col-span-2">
+                                <x-text-input id="ga_di_tau_toi" class="block w-full" type="text" name="ga_di_tau_toi" :value="old('ga_di_tau_toi')" placeholder="Nhập tên ga đi tàu tới" />
+                                <x-input-error :messages="$errors->get('ga_di_tau_toi')" class="mt-1" />
+                            </div>
+                            <div>
+                                <select id="ga_di_tau_toi_house_type" name="ga_di_tau_toi_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                    <option value="1R-1K" {{ old('ga_di_tau_toi_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ old('ga_di_tau_toi_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('ga_di_tau_toi_house_type')" class="mt-1" />
+                            </div>
                         </div>
                     </div>
 
                     <!-- Thông tin công ty -->
-                    <div class="mb-4">
-                        <x-input-label for="is_company" :value="__('Là công ty')" />
-                        <div class="mt-2">
-                            <label class="inline-flex items-center">
-                                <input id="is_company" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="is_company" value="1" {{ old('is_company') ? 'checked' : '' }}>
-                                <span class="ml-2 text-sm text-gray-600">{{ __('Nhà này thuộc công ty') }}</span>
-                            </label>
+                    <div class="mb-6 border-b pb-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <x-input-label for="is_company" :value="__('Là công ty')" class="text-base font-semibold" />
                         </div>
-                        <x-input-error :messages="$errors->get('is_company')" class="mt-2" />
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="col-span-2">
+                                <label class="inline-flex items-center">
+                                    <input id="is_company" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="is_company" value="1" {{ old('is_company') ? 'checked' : '' }}>
+                                    <span class="ml-2 text-sm text-gray-600">{{ __('Nhà này thuộc công ty') }}</span>
+                                </label>
+                                <x-input-error :messages="$errors->get('is_company')" class="mt-1" />
+                            </div>
+                            <div>
+                                <select id="company_house_type" name="company_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                    <option value="1R-1K" {{ old('company_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ old('company_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                <x-input-error :messages="$errors->get('company_house_type')" class="mt-1" />
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Mô tả chi tiết -->
-                    <div class="mb-4">
-                        <x-input-label for="description" :value="__('Mô tả chi tiết')" />
+                    <div class="mb-6">
+                        <x-input-label for="description" :value="__('Mô tả chi tiết')" class="text-base font-semibold mb-2" />
                         <textarea id="description" name="description" rows="4" 
-                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full"
+                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full"
                             placeholder="Nhập mô tả chi tiết về nhà cho thuê...">{{ old('description') }}</textarea>
                         <x-input-error :messages="$errors->get('description')" class="mt-2" />
                     </div>
@@ -68,14 +115,14 @@
                     <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Chi tiết phòng</div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Loại nhà -->
+                        <!-- Loại nhà mặc định -->
                         <div class="mb-4">
-                            <x-input-label for="house_type" :value="__('Loại nhà')" />
-                            <select id="house_type" name="house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
-                                <option value="1r-1K" {{ old('house_type') == '1r-1K' ? 'selected' : '' }}>1r-1K</option>
-                                <option value="2K-2DK" {{ old('house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                            <x-input-label for="default_house_type" :value="__('Loại nhà mặc định')" />
+                            <select id="default_house_type" name="default_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
+                                <option value="1R-1K" {{ old('default_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                <option value="2K-2DK" {{ old('default_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
                             </select>
-                            <x-input-error :messages="$errors->get('house_type')" class="mt-2" />
+                            <x-input-error :messages="$errors->get('default_house_type')" class="mt-2" />
                         </div>
                     </div>
                     
@@ -129,7 +176,6 @@
                     
                     <!-- Ảnh nhà -->
                     <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Ảnh nhà</div>
-                    
                     
                     <!-- Ảnh chính -->
                     <div class="mb-4">

@@ -84,10 +84,10 @@
                         </div>
                         @endif
                         
-                        @if($house->house_type)
+                        @if($house->default_house_type)
                         <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Loại nhà:</span>
-                            <span class="mt-1 text-sm text-gray-900">{{ $house->house_type }}</span>
+                            <span class="text-sm font-medium text-gray-500">Loại nhà mặc định:</span>
+                            <span class="mt-1 text-sm text-gray-900">{{ $house->default_house_type }}</span>
                         </div>
                         @endif
                         
@@ -102,6 +102,68 @@
                         <div class="flex flex-col">
                             <span class="text-sm font-medium text-gray-500">Phương tiện di chuyển:</span>
                             <span class="mt-1 text-sm text-gray-900">{{ $house->transportation }}</span>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                
+                <!-- Thông tin ga tàu và loại nhà -->
+                <div>
+                    <h4 class="text-sm font-medium text-gray-500">Thông tin ga tàu và loại nhà</h4>
+                    <div class="mt-4 space-y-4">
+                        @if($house->ga_chinh)
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-500">Ga chính:</span>
+                                @if($house->ga_chinh_house_type)
+                                <span class="px-2 py-1 text-xs rounded-full {{ $house->ga_chinh_house_type == '1R-1K' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    {{ $house->ga_chinh_house_type }}
+                                </span>
+                                @endif
+                            </div>
+                            <span class="mt-1 text-sm text-gray-900">{{ $house->ga_chinh }}</span>
+                        </div>
+                        @endif
+                        
+                        @if($house->ga_ben_canh)
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-500">Ga bên cạnh:</span>
+                                @if($house->ga_ben_canh_house_type)
+                                <span class="px-2 py-1 text-xs rounded-full {{ $house->ga_ben_canh_house_type == '1R-1K' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    {{ $house->ga_ben_canh_house_type }}
+                                </span>
+                                @endif
+                            </div>
+                            <span class="mt-1 text-sm text-gray-900">{{ $house->ga_ben_canh }}</span>
+                        </div>
+                        @endif
+                        
+                        @if($house->ga_di_tau_toi)
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-500">Ga đi tàu tới:</span>
+                                @if($house->ga_di_tau_toi_house_type)
+                                <span class="px-2 py-1 text-xs rounded-full {{ $house->ga_di_tau_toi_house_type == '1R-1K' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    {{ $house->ga_di_tau_toi_house_type }}
+                                </span>
+                                @endif
+                            </div>
+                            <span class="mt-1 text-sm text-gray-900">{{ $house->ga_di_tau_toi }}</span>
+                        </div>
+                        @endif
+                        
+                        @if($house->is_company)
+                        <div class="flex flex-col">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm font-medium text-gray-500">Công ty:</span>
+                                @if($house->company_house_type)
+                                <span class="px-2 py-1 text-xs rounded-full {{ $house->company_house_type == '1R-1K' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800' }}">
+                                    {{ $house->company_house_type }}
+                                </span>
+                                @endif
+                            </div>
+                            <span class="mt-1 text-sm text-gray-900">{{ $house->is_company ? 'Có' : 'Không' }}</span>
                         </div>
                         @endif
                     </div>

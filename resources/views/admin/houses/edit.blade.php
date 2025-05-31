@@ -195,6 +195,133 @@
                 </div>
             </div>
 
+            <!-- Loại nhà -->
+            <div>
+                <label for="default_house_type" class="form-label">Loại nhà mặc định <span class="text-red-500">*</span></label>
+                <select name="default_house_type" id="default_house_type" class="input-field @error('default_house_type') border-red-500 @enderror">
+                    <option value="">-- Chọn loại nhà --</option>
+                    <option value="1R-1K" {{ (old('default_house_type', $house->default_house_type) == '1R-1K') ? 'selected' : '' }}>1R-1K</option>
+                    <option value="2K-2DK" {{ (old('default_house_type', $house->default_house_type) == '2K-2DK') ? 'selected' : '' }}>2K-2DK</option>
+                </select>
+                @error('default_house_type')
+                    <p class="error-message">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <!-- Thông tin ga tàu và loại nhà -->
+            <div class="space-y-6 mt-8">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Cấu hình loại nhà cho từng ga</h3>
+                    <p class="mt-1 text-sm text-gray-500">Chọn loại nhà tương ứng cho từng ga và công ty</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Ga chính -->
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <label for="ga_chinh" class="form-label">Ga chính</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <input type="text" name="ga_chinh" id="ga_chinh" value="{{ old('ga_chinh', $house->ga_chinh) }}" 
+                                    class="input-field @error('ga_chinh') border-red-500 @enderror" 
+                                    placeholder="Nhập tên ga chính">
+                                @error('ga_chinh')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <select name="ga_chinh_house_type" id="ga_chinh_house_type" 
+                                    class="input-field @error('ga_chinh_house_type') border-red-500 @enderror">
+                                    <option value="">-- Chọn loại nhà --</option>
+                                    <option value="1R-1K" {{ (old('ga_chinh_house_type', $house->ga_chinh_house_type) == '1R-1K') ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ (old('ga_chinh_house_type', $house->ga_chinh_house_type) == '2K-2DK') ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                @error('ga_chinh_house_type')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ga bên cạnh -->
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <label for="ga_ben_canh" class="form-label">Ga bên cạnh</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <input type="text" name="ga_ben_canh" id="ga_ben_canh" value="{{ old('ga_ben_canh', $house->ga_ben_canh) }}" 
+                                    class="input-field @error('ga_ben_canh') border-red-500 @enderror" 
+                                    placeholder="Nhập tên ga bên cạnh">
+                                @error('ga_ben_canh')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <select name="ga_ben_canh_house_type" id="ga_ben_canh_house_type" 
+                                    class="input-field @error('ga_ben_canh_house_type') border-red-500 @enderror">
+                                    <option value="">-- Chọn loại nhà --</option>
+                                    <option value="1R-1K" {{ (old('ga_ben_canh_house_type', $house->ga_ben_canh_house_type) == '1R-1K') ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ (old('ga_ben_canh_house_type', $house->ga_ben_canh_house_type) == '2K-2DK') ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                @error('ga_ben_canh_house_type')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ga đi tàu tới -->
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <label for="ga_di_tau_toi" class="form-label">Ga đi tàu tới</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <input type="text" name="ga_di_tau_toi" id="ga_di_tau_toi" value="{{ old('ga_di_tau_toi', $house->ga_di_tau_toi) }}" 
+                                    class="input-field @error('ga_di_tau_toi') border-red-500 @enderror" 
+                                    placeholder="Nhập tên ga đi tàu tới">
+                                @error('ga_di_tau_toi')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                            <div>
+                                <select name="ga_di_tau_toi_house_type" id="ga_di_tau_toi_house_type" 
+                                    class="input-field @error('ga_di_tau_toi_house_type') border-red-500 @enderror">
+                                    <option value="">-- Chọn loại nhà --</option>
+                                    <option value="1R-1K" {{ (old('ga_di_tau_toi_house_type', $house->ga_di_tau_toi_house_type) == '1R-1K') ? 'selected' : '' }}>1R-1K</option>
+                                    <option value="2K-2DK" {{ (old('ga_di_tau_toi_house_type', $house->ga_di_tau_toi_house_type) == '2K-2DK') ? 'selected' : '' }}>2K-2DK</option>
+                                </select>
+                                @error('ga_di_tau_toi_house_type')
+                                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Công ty -->
+                    <div class="p-4 bg-gray-50 rounded-lg">
+                        <label for="is_company" class="form-label">Công ty</label>
+                        <div class="mb-2">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="is_company" id="is_company" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
+                                    {{ old('is_company', $house->is_company) ? 'checked' : '' }}>
+                                <span class="ml-2 text-sm text-gray-600">Nhà này thuộc công ty</span>
+                            </label>
+                            @error('is_company')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div>
+                            <select name="company_house_type" id="company_house_type" 
+                                class="input-field @error('company_house_type') border-red-500 @enderror">
+                                <option value="">-- Chọn loại nhà --</option>
+                                <option value="1R-1K" {{ (old('company_house_type', $house->company_house_type) == '1R-1K') ? 'selected' : '' }}>1R-1K</option>
+                                <option value="2K-2DK" {{ (old('company_house_type', $house->company_house_type) == '2K-2DK') ? 'selected' : '' }}>2K-2DK</option>
+                            </select>
+                            @error('company_house_type')
+                                <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="flex justify-end space-x-3 mt-6 pt-6 border-t border-gray-200">
                 <a href="{{ route('admin.houses.show', $house) }}" class="inline-flex items-center px-4 py-2 bg-gray-100 border border-gray-300 rounded-md font-semibold text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition">
                     <i class="fas fa-eye mr-2"></i> Xem chi tiết
