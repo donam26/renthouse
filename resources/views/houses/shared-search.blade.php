@@ -188,8 +188,34 @@
                                         
                                         @if (request('house_type'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Dạng nhà:</p>
-                                            <p class="text-sm font-medium text-indigo-700">{{ request('house_type') }}</p>
+                                            <p class="text-xs text-gray-500">
+                                                @if(request('house_type_source') == 'ga_chinh')
+                                                    Ga chính (Dạng nhà):
+                                                @elseif(request('house_type_source') == 'ga_ben_canh')
+                                                    Ga bên cạnh (Dạng nhà):
+                                                @elseif(request('house_type_source') == 'ga_di_tau_toi')
+                                                    Ga tàu tới (Dạng nhà):
+                                                @elseif(request('house_type_source') == 'company')
+                                                    Công ty (Dạng nhà):
+                                                @else
+                                                    Dạng nhà:
+                                                @endif
+                                            </p>
+                                            <p class="text-sm font-medium text-indigo-700">
+                                                @if(request('house_type'))
+                                                    {{ request('house_type') }}
+                                                @elseif(request('house_type_source') == 'ga_chinh' && $house->ga_chinh_house_type)
+                                                    {{ $house->ga_chinh_house_type }}
+                                                @elseif(request('house_type_source') == 'ga_ben_canh' && $house->ga_ben_canh_house_type)
+                                                    {{ $house->ga_ben_canh_house_type }}
+                                                @elseif(request('house_type_source') == 'ga_di_tau_toi' && $house->ga_di_tau_toi_house_type)
+                                                    {{ $house->ga_di_tau_toi_house_type }}
+                                                @elseif(request('house_type_source') == 'company' && $house->company_house_type)
+                                                    {{ $house->company_house_type }}
+                                                @else
+                                                    {{ $house->default_house_type }}
+                                                @endif
+                                            </p>
                                         </div>
                                         @endif
                                         
@@ -208,8 +234,8 @@
                                 <div class="mb-4">
                                     <p class="text-sm text-gray-600 mb-1">Dạng nhà:</p>
                                     <div class="flex space-x-2">
-                                        @foreach(['1K', '2K-2DK'] as $type)
-                                            <span class="px-3 py-1 text-xs rounded-md {{ $house->house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
+                                        @foreach(['1R-1K', '2K-2DK'] as $type)
+                                            <span class="px-3 py-1 text-xs rounded-md {{ $house->default_house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
                                                 {{ $type }}
                                             </span>
                                         @endforeach

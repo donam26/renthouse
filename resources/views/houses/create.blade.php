@@ -15,6 +15,18 @@
             <div class="p-6 bg-white border-b border-gray-200">
                 <form method="POST" action="{{ route('houses.store') }}" enctype="multipart/form-data">
                     @csrf
+                    
+                    <!-- Hiển thị tổng quan các lỗi validation -->
+                    @if ($errors->any())
+                        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4">
+                            <div class="font-medium text-red-700 mb-2">Đã có lỗi xảy ra:</div>
+                            <ul class="text-red-600 list-disc list-inside text-sm">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <!-- Thông tin cơ bản -->
                     <div class="text-lg font-medium text-gray-900 mb-4">Thông tin cơ bản</div>
@@ -118,8 +130,8 @@
                         <!-- Loại nhà mặc định -->
                         <div class="mb-4">
                             <x-input-label for="default_house_type" :value="__('Loại nhà mặc định')" />
-                            <select id="default_house_type" name="default_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full">
-                                <option value="1R-1K" {{ old('default_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                            <select id="default_house_type" name="default_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
+                                <option value="1R-1K" {{ old('default_house_type', '1R-1K') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
                                 <option value="2K-2DK" {{ old('default_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
                             </select>
                             <x-input-error :messages="$errors->get('default_house_type')" class="mt-2" />

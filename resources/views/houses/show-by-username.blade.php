@@ -158,8 +158,60 @@
                     </div>
                 </div>
             </div>
+
+              <!-- NHÓM 2: THÔNG TIN NHÀ -->
+              <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Thông tin nhà</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Dạng nhà -->
+                    <div class="md:col-span-3">
+                        <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block mb-1 text-sm text-gray-600">Loại phòng</label>
+                                <div class="flex flex-wrap gap-2">
+                                    @foreach(['1R-1K', '2K-2DK'] as $type)
+                                        <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseType(this)">
+                                            <input type="radio" name="house_type" value="{{ $type }}" class="hidden house-type-input" {{ request('house_type') == $type ? 'checked' : '' }}>
+                                            {{ $type }}
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label class="block mb-1 text-sm text-gray-600">Áp dụng cho</label>
+                                <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                                    <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'default' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
+                                        <input type="radio" name="house_type_source" value="default" class="hidden house-source-input" {{ request('house_type_source') == 'default' ? 'checked' : '' }}>
+                                        <span class="text-sm">Mặc định</span>
+                                    </label>
+                                    <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'ga_chinh' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
+                                        <input type="radio" name="house_type_source" value="ga_chinh" class="hidden house-source-input" {{ request('house_type_source') == 'ga_chinh' ? 'checked' : '' }}>
+                                        <span class="text-sm">Ga chính</span>
+                                    </label>
+                                    <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'ga_ben_canh' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
+                                        <input type="radio" name="house_type_source" value="ga_ben_canh" class="hidden house-source-input" {{ request('house_type_source') == 'ga_ben_canh' ? 'checked' : '' }}>
+                                        <span class="text-sm">Ga bên cạnh</span>
+                                    </label>
+                                    <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'ga_di_tau_toi' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
+                                        <input type="radio" name="house_type_source" value="ga_di_tau_toi" class="hidden house-source-input" {{ request('house_type_source') == 'ga_di_tau_toi' ? 'checked' : '' }}>
+                                        <span class="text-sm">Ga tàu tới</span>
+                                    </label>
+                                    <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'company' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
+                                        <input type="radio" name="house_type_source" value="company" class="hidden house-source-input" {{ request('house_type_source') == 'company' ? 'checked' : '' }}>
+                                        <span class="text-sm">Công ty</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+            </div>
             
-            <!-- NHÓM 2: THÔNG TIN GIÁ CẢ -->
+            <!-- NHÓM 3: THÔNG TIN GIÁ CẢ -->
             <div class="bg-gray-50 p-4 rounded-lg mb-6">
                 <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Apply giá cả</h3>
                 
@@ -214,26 +266,7 @@
                 </div>
             </div>
             
-            <!-- NHÓM 3: THÔNG TIN NHÀ -->
-            <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Thông tin nhà</h3>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Dạng nhà -->
-                    <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-700">Dạng nhà</label>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach(['1r-1K', '2K-2DK'] as $type)
-                                <label class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type') == $type ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseType(this)">
-                                    <input type="radio" name="house_type" value="{{ $type }}" class="hidden house-type-input" {{ request('house_type') == $type ? 'checked' : '' }}>
-                                    {{ $type }}
-                                </label>
-                            @endforeach
-                        </div>
-                    </div>
-                 
-                </div>
-            </div>
+          
             
             <div class="flex justify-between items-center">
                 <div class="flex items-center">
@@ -381,10 +414,36 @@
                                     </div>
                                     @endif
                                     
-                                    @if (request('house_type') || $house->house_type)
+                                    @if (request('house_type') || $house->default_house_type)
                                     <div>
-                                        <p class="text-xs text-gray-500">Dạng nhà:</p>
-                                        <p class="text-sm font-medium text-indigo-700">{{ request('house_type') ?: $house->house_type }}</p>
+                                        <p class="text-xs text-gray-500">
+                                            @if(request('house_type_source') == 'ga_chinh')
+                                                Ga chính (Dạng nhà):
+                                            @elseif(request('house_type_source') == 'ga_ben_canh')
+                                                Ga bên cạnh (Dạng nhà):
+                                            @elseif(request('house_type_source') == 'ga_di_tau_toi')
+                                                Ga tàu tới (Dạng nhà):
+                                            @elseif(request('house_type_source') == 'company')
+                                                Công ty (Dạng nhà):
+                                            @else
+                                                Dạng nhà:
+                                            @endif
+                                        </p>
+                                        <p class="text-sm font-medium text-indigo-700">
+                                            @if(request('house_type'))
+                                                {{ request('house_type') }}
+                                            @elseif(request('house_type_source') == 'ga_chinh' && $house->ga_chinh_house_type)
+                                                {{ $house->ga_chinh_house_type }}
+                                            @elseif(request('house_type_source') == 'ga_ben_canh' && $house->ga_ben_canh_house_type)
+                                                {{ $house->ga_ben_canh_house_type }}
+                                            @elseif(request('house_type_source') == 'ga_di_tau_toi' && $house->ga_di_tau_toi_house_type)
+                                                {{ $house->ga_di_tau_toi_house_type }}
+                                            @elseif(request('house_type_source') == 'company' && $house->company_house_type)
+                                                {{ $house->company_house_type }}
+                                            @else
+                                                {{ $house->default_house_type }}
+                                            @endif
+                                        </p>
                                     </div>
                                     @endif
                                     
@@ -498,6 +557,25 @@
     function updateHouseType(labelElement) {
         // Reset tất cả các nút dạng nhà
         let allLabels = document.querySelectorAll('input[name="house_type"]').forEach(input => {
+            let label = input.parentElement;
+            label.classList.remove('bg-indigo-50', 'border-indigo-500', 'text-indigo-700');
+            label.classList.add('text-gray-700');
+        });
+        
+        // Đánh dấu label được chọn
+        labelElement.classList.remove('text-gray-700');
+        labelElement.classList.add('bg-indigo-50', 'border-indigo-500', 'text-indigo-700');
+        
+        // Đảm bảo input bên trong được chọn
+        let input = labelElement.querySelector('input');
+        if (input) {
+            input.checked = true;
+        }
+    }
+    
+    function updateHouseTypeSource(labelElement) {
+        // Reset tất cả các nút nguồn dạng nhà
+        let allLabels = document.querySelectorAll('input[name="house_type_source"]').forEach(input => {
             let label = input.parentElement;
             label.classList.remove('bg-indigo-50', 'border-indigo-500', 'text-indigo-700');
             label.classList.add('text-gray-700');

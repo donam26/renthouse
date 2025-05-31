@@ -74,6 +74,39 @@ class HouseController extends Controller
         // Tạo query cơ bản - lấy tất cả nhà của user
         $query = House::query()->where('user_id', $user->id);
         
+        // Lọc theo kiểu phòng nếu có
+        $selectedHouseType = $request->house_type;
+        $selectedSource = $request->house_type_source;
+
+        if ($selectedHouseType && $selectedSource) {
+            switch ($selectedSource) {
+                case 'ga_chinh':
+                    $query->where('ga_chinh_house_type', $selectedHouseType);
+                    break;
+                case 'ga_ben_canh':
+                    $query->where('ga_ben_canh_house_type', $selectedHouseType);
+                    break;
+                case 'ga_di_tau_toi':
+                    $query->where('ga_di_tau_toi_house_type', $selectedHouseType);
+                    break;
+                case 'company':
+                    $query->where('company_house_type', $selectedHouseType);
+                    break;
+                default:
+                    $query->where('default_house_type', $selectedHouseType);
+                    break;
+            }
+        } elseif ($selectedHouseType) {
+            // Nếu chỉ có house_type mà không có source, tìm trong tất cả các trường
+            $query->where(function($q) use ($selectedHouseType) {
+                $q->where('default_house_type', $selectedHouseType)
+                  ->orWhere('ga_chinh_house_type', $selectedHouseType)
+                  ->orWhere('ga_ben_canh_house_type', $selectedHouseType)
+                  ->orWhere('ga_di_tau_toi_house_type', $selectedHouseType)
+                  ->orWhere('company_house_type', $selectedHouseType);
+            });
+        }
+        
         // Lấy tất cả nhà, không lọc theo transportation
         $houses = $query->get();
         
@@ -119,7 +152,7 @@ class HouseController extends Controller
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'min_price', 'input_price', 
+            'search', 'house_type', 'house_type_source', 'min_price', 'input_price', 
             'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
@@ -143,15 +176,21 @@ class HouseController extends Controller
         $validated = $request->validate([
             'rent_price' => 'required|numeric|min:0',
             'input_price' => 'nullable|numeric|min:0',
-            'house_type' => 'required|string|in:1r-1K,2K-2DK',
+            'default_house_type' => 'required|string|in:1R-1K,2K-2DK',
+            'ga_chinh' => 'nullable|string|max:255',
+            'ga_chinh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
+            'ga_ben_canh' => 'nullable|string|max:255',
+            'ga_ben_canh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
+            'ga_di_tau_toi' => 'nullable|string|max:255',
+            'ga_di_tau_toi_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
+            'is_company' => 'nullable|boolean',
+            'company_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
-            'ga_chinh' => 'nullable|string|max:255',
-            'ga_ben_canh' => 'nullable|string|max:255',
-            'ga_di_tau_toi' => 'nullable|string|max:255',
-            'is_company' => 'nullable|boolean',
+            'description' => 'nullable|string',
+            'distance_to_station' => 'nullable|integer|min:0',
         ]);
 
         // Xử lý upload file ảnh chính
@@ -170,11 +209,13 @@ class HouseController extends Controller
        
         // Lọc bỏ các trường không thuộc về bảng houses
         $houseData = collect($validated)->only([
-            'user_id', 'rent_price', 
-            'input_price', 'house_type',
-            'image_path', 'share_link',
-            'ga_chinh', 'ga_ben_canh', 'ga_di_tau_toi',
-            'is_company', 'transportation', 'distance_to_station'
+            'user_id', 'rent_price', 'input_price', 'default_house_type',
+            'ga_chinh', 'ga_chinh_house_type',
+            'ga_ben_canh', 'ga_ben_canh_house_type',
+            'ga_di_tau_toi', 'ga_di_tau_toi_house_type',
+            'is_company', 'company_house_type',
+            'image_path', 'share_link', 'description',
+            'transportation', 'distance_to_station'
         ])->toArray();
     
         
@@ -238,7 +279,15 @@ class HouseController extends Controller
         $validated = $request->validate([
             'rent_price' => 'required|numeric|min:0',
             'input_price' => 'nullable|numeric|min:0',
-            'house_type' => 'required|string|in:1r-1K,2K-2DK',
+            'default_house_type' => 'required|string|in:1R-1K,2K-2DK',
+            'ga_chinh' => 'nullable|string|max:255',
+            'ga_chinh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
+            'ga_ben_canh' => 'nullable|string|max:255',
+            'ga_ben_canh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
+            'ga_di_tau_toi' => 'nullable|string|max:255',
+            'ga_di_tau_toi_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
+            'is_company' => 'nullable|boolean',
+            'company_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images_to_delete' => 'nullable|array',
@@ -246,10 +295,8 @@ class HouseController extends Controller
             'primary_image_id' => 'nullable|integer',
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
-            'ga_chinh' => 'nullable|string|max:255',
-            'ga_ben_canh' => 'nullable|string|max:255',
-            'ga_di_tau_toi' => 'nullable|string|max:255',
-            'is_company' => 'nullable|boolean',
+            'description' => 'nullable|string',
+            'distance_to_station' => 'nullable|integer|min:0',
         ]);
 
         // Xử lý upload file ảnh mới
@@ -286,13 +333,15 @@ class HouseController extends Controller
             }
         }
         
-        // Lọc bỏ các trường không thuộc về bảng houses
+        // Lọc bỏ các trường không cần cập nhật
         $houseData = collect($validated)->only([
-            'rent_price', 
-            'input_price', 'house_type', 
-            'image_path', 'share_link',
-            'ga_chinh', 'ga_ben_canh', 'ga_di_tau_toi',
-            'is_company', 'transportation', 'distance_to_station'
+            'rent_price', 'input_price', 'default_house_type', 
+            'image_path', 'share_link', 'description',
+            'ga_chinh', 'ga_chinh_house_type',
+            'ga_ben_canh', 'ga_ben_canh_house_type',
+            'ga_di_tau_toi', 'ga_di_tau_toi_house_type',
+            'is_company', 'company_house_type',
+            'transportation', 'distance_to_station'
         ])->toArray();
         
         
@@ -365,6 +414,38 @@ class HouseController extends Controller
         // Tạo query cơ bản
         $query = House::query()->where('user_id', $userId);
         
+        // Lọc theo kiểu phòng nếu có
+        $selectedHouseType = $request->house_type;
+        $selectedSource = $request->house_type_source;
+
+        if ($selectedHouseType && $selectedSource) {
+            switch ($selectedSource) {
+                case 'ga_chinh':
+                    $query->where('ga_chinh_house_type', $selectedHouseType);
+                    break;
+                case 'ga_ben_canh':
+                    $query->where('ga_ben_canh_house_type', $selectedHouseType);
+                    break;
+                case 'ga_di_tau_toi':
+                    $query->where('ga_di_tau_toi_house_type', $selectedHouseType);
+                    break;
+                case 'company':
+                    $query->where('company_house_type', $selectedHouseType);
+                    break;
+                default:
+                    $query->where('default_house_type', $selectedHouseType);
+                    break;
+            }
+        } elseif ($selectedHouseType) {
+            // Nếu chỉ có house_type mà không có source, tìm trong tất cả các trường
+            $query->where(function($q) use ($selectedHouseType) {
+                $q->where('default_house_type', $selectedHouseType)
+                  ->orWhere('ga_chinh_house_type', $selectedHouseType)
+                  ->orWhere('ga_ben_canh_house_type', $selectedHouseType)
+                  ->orWhere('ga_di_tau_toi_house_type', $selectedHouseType)
+                  ->orWhere('company_house_type', $selectedHouseType);
+            });
+        }
     
         // KHÔNG lọc theo giá thuê hay giá đầu vào nữa
         // Chỉ sắp xếp theo các tiêu chí khác
@@ -428,7 +509,7 @@ class HouseController extends Controller
         
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
-            'search', 'house_type', 'min_price', 'input_price', 
+            'search', 'house_type', 'house_type_source', 'min_price', 'input_price', 
             'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
