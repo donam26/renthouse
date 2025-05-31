@@ -25,6 +25,7 @@ class House extends Model
         'is_company',
         'image_path',
         'share_link',
+        'description',
     ];
 
     /**

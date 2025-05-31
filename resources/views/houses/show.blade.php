@@ -132,6 +132,15 @@
                     @endif
                 </div>
                 
+                @if ($house->description)
+                <div class="mb-6">
+                    <h2 class="text-sm text-gray-600 mb-1">Mô tả chi tiết:</h2>
+                    <div class="mt-2 p-4 bg-gray-50 rounded-lg text-gray-700">
+                        {{ $house->description }}
+                    </div>
+                </div>
+                @endif
+                
                 <div class="pt-6 mt-6 border-t border-gray-200">
                     <h2 class="text-sm text-gray-600 mb-2">Chủ sở hữu:</h2>
                     <div class="flex items-center">

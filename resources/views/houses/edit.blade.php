@@ -97,6 +97,17 @@
                         <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
                     @enderror
                 </div>
+                
+                <!-- Mô tả chi tiết -->
+                <div class="mt-4">
+                    <label for="description" class="block mb-2 text-sm font-medium text-gray-700">Mô tả chi tiết</label>
+                    <textarea id="description" name="description" rows="4" 
+                        class="input-field @error('description') border-red-500 @enderror"
+                        placeholder="Nhập mô tả chi tiết về nhà cho thuê...">{{ old('description', $house->description) }}</textarea>
+                    @error('description')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

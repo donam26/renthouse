@@ -121,6 +121,19 @@
                         @enderror
                     </div>
 
+                    <!-- Mô tả chi tiết -->
+                    <div class="sm:col-span-6">
+                        <label for="description" class="block text-sm font-medium text-gray-700">Mô tả chi tiết</label>
+                        <div class="mt-1">
+                            <textarea id="description" name="description" rows="4"
+                                class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('description') border-red-500 @enderror"
+                                placeholder="Nhập mô tả chi tiết về nhà cho thuê...">{{ old('description') }}</textarea>
+                        </div>
+                        @error('description')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
                     <!-- Hình ảnh -->
                     <div class="sm:col-span-6">
                         <label for="image" class="block text-sm font-medium text-gray-700">Hình ảnh</label>

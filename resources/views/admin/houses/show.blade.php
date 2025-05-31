@@ -131,6 +131,15 @@
                             <span class="mt-1 text-sm text-gray-900">{{ $house->updated_at->format('d/m/Y H:i') }}</span>
                         </div>
                     </div>
+                    
+                    @if($house->description)
+                    <div class="mt-4">
+                        <span class="text-sm font-medium text-gray-500">Mô tả chi tiết:</span>
+                        <div class="mt-2 p-4 bg-gray-100 rounded-lg text-sm text-gray-700">
+                            {{ $house->description }}
+                        </div>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

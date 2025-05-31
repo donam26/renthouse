@@ -152,9 +152,26 @@
                 </div>
             </div>
 
+            <!-- Mô tả chi tiết -->
+            <div class="mt-8 space-y-6">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900">Mô tả chi tiết</h3>
+                    <p class="mt-1 text-sm text-gray-500">Nhập mô tả chi tiết về nhà cho thuê</p>
+                </div>
+                
+                <div>
+                    <label for="description" class="form-label">Mô tả</label>
+                    <textarea name="description" id="description" rows="4" 
+                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('description') border-red-500 @enderror" 
+                        placeholder="Nhập mô tả chi tiết về nhà cho thuê...">{{ old('description', $house->description) }}</textarea>
+                    @error('description')
+                        <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    @enderror
+                </div>
+            </div>
+
             <!-- Ảnh nhà -->
             <div class="mt-8 space-y-6">
-
                 <div>
                     <label for="image" class="form-label">Hình ảnh</label>
                     <div class="flex items-center space-x-4">

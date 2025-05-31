@@ -54,6 +54,15 @@
                         </div>
                         <x-input-error :messages="$errors->get('is_company')" class="mt-2" />
                     </div>
+                    
+                    <!-- Mô tả chi tiết -->
+                    <div class="mb-4">
+                        <x-input-label for="description" :value="__('Mô tả chi tiết')" />
+                        <textarea id="description" name="description" rows="4" 
+                            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full"
+                            placeholder="Nhập mô tả chi tiết về nhà cho thuê...">{{ old('description') }}</textarea>
+                        <x-input-error :messages="$errors->get('description')" class="mt-2" />
+                    </div>
 
                     <!-- Chi tiết phòng -->
                     <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Chi tiết phòng</div>

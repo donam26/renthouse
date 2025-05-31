@@ -135,6 +135,16 @@
                             <p class="text-xl font-bold text-gray-800">{{ number_format($house->input_price) }} <span class="text-sm font-normal">¥</span></p>
                         </div>
                     </div>
+
+                    <!-- Mô tả chi tiết -->
+                    @if ($house->description)
+                    <div class="mb-6">
+                        <h2 class="text-sm text-gray-600 mb-1">Mô tả chi tiết:</h2>
+                        <div class="mt-2 p-4 bg-gray-50 rounded-lg text-gray-700">
+                            {{ $house->description }}
+                        </div>
+                    </div>
+                    @endif
                     
                     <!-- Thông tin ga tàu -->
                     @if ($house->ga_chinh || $house->ga_ben_canh || $house->ga_di_tau_toi || $house->is_company)
