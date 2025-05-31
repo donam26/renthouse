@@ -24,22 +24,7 @@ class HouseController extends Controller
         // Tạo query cơ bản
         $query = House::query()->where('user_id', Auth::id());
      
-        
-        // Sắp xếp
-        switch ($request->sort_by) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'price_low':
-                $query->orderBy('rent_price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('rent_price', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc'); // Mặc định: newest
-        }
-        
+
         // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
         if ($searchKeyword) {
             $houses = $query->inRandomOrder()->limit(10)->get();
@@ -173,25 +158,45 @@ class HouseController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        // Kiểm tra xem đã chọn loại vị trí chưa
+        if (!$request->has('location_type')) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['location_type' => 'Vui lòng chọn một loại vị trí']);
+        }
+
+        // Chuẩn bị validation cơ bản
+        $baseRules = [
+            'location_type' => 'required|in:ga_chinh,ga_ben_canh,ga_di_tau_toi,company',
             'rent_price' => 'required|numeric|min:0',
             'input_price' => 'nullable|numeric|min:0',
-            'default_house_type' => 'required|string|in:1R-1K,2K-2DK',
-            'ga_chinh' => 'nullable|string|max:255',
-            'ga_chinh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
-            'ga_ben_canh' => 'nullable|string|max:255',
-            'ga_ben_canh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
-            'ga_di_tau_toi' => 'nullable|string|max:255',
-            'ga_di_tau_toi_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
-            'is_company' => 'nullable|boolean',
-            'company_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
             'description' => 'nullable|string',
             'distance_to_station' => 'nullable|integer|min:0',
-        ]);
+        ];
+
+        // Bổ sung rules tùy theo loại vị trí được chọn
+        $locationType = $request->input('location_type');
+        
+        if ($locationType === 'ga_chinh') {
+            $baseRules['ga_chinh'] = 'required|string|max:255';
+            $baseRules['ga_chinh_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        } else if ($locationType === 'ga_ben_canh') {
+            $baseRules['ga_ben_canh'] = 'required|string|max:255';
+            $baseRules['ga_ben_canh_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        } else if ($locationType === 'ga_di_tau_toi') {
+            $baseRules['ga_di_tau_toi'] = 'required|string|max:255';
+            $baseRules['ga_di_tau_toi_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        } else if ($locationType === 'company') {
+            $baseRules['is_company'] = 'required|boolean';
+            $baseRules['company_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        }
+
+        // Validate dữ liệu
+        $validated = $request->validate($baseRules);
 
         // Xử lý upload file ảnh chính
         if ($request->hasFile('image')) {
@@ -206,6 +211,17 @@ class HouseController extends Controller
         if (empty($validated['share_link'])) {
             $validated['share_link'] = uniqid('house_');
         }
+        
+        // Sử dụng loại nhà được chọn làm default_house_type
+        if ($locationType === 'ga_chinh') {
+            $validated['default_house_type'] = $validated['ga_chinh_house_type'];
+        } else if ($locationType === 'ga_ben_canh') {
+            $validated['default_house_type'] = $validated['ga_ben_canh_house_type'];
+        } else if ($locationType === 'ga_di_tau_toi') {
+            $validated['default_house_type'] = $validated['ga_di_tau_toi_house_type'];
+        } else if ($locationType === 'company') {
+            $validated['default_house_type'] = $validated['company_house_type'];
+        }
        
         // Lọc bỏ các trường không thuộc về bảng houses
         $houseData = collect($validated)->only([
@@ -217,7 +233,6 @@ class HouseController extends Controller
             'image_path', 'share_link', 'description',
             'transportation', 'distance_to_station'
         ])->toArray();
-    
         
         $house = House::create($houseData);
         
@@ -274,96 +289,151 @@ class HouseController extends Controller
      */
     public function update(Request $request, House $house)
     {
-        $this->authorize('update', $house);
+        // Kiểm tra quyền sở hữu
+        if (Auth::id() !== $house->user_id) {
+            abort(403, 'Bạn không có quyền chỉnh sửa nhà này');
+        }
 
-        $validated = $request->validate([
+        // Kiểm tra xem đã chọn loại vị trí chưa
+        if (!$request->has('location_type')) {
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['location_type' => 'Vui lòng chọn một loại vị trí']);
+        }
+
+        // Chuẩn bị validation cơ bản
+        $baseRules = [
+            'location_type' => 'required|in:ga_chinh,ga_ben_canh,ga_di_tau_toi,company',
             'rent_price' => 'required|numeric|min:0',
             'input_price' => 'nullable|numeric|min:0',
-            'default_house_type' => 'required|string|in:1R-1K,2K-2DK',
-            'ga_chinh' => 'nullable|string|max:255',
-            'ga_chinh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
-            'ga_ben_canh' => 'nullable|string|max:255',
-            'ga_ben_canh_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
-            'ga_di_tau_toi' => 'nullable|string|max:255',
-            'ga_di_tau_toi_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
-            'is_company' => 'nullable|boolean',
-            'company_house_type' => 'nullable|string|in:1R-1K,2K-2DK',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'additional_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'images_to_delete' => 'nullable|array',
-            'images_to_delete.*' => 'nullable|integer',
-            'primary_image_id' => 'nullable|integer',
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
             'description' => 'nullable|string',
             'distance_to_station' => 'nullable|integer|min:0',
-        ]);
+        ];
 
-        // Xử lý upload file ảnh mới
+        // Bổ sung rules tùy theo loại vị trí được chọn
+        $locationType = $request->input('location_type');
+        
+        if ($locationType === 'ga_chinh') {
+            $baseRules['ga_chinh'] = 'required|string|max:255';
+            $baseRules['ga_chinh_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        } else if ($locationType === 'ga_ben_canh') {
+            $baseRules['ga_ben_canh'] = 'required|string|max:255';
+            $baseRules['ga_ben_canh_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        } else if ($locationType === 'ga_di_tau_toi') {
+            $baseRules['ga_di_tau_toi'] = 'required|string|max:255';
+            $baseRules['ga_di_tau_toi_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        } else if ($locationType === 'company') {
+            $baseRules['is_company'] = 'required|boolean';
+            $baseRules['company_house_type'] = 'required|string|in:1R-1K,2K-2DK';
+        }
+
+        // Validate dữ liệu
+        $validated = $request->validate($baseRules);
+
+        // Khởi tạo mảng dữ liệu cập nhật
+        $houseData = [];
+
+        // Thêm dữ liệu cơ bản
+        $houseData['rent_price'] = $validated['rent_price'];
+        $houseData['input_price'] = $validated['input_price'] ?? null;
+        $houseData['share_link'] = $validated['share_link'] ?? $house->share_link;
+        $houseData['description'] = $validated['description'] ?? null;
+        $houseData['transportation'] = $validated['transportation'] ?? 'Đi bộ';
+        $houseData['distance_to_station'] = $validated['distance_to_station'] ?? null;
+
+        // Xử lý dữ liệu dựa trên loại vị trí
+        if ($locationType === 'ga_chinh') {
+            $houseData['ga_chinh'] = $validated['ga_chinh'];
+            $houseData['ga_chinh_house_type'] = $validated['ga_chinh_house_type'];
+            $houseData['default_house_type'] = $validated['ga_chinh_house_type'];
+            // Reset các trường khác nếu cần
+            $houseData['ga_ben_canh'] = null;
+            $houseData['ga_ben_canh_house_type'] = null;
+            $houseData['ga_di_tau_toi'] = null;
+            $houseData['ga_di_tau_toi_house_type'] = null;
+            $houseData['is_company'] = false;
+            $houseData['company_house_type'] = null;
+        } 
+        else if ($locationType === 'ga_ben_canh') {
+            $houseData['ga_ben_canh'] = $validated['ga_ben_canh'];
+            $houseData['ga_ben_canh_house_type'] = $validated['ga_ben_canh_house_type'];
+            $houseData['default_house_type'] = $validated['ga_ben_canh_house_type'];
+            // Reset các trường khác
+            $houseData['ga_chinh'] = null;
+            $houseData['ga_chinh_house_type'] = null;
+            $houseData['ga_di_tau_toi'] = null;
+            $houseData['ga_di_tau_toi_house_type'] = null;
+            $houseData['is_company'] = false;
+            $houseData['company_house_type'] = null;
+        } 
+        else if ($locationType === 'ga_di_tau_toi') {
+            $houseData['ga_di_tau_toi'] = $validated['ga_di_tau_toi'];
+            $houseData['ga_di_tau_toi_house_type'] = $validated['ga_di_tau_toi_house_type'];
+            $houseData['default_house_type'] = $validated['ga_di_tau_toi_house_type'];
+            // Reset các trường khác
+            $houseData['ga_chinh'] = null;
+            $houseData['ga_chinh_house_type'] = null;
+            $houseData['ga_ben_canh'] = null;
+            $houseData['ga_ben_canh_house_type'] = null;
+            $houseData['is_company'] = false;
+            $houseData['company_house_type'] = null;
+        } 
+        else if ($locationType === 'company') {
+            $houseData['is_company'] = true;
+            $houseData['company_house_type'] = $validated['company_house_type'];
+            $houseData['default_house_type'] = $validated['company_house_type'];
+            // Reset các trường khác
+            $houseData['ga_chinh'] = null;
+            $houseData['ga_chinh_house_type'] = null;
+            $houseData['ga_ben_canh'] = null;
+            $houseData['ga_ben_canh_house_type'] = null;
+            $houseData['ga_di_tau_toi'] = null;
+            $houseData['ga_di_tau_toi_house_type'] = null;
+        }
+
+        // Xử lý upload ảnh chính mới nếu có
         if ($request->hasFile('image')) {
+            // Xóa ảnh cũ nếu có
+            if ($house->image_path && Storage::disk('public')->exists($house->image_path)) {
+                Storage::disk('public')->delete($house->image_path);
+            }
+            
             // Lưu ảnh mới
             $imagePath = $request->file('image')->store('houses', 'public');
-            $validated['image_path'] = $imagePath;
+            $houseData['image_path'] = $imagePath;
             
-            // Tạo bản ghi ảnh mới và đặt làm ảnh chính
-            $house->images()->where('is_primary', true)->update(['is_primary' => false]);
+            // Tạo hoặc cập nhật bản ghi house_image cho ảnh chính
+            $house->images()
+                ->where('is_primary', true)
+                ->delete(); // Xóa ảnh chính cũ
+                
             $house->images()->create([
                 'image_path' => $imagePath,
                 'is_primary' => true,
                 'sort_order' => -1,
             ]);
-        } else if ($request->has('primary_image_id')) {
-            // Cập nhật ảnh chính nếu được chọn
-            $house->images()->where('is_primary', true)->update(['is_primary' => false]);
-            $house->images()->where('id', $request->primary_image_id)->update(['is_primary' => true]);
         }
-        
-        // Xóa các ảnh được chọn để xóa
-        if ($request->has('images_to_delete')) {
-            $imagesToDelete = $house->images()->whereIn('id', $request->images_to_delete)->get();
-            
-            foreach ($imagesToDelete as $image) {
-                // Xóa file ảnh
-                if (Storage::disk('public')->exists($image->image_path)) {
-                    Storage::disk('public')->delete($image->image_path);
-                }
-                
-                // Xóa bản ghi
-                $image->delete();
-            }
-        }
-        
-        // Lọc bỏ các trường không cần cập nhật
-        $houseData = collect($validated)->only([
-            'rent_price', 'input_price', 'default_house_type', 
-            'image_path', 'share_link', 'description',
-            'ga_chinh', 'ga_chinh_house_type',
-            'ga_ben_canh', 'ga_ben_canh_house_type',
-            'ga_di_tau_toi', 'ga_di_tau_toi_house_type',
-            'is_company', 'company_house_type',
-            'transportation', 'distance_to_station'
-        ])->toArray();
-        
-        
-        // Cập nhật thông tin nhà
-        $house->update($houseData);
-        
-        // Xử lý upload các ảnh bổ sung
+
+        // Xử lý upload ảnh bổ sung nếu có
         if ($request->hasFile('additional_images')) {
-            $maxOrder = $house->images()->max('sort_order') ?? 0;
-            
-            foreach ($request->file('additional_images') as $image) {
+            foreach ($request->file('additional_images') as $index => $image) {
                 $imagePath = $image->store('houses', 'public');
-                $maxOrder++;
                 
                 $house->images()->create([
                     'image_path' => $imagePath,
                     'is_primary' => false,
-                    'sort_order' => $maxOrder,
+                    'sort_order' => $index,
                 ]);
             }
         }
-        
+
+        // Cập nhật nhà
+        $house->update($houseData);
+
         return redirect()->route('houses.show', $house)->with('success', 'Cập nhật nhà thành công');
     }
 
@@ -387,8 +457,8 @@ class HouseController extends Controller
         }
 
         $house->delete();
-
-        return redirect()->route('houses.index')->with('success', 'Xóa nhà thành công');
+        
+        return redirect()->route('houses.by.username', Auth::user()->username)->with('success', 'Xóa nhà thành công');
     }
 
     /**
@@ -448,20 +518,6 @@ class HouseController extends Controller
         }
     
         // KHÔNG lọc theo giá thuê hay giá đầu vào nữa
-        // Chỉ sắp xếp theo các tiêu chí khác
-        switch ($request->sort_by) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'price_low':
-                $query->orderBy('rent_price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('rent_price', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc'); // Mặc định: newest
-        }
       
       
         // Lấy danh sách nhà

@@ -50,7 +50,7 @@
             
             <button 
                 onclick="shareSearchResults()" 
-                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex items-center">
+                class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors flex items-center shadow-sm font-medium text-sm">
                 <i class="fas fa-share-alt mr-2"></i> Share Link
             </button>
         </div>
@@ -67,7 +67,7 @@
                         <label for="ga_chinh" class="block mb-2 text-sm font-medium text-gray-700">Ga chính</label>
                         <input type="text" name="ga_chinh" id="ga_chinh" 
                             value="{{ request('ga_chinh') }}"
-                            class="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700"
                             placeholder="Nhập tên ga chính">
                     </div>
                     
@@ -76,7 +76,7 @@
                         <label for="ga_ben_canh" class="block mb-2 text-sm font-medium text-gray-700">Ga bên cạnh</label>
                         <input type="text" name="ga_ben_canh" id="ga_ben_canh" 
                             value="{{ request('ga_ben_canh') }}"
-                            class="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700"
                             placeholder="Nhập tên ga bên cạnh">
                     </div>
                     
@@ -85,7 +85,7 @@
                         <label for="ga_di_tau_toi" class="block mb-2 text-sm font-medium text-gray-700">Ga đi tàu tới</label>
                         <input type="text" name="ga_di_tau_toi" id="ga_di_tau_toi" 
                             value="{{ request('ga_di_tau_toi') }}"
-                            class="block w-full py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            class="block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700"
                             placeholder="Nhập tên ga đi tàu tới">
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                         <div class="relative">
                             <input type="text" name="distance_to_station" id="distance_to_station" 
                                 value="{{ request('distance_to_station') }}"
-                                class="block w-full pr-12 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                class="block w-full pr-12 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700"
                                 placeholder="Nhập khoảng cách">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 text-sm">
                                 vđ 5Phút
@@ -158,7 +158,7 @@
                     </div>
                 </div>
             </div>
-
+            
               <!-- NHÓM 2: THÔNG TIN NHÀ -->
               <div class="bg-gray-50 p-4 rounded-lg mb-6">
                 <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Thông tin nhà</h3>
@@ -183,10 +183,7 @@
                             <div class="md:col-span-2">
                                 <label class="block mb-1 text-sm text-gray-600">Áp dụng cho</label>
                                 <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                                    <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'default' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
-                                        <input type="radio" name="house_type_source" value="default" class="hidden house-source-input" {{ request('house_type_source') == 'default' ? 'checked' : '' }}>
-                                        <span class="text-sm">Mặc định</span>
-                                    </label>
+                                  
                                     <label class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm cursor-pointer hover:bg-gray-50 {{ request('house_type_source') == 'ga_chinh' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateHouseTypeSource(this)">
                                         <input type="radio" name="house_type_source" value="ga_chinh" class="hidden house-source-input" {{ request('house_type_source') == 'ga_chinh' ? 'checked' : '' }}>
                                         <span class="text-sm">Ga chính</span>
@@ -222,7 +219,7 @@
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                             <select name="min_price" id="min_price" 
-                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                class="block w-full rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-gray-700 text-sm">
                                 <option value="">Chọn giá thuê</option>
                                 <option value="20000" {{ request('min_price') == '20000' ? 'selected' : '' }}>20,000</option>
                                 <option value="30000" {{ request('min_price') == '30000' ? 'selected' : '' }}>30,000</option>
@@ -246,7 +243,7 @@
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                             <select name="input_price" id="input_price"
-                                class="block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                class="block w-full rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-gray-700 text-sm">
                                 <option value="">Chọn giá đầu vào</option>
                                 <option value="20000" {{ request('input_price') == '20000' ? 'selected' : '' }}>20,000</option>
                                 <option value="30000" {{ request('input_price') == '30000' ? 'selected' : '' }}>30,000</option>
@@ -274,10 +271,10 @@
                 </div>
                 
                 <div class="flex space-x-3">
-                    <a href="{{ route('houses.by.username', $user->username) }}" class="inline-flex items-center py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                    <a href="{{ route('houses.by.username', $user->username) }}" class="inline-flex items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors">
                         <i class="fas fa-undo mr-2"></i> Đặt lại
                     </a>
-                    <button type="submit" class="flex items-center justify-center py-2 px-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
+                    <button type="submit" class="flex items-center justify-center py-2 px-5 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 shadow-sm font-medium text-sm transition-colors">
                         <i class="fas fa-search mr-2"></i> Apply
                     </button>
                 </div>

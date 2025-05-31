@@ -15,7 +15,7 @@
             <div class="p-6 bg-white border-b border-gray-200">
                 <form method="POST" action="{{ route('houses.store') }}" enctype="multipart/form-data">
                     @csrf
-                    
+
                     <!-- Hiển thị tổng quan các lỗi validation -->
                     @if ($errors->any())
                         <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4">
@@ -28,88 +28,138 @@
                         </div>
                     @endif
 
-                    <!-- Thông tin cơ bản -->
-                    <div class="text-lg font-medium text-gray-900 mb-4">Thông tin cơ bản</div>
+                    <!-- Thông tin vị trí -->
+                    <div class="text-lg font-medium text-gray-900 mb-4">Thông tin vị trí</div>
                     
-                    <!-- Ga chính -->
-                    <div class="mb-6 border-b pb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <x-input-label for="ga_chinh" :value="__('Ga chính')" class="text-base font-semibold" />
+                    <!-- Chọn loại vị trí -->
+                    <div class="mb-6">
+                        <x-input-label for="location_type" :value="__('Chọn loại vị trí')" class="text-base font-semibold mb-3" />
+                        
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <label class="flex flex-col items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors location-option"
+                                   onclick="toggleLocationType('ga_chinh')">
+                                <input type="radio" name="location_type" value="ga_chinh" class="hidden" {{ old('location_type') == 'ga_chinh' ? 'checked' : '' }}>
+                                <div class="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mb-2">
+                                    <i class="fas fa-subway text-indigo-600 text-xl"></i>
+                                </div>
+                                <span class="font-medium text-gray-800">Ga chính</span>
+                                <div class="w-full h-1 mt-2 location-indicator {{ old('location_type') == 'ga_chinh' ? 'bg-indigo-600' : 'bg-transparent' }}"></div>
+                            </label>
+                            
+                            <label class="flex flex-col items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors location-option"
+                                   onclick="toggleLocationType('ga_ben_canh')">
+                                <input type="radio" name="location_type" value="ga_ben_canh" class="hidden" {{ old('location_type') == 'ga_ben_canh' ? 'checked' : '' }}>
+                                <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mb-2">
+                                    <i class="fas fa-train text-green-600 text-xl"></i>
+                                </div>
+                                <span class="font-medium text-gray-800">Ga bên cạnh</span>
+                                <div class="w-full h-1 mt-2 location-indicator {{ old('location_type') == 'ga_ben_canh' ? 'bg-indigo-600' : 'bg-transparent' }}"></div>
+                            </label>
+                            
+                            <label class="flex flex-col items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors location-option"
+                                   onclick="toggleLocationType('ga_di_tau_toi')">
+                                <input type="radio" name="location_type" value="ga_di_tau_toi" class="hidden" {{ old('location_type') == 'ga_di_tau_toi' ? 'checked' : '' }}>
+                                <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                                    <i class="fas fa-route text-blue-600 text-xl"></i>
+                                </div>
+                                <span class="font-medium text-gray-800">Ga đi tàu tới</span>
+                                <div class="w-full h-1 mt-2 location-indicator {{ old('location_type') == 'ga_di_tau_toi' ? 'bg-indigo-600' : 'bg-transparent' }}"></div>
+                            </label>
+                            
+                            <label class="flex flex-col items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition-colors location-option"
+                                   onclick="toggleLocationType('company')">
+                                <input type="radio" name="location_type" value="company" class="hidden" {{ old('location_type') == 'company' ? 'checked' : '' }}>
+                                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mb-2">
+                                    <i class="fas fa-building text-red-600 text-xl"></i>
+                                </div>
+                                <span class="font-medium text-gray-800">Công ty</span>
+                                <div class="w-full h-1 mt-2 location-indicator {{ old('location_type') == 'company' ? 'bg-indigo-600' : 'bg-transparent' }}"></div>
+                            </label>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="col-span-2">
-                                <x-text-input id="ga_chinh" class="block w-full" type="text" name="ga_chinh" :value="old('ga_chinh')" placeholder="Nhập tên ga chính" />
-                                <x-input-error :messages="$errors->get('ga_chinh')" class="mt-1" />
-                            </div>
-                            <div>
-                                <select id="ga_chinh_house_type" name="ga_chinh_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
-                                    <option value="1R-1K" {{ old('ga_chinh_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
-                                    <option value="2K-2DK" {{ old('ga_chinh_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
-                                </select>
-                                <x-input-error :messages="$errors->get('ga_chinh_house_type')" class="mt-1" />
-                            </div>
-                        </div>
+                        
+                        @error('location_type')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                        @enderror
                     </div>
                     
-                    <!-- Ga bên cạnh -->
-                    <div class="mb-6 border-b pb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <x-input-label for="ga_ben_canh" :value="__('Ga bên cạnh')" class="text-base font-semibold" />
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="col-span-2">
-                                <x-text-input id="ga_ben_canh" class="block w-full" type="text" name="ga_ben_canh" :value="old('ga_ben_canh')" placeholder="Nhập tên ga bên cạnh" />
-                                <x-input-error :messages="$errors->get('ga_ben_canh')" class="mt-1" />
-                            </div>
-                            <div>
-                                <select id="ga_ben_canh_house_type" name="ga_ben_canh_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
-                                    <option value="1R-1K" {{ old('ga_ben_canh_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
-                                    <option value="2K-2DK" {{ old('ga_ben_canh_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
-                                </select>
-                                <x-input-error :messages="$errors->get('ga_ben_canh_house_type')" class="mt-1" />
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Ga đi tàu tới -->
-                    <div class="mb-6 border-b pb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <x-input-label for="ga_di_tau_toi" :value="__('Ga đi tàu tới')" class="text-base font-semibold" />
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="col-span-2">
-                                <x-text-input id="ga_di_tau_toi" class="block w-full" type="text" name="ga_di_tau_toi" :value="old('ga_di_tau_toi')" placeholder="Nhập tên ga đi tàu tới" />
-                                <x-input-error :messages="$errors->get('ga_di_tau_toi')" class="mt-1" />
-                            </div>
-                            <div>
-                                <select id="ga_di_tau_toi_house_type" name="ga_di_tau_toi_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
-                                    <option value="1R-1K" {{ old('ga_di_tau_toi_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
-                                    <option value="2K-2DK" {{ old('ga_di_tau_toi_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
-                                </select>
-                                <x-input-error :messages="$errors->get('ga_di_tau_toi_house_type')" class="mt-1" />
+                    <!-- Thông tin chi tiết vị trí -->
+                    <div id="location_details" class="mb-6 p-5 border rounded-lg bg-gray-50">
+                        <!-- Ga chính -->
+                        <div id="ga_chinh_section" class="location-section {{ old('location_type') == 'ga_chinh' ? '' : 'hidden' }}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="col-span-2">
+                                    <x-input-label for="ga_chinh" :value="__('Tên ga chính')" class="mb-1" />
+                                    <x-text-input id="ga_chinh" class="block w-full" type="text" name="ga_chinh" :value="old('ga_chinh')" placeholder="Nhập tên ga chính" />
+                                    <x-input-error :messages="$errors->get('ga_chinh')" class="mt-1" />
+                                </div>
+                                <div>
+                                    <x-input-label for="ga_chinh_house_type" :value="__('Loại nhà')" class="mb-1" />
+                                    <select id="ga_chinh_house_type" name="ga_chinh_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                        <option value="1R-1K" {{ old('ga_chinh_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                        <option value="2K-2DK" {{ old('ga_chinh_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('ga_chinh_house_type')" class="mt-1" />
+                                </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Thông tin công ty -->
-                    <div class="mb-6 border-b pb-4">
-                        <div class="flex items-center justify-between mb-2">
-                            <x-input-label for="is_company" :value="__('Là công ty')" class="text-base font-semibold" />
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="col-span-2">
-                                <label class="inline-flex items-center">
-                                    <input id="is_company" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="is_company" value="1" {{ old('is_company') ? 'checked' : '' }}>
-                                    <span class="ml-2 text-sm text-gray-600">{{ __('Nhà này thuộc công ty') }}</span>
-                                </label>
-                                <x-input-error :messages="$errors->get('is_company')" class="mt-1" />
+                        
+                        <!-- Ga bên cạnh -->
+                        <div id="ga_ben_canh_section" class="location-section {{ old('location_type') == 'ga_ben_canh' ? '' : 'hidden' }}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="col-span-2">
+                                    <x-input-label for="ga_ben_canh" :value="__('Tên ga bên cạnh')" class="mb-1" />
+                                    <x-text-input id="ga_ben_canh" class="block w-full" type="text" name="ga_ben_canh" :value="old('ga_ben_canh')" placeholder="Nhập tên ga bên cạnh" />
+                                    <x-input-error :messages="$errors->get('ga_ben_canh')" class="mt-1" />
+                                </div>
+                                <div>
+                                    <x-input-label for="ga_ben_canh_house_type" :value="__('Loại nhà')" class="mb-1" />
+                                    <select id="ga_ben_canh_house_type" name="ga_ben_canh_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                        <option value="1R-1K" {{ old('ga_ben_canh_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                        <option value="2K-2DK" {{ old('ga_ben_canh_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('ga_ben_canh_house_type')" class="mt-1" />
+                                </div>
                             </div>
-                            <div>
-                                <select id="company_house_type" name="company_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
-                                    <option value="1R-1K" {{ old('company_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
-                                    <option value="2K-2DK" {{ old('company_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
-                                </select>
-                                <x-input-error :messages="$errors->get('company_house_type')" class="mt-1" />
+                        </div>
+                        
+                        <!-- Ga đi tàu tới -->
+                        <div id="ga_di_tau_toi_section" class="location-section {{ old('location_type') == 'ga_di_tau_toi' ? '' : 'hidden' }}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="col-span-2">
+                                    <x-input-label for="ga_di_tau_toi" :value="__('Tên ga đi tàu tới')" class="mb-1" />
+                                    <x-text-input id="ga_di_tau_toi" class="block w-full" type="text" name="ga_di_tau_toi" :value="old('ga_di_tau_toi')" placeholder="Nhập tên ga đi tàu tới" />
+                                    <x-input-error :messages="$errors->get('ga_di_tau_toi')" class="mt-1" />
+                                </div>
+                                <div>
+                                    <x-input-label for="ga_di_tau_toi_house_type" :value="__('Loại nhà')" class="mb-1" />
+                                    <select id="ga_di_tau_toi_house_type" name="ga_di_tau_toi_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                        <option value="1R-1K" {{ old('ga_di_tau_toi_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                        <option value="2K-2DK" {{ old('ga_di_tau_toi_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('ga_di_tau_toi_house_type')" class="mt-1" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Công ty -->
+                        <div id="company_section" class="location-section {{ old('location_type') == 'company' ? '' : 'hidden' }}">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div class="col-span-2">
+                                    <x-input-label for="is_company" :value="__('Thông tin công ty')" class="mb-1" />
+                                    <div class="flex items-center">
+                                        <input id="is_company" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="is_company" value="1" checked>
+                                        <span class="ml-2 text-sm text-gray-600">{{ __('Nhà này thuộc công ty') }}</span>
+                                    </div>
+                                    <x-input-error :messages="$errors->get('is_company')" class="mt-1" />
+                                </div>
+                                <div>
+                                    <x-input-label for="company_house_type" :value="__('Loại nhà')" class="mb-1" />
+                                    <select id="company_house_type" name="company_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block w-full">
+                                        <option value="1R-1K" {{ old('company_house_type') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
+                                        <option value="2K-2DK" {{ old('company_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
+                                    </select>
+                                    <x-input-error :messages="$errors->get('company_house_type')" class="mt-1" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,18 +175,6 @@
 
                     <!-- Chi tiết phòng -->
                     <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Chi tiết phòng</div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Loại nhà mặc định -->
-                        <div class="mb-4">
-                            <x-input-label for="default_house_type" :value="__('Loại nhà mặc định')" />
-                            <select id="default_house_type" name="default_house_type" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
-                                <option value="1R-1K" {{ old('default_house_type', '1R-1K') == '1R-1K' ? 'selected' : '' }}>1R-1K</option>
-                                <option value="2K-2DK" {{ old('default_house_type') == '2K-2DK' ? 'selected' : '' }}>2K-2DK</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('default_house_type')" class="mt-2" />
-                        </div>
-                    </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Khoảng cách đến ga -->
@@ -233,4 +271,88 @@
             </div>
         </div>
     </div>
-@endsection 
+@endsection
+
+@push('scripts')
+<script>
+    function toggleLocationType(type) {
+        // Ẩn tất cả các section
+        document.querySelectorAll('.location-section').forEach(section => {
+            section.classList.add('hidden');
+        });
+        
+        // Hiển thị section được chọn
+        document.getElementById(type + '_section').classList.remove('hidden');
+        
+        // Cập nhật style cho các option
+        document.querySelectorAll('.location-option').forEach(option => {
+            option.querySelector('.location-indicator').classList.replace('bg-indigo-600', 'bg-transparent');
+        });
+        
+        // Highlight option được chọn
+        const selectedOption = document.querySelector('input[name="location_type"][value="' + type + '"]').closest('.location-option');
+        selectedOption.querySelector('.location-indicator').classList.replace('bg-transparent', 'bg-indigo-600');
+    }
+    
+    // Thiết lập giá trị ban đầu dựa vào radio đã chọn
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectedType = document.querySelector('input[name="location_type"]:checked');
+        if (selectedType) {
+            toggleLocationType(selectedType.value);
+        } else {
+            // Nếu chưa có lựa chọn, mặc định chọn ga_chinh
+            document.querySelector('input[name="location_type"][value="ga_chinh"]').checked = true;
+            toggleLocationType('ga_chinh');
+        }
+        
+        // Thêm sự kiện cho tất cả các radio button
+        document.querySelectorAll('input[name="location_type"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                toggleLocationType(this.value);
+            });
+        });
+    });
+    
+    // Preview ảnh đã tồn tại
+    document.getElementById('image').addEventListener('change', function(event) {
+        const preview = document.getElementById('image-preview');
+        const file = event.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.querySelector('img').src = e.target.result;
+                preview.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        } else {
+            preview.classList.add('hidden');
+        }
+    });
+    
+    // Preview ảnh bổ sung
+    document.getElementById('additional_images').addEventListener('change', function(event) {
+        const preview = document.getElementById('additional-images-preview');
+        preview.innerHTML = '';
+        
+        const files = event.target.files;
+        if (files.length > 0) {
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgContainer = document.createElement('div');
+                    imgContainer.className = 'relative h-32 rounded-lg overflow-hidden border border-gray-300';
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'w-full h-full object-cover';
+                    
+                    imgContainer.appendChild(img);
+                    preview.appendChild(imgContainer);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+    });
+</script>
+@endpush 

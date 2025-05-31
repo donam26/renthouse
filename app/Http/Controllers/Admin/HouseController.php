@@ -37,21 +37,6 @@ class HouseController extends Controller
             $query->where('rent_price', '<=', $request->max_price);
         }
         
-        // Sắp xếp
-        switch ($request->sort_by) {
-            case 'oldest':
-                $query->orderBy('created_at', 'asc');
-                break;
-            case 'price_low':
-                $query->orderBy('rent_price', 'asc');
-                break;
-            case 'price_high':
-                $query->orderBy('rent_price', 'desc');
-                break;
-            default:
-                $query->orderBy('created_at', 'desc'); // Mặc định: newest
-        }
-        
         $houses = $query->paginate(10);
         $users = User::all(); // Dùng cho dropdown lọc theo chủ nhà
         
