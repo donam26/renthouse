@@ -93,10 +93,10 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-4">
                     <!-- Khoảng cách -->
                     <div>
-                        <label for="distance_to_station" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách</label>
+                        <label for="distance" class="block mb-2 text-sm font-medium text-gray-700">Khoảng cách</label>
                         <div class="relative">
-                            <input type="text" name="distance_to_station" id="distance_to_station" 
-                                value="{{ request('distance_to_station') }}"
+                            <input type="text" name="distance" id="distance" 
+                                value="{{ request('distance') }}"
                                 class="block w-full pr-12 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700"
                                 placeholder="Nhập khoảng cách">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 text-sm">
@@ -397,14 +397,14 @@
                                     </div>
                                     @endif
                                     
-                                    @if (request('distance_to_station') || $house->distance_to_station)
+                                    @if (request('distance') || $house->distance)
                                     <div>
                                         <p class="text-xs text-gray-500">Khoảng cách:</p>
                                         <p class="text-sm font-medium text-indigo-700">
                                             @if(isset($house->adjusted_distance))
                                                 {{ $house->adjusted_distance }}
                                             @else
-                                                {{ request('distance_to_station') ?: $house->distance_to_station }}
+                                                {{ request('distance') ?: $house->distance }}
                                             @endif
                                             phút đi bộ
                                         </p>

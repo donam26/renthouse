@@ -147,7 +147,7 @@
                                 </div>
                                 
                                 <!-- Thông tin ga tàu -->
-                                @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance_to_station'))
+                                @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance'))
                                 <div class="mb-4 bg-gray-50 p-3 rounded-md">
                                     <p class="text-sm font-medium text-gray-700 mb-2">Thông tin áp dụng:</p>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -172,14 +172,14 @@
                                         </div>
                                         @endif
                                         
-                                        @if (request('distance_to_station'))
+                                        @if (request('distance'))
                                         <div>
                                             <p class="text-xs text-gray-500">Khoảng cách:</p>
                                             <p class="text-sm font-medium text-indigo-700">
                                                 @if(isset($house->adjusted_distance))
                                                     {{ $house->adjusted_distance }}
                                                 @else
-                                                    {{ request('distance_to_station') }}
+                                                    {{ request('distance') }}
                                                 @endif
                                                 phút đi bộ
                                             </p>

@@ -124,8 +124,8 @@ class HouseController extends Controller
         }
         
         // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách
-        if ($request->filled('distance_to_station') && $houses->count() > 0) {
-            $baseDistance = (int)$request->distance_to_station;
+        if ($request->filled('distance') && $houses->count() > 0) {
+            $baseDistance = (int)$request->distance;
             
             // Áp dụng khoảng cách mới cho tất cả nhà
             foreach ($houses as $house) {
@@ -138,7 +138,7 @@ class HouseController extends Controller
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
             'search', 'house_type', 'house_type_source', 'min_price', 'input_price', 
-            'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
+            'distance', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
         
@@ -175,7 +175,7 @@ class HouseController extends Controller
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
             'description' => 'nullable|string',
-            'distance_to_station' => 'nullable|integer|min:0',
+            'distance' => 'nullable|integer|min:0',
         ];
 
         // Bổ sung rules tùy theo loại vị trí được chọn
@@ -231,7 +231,7 @@ class HouseController extends Controller
             'ga_di_tau_toi', 'ga_di_tau_toi_house_type',
             'is_company', 'company_house_type',
             'image_path', 'share_link', 'description',
-            'transportation', 'distance_to_station'
+            'transportation', 'distance'
         ])->toArray();
         
         $house = House::create($houseData);
@@ -311,7 +311,7 @@ class HouseController extends Controller
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
             'description' => 'nullable|string',
-            'distance_to_station' => 'nullable|integer|min:0',
+            'distance' => 'nullable|integer|min:0',
         ];
 
         // Bổ sung rules tùy theo loại vị trí được chọn
@@ -343,7 +343,7 @@ class HouseController extends Controller
         $houseData['share_link'] = $validated['share_link'] ?? $house->share_link;
         $houseData['description'] = $validated['description'] ?? null;
         $houseData['transportation'] = $validated['transportation'] ?? 'Đi bộ';
-        $houseData['distance_to_station'] = $validated['distance_to_station'] ?? null;
+        $houseData['distance'] = $validated['distance'] ?? null;
 
         // Xử lý dữ liệu dựa trên loại vị trí
         if ($locationType === 'ga_chinh') {
@@ -457,7 +457,7 @@ class HouseController extends Controller
         }
 
         $house->delete();
-        
+
         return redirect()->route('houses.by.username', Auth::user()->username)->with('success', 'Xóa nhà thành công');
     }
 
@@ -552,8 +552,8 @@ class HouseController extends Controller
         }
         
         // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách
-        if ($request->filled('distance_to_station') && $houses->count() > 0) {
-            $baseDistance = (int)$request->distance_to_station;
+        if ($request->filled('distance') && $houses->count() > 0) {
+            $baseDistance = (int)$request->distance;
             
             // Áp dụng khoảng cách mới cho tất cả nhà
             foreach ($houses as $house) {
@@ -566,7 +566,7 @@ class HouseController extends Controller
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
             'search', 'house_type', 'house_type_source', 'min_price', 'input_price', 
-            'distance_to_station', 'transportation', 'sort_by', 'ga_chinh', 
+            'distance', 'transportation', 'sort_by', 'ga_chinh', 
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
         

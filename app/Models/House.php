@@ -30,6 +30,8 @@ class House extends Model
         'image_path',
         'share_link',
         'description',
+        'transportation',
+        'distance',
     ];
 
     /**

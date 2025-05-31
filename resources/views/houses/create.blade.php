@@ -179,9 +179,9 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <!-- Khoảng cách đến ga -->
                         <div class="mb-4">
-                            <x-input-label for="distance_to_station" :value="__('Khoảng cách đến ga (phút đi bộ)')" />
-                            <x-text-input id="distance_to_station" class="block mt-1 w-full" type="number" name="distance_to_station" :value="old('distance_to_station')" min="0" />
-                            <x-input-error :messages="$errors->get('distance_to_station')" class="mt-2" />
+                            <x-input-label for="distance" :value="__('Khoảng cách đến ga (phút đi bộ)')" />
+                            <x-text-input id="distance" class="block mt-1 w-full" type="number" name="distance" :value="old('distance')" min="0" />
+                            <x-input-error :messages="$errors->get('distance')" class="mt-2" />
                         </div>
                     </div>
                     
