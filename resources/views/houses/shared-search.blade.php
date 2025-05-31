@@ -104,17 +104,31 @@
                                             @php
                                                 $distance = isset($house->adjusted_distance) ? $house->adjusted_distance : ($house->distance ?: '12');
                                                 $distance = is_numeric($distance) ? round($distance) : $distance;
+                                                
+                                                // Xác định phương tiện từ request hoặc dữ liệu của house
+                                                $transportation = request('transportation');
+                                                if ($transportation == 'walking') {
+                                                    $transportIcon = 'fa-walking';
+                                                    $transportText = 'đi bộ';
+                                                } elseif ($transportation == 'bicycle') {
+                                                    $transportIcon = 'fa-bicycle';
+                                                    $transportText = 'bằng xe đạp';
+                                                } elseif ($transportation == 'train') {
+                                                    $transportIcon = 'fa-train';
+                                                    $transportText = 'bằng tàu';
+                                                } elseif ($house->transportation == 'Xe đạp') {
+                                                    $transportIcon = 'fa-bicycle';
+                                                    $transportText = 'bằng xe đạp';
+                                                } elseif ($house->transportation == 'Tàu') {
+                                                    $transportIcon = 'fa-train';
+                                                    $transportText = 'bằng tàu';
+                                                } else {
+                                                    $transportIcon = 'fa-walking';
+                                                    $transportText = 'đi bộ';
+                                                }
                                             @endphp
                                             {{ $distance }} phút
-                                            @if (request('transportation') == 'walking' || $house->transportation == 'Đi bộ')
-                                                <i class="fas fa-walking ml-1 mr-1 text-indigo-700"></i> đi bộ
-                                            @elseif (request('transportation') == 'bicycle' || $house->transportation == 'Xe đạp')
-                                                <i class="fas fa-bicycle ml-1 mr-1 text-indigo-700"></i> bằng xe đạp
-                                            @elseif (request('transportation') == 'train' || $house->transportation == 'Tàu')
-                                                <i class="fas fa-train ml-1 mr-1 text-indigo-700"></i> bằng tàu
-                                            @else
-                                                <i class="fas fa-walking ml-1 mr-1 text-indigo-700"></i> đi bộ
-                                            @endif
+                                            <i class="fas {{ $transportIcon }} ml-1 mr-1 text-indigo-700"></i> {{ $transportText }}
                                         </p>
                                     </div>
                                     
@@ -219,6 +233,7 @@
                                             <p class="text-sm font-medium text-indigo-700">Công ty</p>
                                         </div>
                                         @endif
+                                    
                                     </div>
                                 </div>
                                 @endif
