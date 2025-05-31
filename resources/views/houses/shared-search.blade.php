@@ -98,29 +98,24 @@
                                 <!-- Thông tin cơ bản -->
                                 <div class="grid grid-cols-3 gap-2 mb-4">
                                     <div class="col-span-3 md:col-span-1">
-                                        <!-- Khoảng trống để giữ cấu trúc layout -->
-                                        @if (request('transportation'))
-                                        <p class="text-sm text-gray-600">Phương tiện đi lại:</p>
+                                        <!-- Thời gian đi lại -->
+                                        <p class="text-sm text-gray-600">Thời gian đi lại:</p>
                                         <p class="font-medium text-gray-800">
-                                            @if (request('transportation') == 'walking')
-                                                <span class="flex items-center text-indigo-700">
-                                                    <i class="fas fa-walking mr-1"></i> Đi bộ
-                                                </span>
-                                            @elseif (request('transportation') == 'bicycle')
-                                                <span class="flex items-center text-indigo-700">
-                                                    <i class="fas fa-bicycle mr-1"></i> Xe đạp
-                                                </span>
-                                            @elseif (request('transportation') == 'train')
-                                                <span class="flex items-center text-indigo-700">
-                                                    <i class="fas fa-train mr-1"></i> Tàu
-                                                </span>
+                                            @php
+                                                $distance = isset($house->adjusted_distance) ? $house->adjusted_distance : ($house->distance ?: '12');
+                                                $distance = is_numeric($distance) ? round($distance) : $distance;
+                                            @endphp
+                                            {{ $distance }} phút
+                                            @if (request('transportation') == 'walking' || $house->transportation == 'Đi bộ')
+                                                <i class="fas fa-walking ml-1 mr-1 text-indigo-700"></i> đi bộ
+                                            @elseif (request('transportation') == 'bicycle' || $house->transportation == 'Xe đạp')
+                                                <i class="fas fa-bicycle ml-1 mr-1 text-indigo-700"></i> bằng xe đạp
+                                            @elseif (request('transportation') == 'train' || $house->transportation == 'Tàu')
+                                                <i class="fas fa-train ml-1 mr-1 text-indigo-700"></i> bằng tàu
                                             @else
-                                                <span class="flex items-center text-indigo-700">
-                                                    {{ request('transportation') }}
-                                                </span>
+                                                <i class="fas fa-walking ml-1 mr-1 text-indigo-700"></i> đi bộ
                                             @endif
                                         </p>
-                                        @endif
                                     </div>
                                     
                                     <div class="col-span-3 md:col-span-1">
@@ -176,12 +171,11 @@
                                         <div>
                                             <p class="text-xs text-gray-500">Khoảng cách:</p>
                                             <p class="text-sm font-medium text-indigo-700">
-                                                @if(isset($house->adjusted_distance))
-                                                    {{ $house->adjusted_distance }}
-                                                @else
-                                                    {{ request('distance') }}
-                                                @endif
-                                                phút đi bộ
+                                                @php
+                                                    $displayDistance = isset($house->adjusted_distance) ? $house->adjusted_distance : request('distance');
+                                                    $displayDistance = is_numeric($displayDistance) ? round($displayDistance) : $displayDistance;
+                                                @endphp
+                                                {{ $displayDistance }} phút đi bộ
                                             </p>
                                         </div>
                                         @endif

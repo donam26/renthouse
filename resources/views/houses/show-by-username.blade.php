@@ -324,26 +324,23 @@
                         <div class="md:col-span-2 p-5">
                             <!-- Phương tiện và giá -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                                <!-- Phương tiện đi lại -->
+                                <!-- Thời gian đi lại -->
                                 <div>
-                                    <p class="text-sm text-gray-600">Phương tiện đi lại:</p>
+                                    <p class="text-sm text-gray-600">Thời gian đi lại:</p>
                                     <p class="font-medium text-gray-800">
+                                        @php
+                                            $distance = isset($house->adjusted_distance) ? $house->adjusted_distance : ($house->distance ?: '12');
+                                            $distance = is_numeric($distance) ? round($distance) : $distance;
+                                        @endphp
+                                        {{ $distance }} phút
                                         @if ($house->transportation == 'Đi bộ')
-                                            <span class="flex items-center text-indigo-700">
-                                                <i class="fas fa-walking mr-1"></i> Đi bộ
-                                            </span>
+                                            <i class="fas fa-walking ml-1 mr-1 text-indigo-700"></i> đi bộ
                                         @elseif ($house->transportation == 'Xe đạp')
-                                            <span class="flex items-center text-indigo-700">
-                                                <i class="fas fa-bicycle mr-1"></i> Xe đạp
-                                            </span>
+                                            <i class="fas fa-bicycle ml-1 mr-1 text-indigo-700"></i> bằng xe đạp
                                         @elseif ($house->transportation == 'Tàu')
-                                            <span class="flex items-center text-indigo-700">
-                                                <i class="fas fa-train mr-1"></i> Tàu
-                                            </span>
+                                            <i class="fas fa-train ml-1 mr-1 text-indigo-700"></i> bằng tàu
                                         @else
-                                            <span class="flex items-center text-indigo-700">
-                                                <i class="fas fa-walking mr-1"></i> Đi bộ
-                                            </span>
+                                            <i class="fas fa-walking ml-1 mr-1 text-indigo-700"></i> đi bộ
                                         @endif
                                     </p>
                                 </div>
@@ -401,12 +398,11 @@
                                     <div>
                                         <p class="text-xs text-gray-500">Khoảng cách:</p>
                                         <p class="text-sm font-medium text-indigo-700">
-                                            @if(isset($house->adjusted_distance))
-                                                {{ $house->adjusted_distance }}
-                                            @else
-                                                {{ request('distance') ?: $house->distance }}
-                                            @endif
-                                            phút đi bộ
+                                            @php
+                                                $displayDistance = isset($house->adjusted_distance) ? $house->adjusted_distance : (request('distance') ?: $house->distance);
+                                                $displayDistance = is_numeric($displayDistance) ? round($displayDistance) : $displayDistance;
+                                            @endphp
+                                            {{ $displayDistance }} phút đi bộ
                                         </p>
                                     </div>
                                     @endif
