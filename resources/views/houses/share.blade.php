@@ -107,17 +107,7 @@
                             <i class="fas fa-home text-8xl text-gray-300"></i>
                         </div>
                     @endif
-                    
-                    <div class="mt-6">
-                        <h2 class="text-xl font-bold mb-4">Dạng nhà mặc định</h2>
-                        <div class="flex flex-wrap gap-2">
-                            @foreach(['1R-1K', '2K-2DK'] as $type)
-                                <span class="px-4 py-2 text-sm rounded-md {{ $house->default_house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
-                                    {{ $type }}
-                                </span>
-                            @endforeach
-                        </div>
-                    </div>
+                  
                 </div>
                 
                 <!-- Phần thông tin chi tiết -->
@@ -126,7 +116,7 @@
                     
                     <div class="grid grid-cols-2 gap-6 mb-6">
                         <div>
-                            <h2 class="text-sm text-gray-600 mb-1">Giá thuê:</h2>
+                            <h2 class="text-sm text-gray-600 mb-1">Giá tiền:</h2>
                             <p class="text-2xl font-bold text-green-600">{{ number_format($house->rent_price) }} <span class="text-base font-normal">¥</span></p>
                         </div>
                         

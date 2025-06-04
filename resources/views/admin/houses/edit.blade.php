@@ -63,14 +63,14 @@
 
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label for="rent_price" class="form-label">Giá thuê <span class="text-red-500">*</span></label>
+                            <label for="rent_price" class="form-label">Giá tiền <span class="text-red-500">*</span></label>
                             <div class="mt-1 flex rounded-md shadow-sm">
                                 <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                                 ¥
                                 </span>
                                 <input type="number" name="rent_price" id="rent_price" value="{{ old('rent_price', $house->rent_price) }}" 
                                     class="focus:ring-indigo-500 focus:border-indigo-500 flex-1 block w-full rounded-none rounded-r-md sm:text-sm border-gray-300 @error('rent_price') border-red-500 @enderror"
-                                    placeholder="Nhập giá thuê">
+                                    placeholder="Nhập giá tiền">
                             </div>
                             @error('rent_price')
                                 <p class="mt-1 text-sm text-red-500">{{ $message }}</p>

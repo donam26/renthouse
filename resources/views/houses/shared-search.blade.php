@@ -58,9 +58,15 @@
         <!-- Header -->
         <div class="bg-indigo-600 py-6 px-6 rounded-lg shadow-md mb-8">
             <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-white">Bất động sản của {{ $user->name }}</h1>
-                </div>
+                <div class="flex items-center">
+                        <!-- Logo -->
+                        <a href="{{ Auth::check() ? '/' . Auth::user()->username : '/' }}" class="flex-shrink-0 flex items-center">
+                        <span class="text-2xl font-bold text-white">WIN<span class="text-gray-800">HOMES</span></span>
+                        @auth
+                            <span class="ml-2 text-xl uppercase text-white hidden sm:inline-block">{{ Auth::user()->name }}</span>
+                            @endauth
+                        </a>
+                    </div>
             </div>
         </div>
 
@@ -133,7 +139,7 @@
                                     </div>
                                     
                                     <div class="col-span-3 md:col-span-1">
-                                        <p class="text-sm text-gray-600">Giá thuê:</p>
+                                        <p class="text-sm text-gray-600">Giá tiền:</p>
                                         <p class="font-bold text-green-600 text-lg">
                                             @if(isset($house->adjusted_rent_price))
                                                 {{ number_format($house->adjusted_rent_price) }}
@@ -158,7 +164,7 @@
                                 <!-- Thông tin ga tàu -->
                                 @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance'))
                                 <div class="mb-4 bg-gray-50 p-3 rounded-md">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin áp dụng:</p>
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin nhà:</p>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                         @if (request('ga_chinh'))
                                         <div>

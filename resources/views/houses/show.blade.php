@@ -74,33 +74,7 @@
                         <i class="fas fa-home text-8xl text-gray-300"></i>
                     </div>
                 @endif
-                
-                <div class="mt-6">
-                    <h2 class="text-xl font-bold mb-4">Dạng nhà mặc định</h2>
-                    <div class="flex flex-wrap gap-2">
-                        @foreach(['1R-1K', '2K-2DK'] as $type)
-                            <span class="px-4 py-2 text-sm rounded-md {{ $house->default_house_type === $type ? 'bg-blue-600 text-white font-bold' : 'bg-gray-100 text-gray-600' }}">
-                                {{ $type }}
-                            </span>
-                        @endforeach
-                    </div>
-                </div>
-                
-                @if ($house->share_link)
-                <div class="mt-6 p-4 bg-indigo-50 rounded-lg">
-                    <h2 class="text-md font-bold text-indigo-700 mb-2">Chia sẻ nhà này</h2>
-                    <div class="flex space-x-2">
-                        <a href="" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition flex-1 text-center">
-                            <i class="fas fa-external-link-alt mr-2"></i> Mở link
-                        </a>
-                        <button 
-                            onclick="copyToClipboard('{{ route('houses.share', $house->share_link) }}')" 
-                            class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition flex-1">
-                            <i class="fas fa-copy mr-2"></i> Copy link
-                        </button>
-                    </div>
-                </div>
-                @endif
+             
             </div>
             
             <!-- Phần thông tin chi tiết -->
@@ -110,7 +84,7 @@
                 
                 <div class="grid grid-cols-2 gap-6 mb-6">
                     <div>
-                        <h2 class="text-sm text-gray-600 mb-1">Giá thuê:</h2>
+                        <h2 class="text-sm text-gray-600 mb-1">Giá tiền:</h2>
                         <p class="text-2xl font-bold text-green-600">{{ number_format($house->rent_price) }} <span class="text-base font-normal">yên/tháng</span></p>
                     </div>
                     
@@ -180,18 +154,6 @@
                         </div>
                         @endif
                     </div>
-                </div>
-                
-                <div class="mb-6">
-                    <h2 class="text-sm text-gray-600 mb-1">Địa chỉ:</h2>
-                    <p class="text-gray-800 font-medium">{{ $house->address }}</p>
-                    
-                    @if ($house->location)
-                    <div class="mt-3">
-                        <h2 class="text-sm text-gray-600 mb-1">Khu vực:</h2>
-                        <p class="text-gray-800">{{ $house->location }}</p>
-                    </div>
-                    @endif
                 </div>
                 
                 @if ($house->description)

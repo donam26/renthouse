@@ -69,9 +69,9 @@
                     </div>
                 </div>
                 
-                <!-- Giá thuê từ -->
+                <!-- Giá tiền từ -->
                 <div>
-                    <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê (từ điển)</label>
+                    <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá tiền (từ điển)</label>
                     <div class="flex">
                         <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                         <input type="number" name="min_price" id="min_price" value="{{ request('min_price') }}" 
@@ -80,7 +80,7 @@
                     </div>
                 </div>
                 
-                <!-- Giá thuê đến -->
+                <!-- Giá tiền đến -->
                 <div>
                     <label for="max_price" class="block mb-2 text-sm font-medium text-gray-700">Đến</label>
                     <div class="flex">
@@ -212,7 +212,7 @@
                             @endif
                         </div>
                         
-                        <!-- Giá thuê -->
+                        <!-- Giá tiền -->
                         <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent text-white p-3">
                             <p class="text-lg font-bold">{{ number_format($house->rent_price) }} <span class="text-sm font-normal">¥/tháng</span></p>
                             @if ($house->size)

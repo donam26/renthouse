@@ -73,7 +73,7 @@
                     <h4 class="text-sm font-medium text-gray-500">Thông tin giá và đặc điểm</h4>
                     <div class="mt-4 space-y-4">
                         <div class="flex flex-col">
-                            <span class="text-sm font-medium text-gray-500">Giá thuê:</span>
+                            <span class="text-sm font-medium text-gray-500">Giá tiền:</span>
                             <span class="mt-1 text-sm text-gray-900 font-bold text-green-600">{{ number_format($house->rent_price) }} ¥</span>
                         </div>
                         

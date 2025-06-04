@@ -145,12 +145,7 @@
                         <div id="company_section" class="location-section {{ old('location_type') == 'company' ? '' : 'hidden' }}">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div class="col-span-2">
-                                    <x-input-label for="is_company" :value="__('Thông tin công ty')" class="mb-1" />
-                                    <div class="flex items-center">
-                                        <input id="is_company" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="is_company" value="1" checked>
-                                        <span class="ml-2 text-sm text-gray-600">{{ __('Nhà này thuộc công ty') }}</span>
-                                    </div>
-                                    <x-input-error :messages="$errors->get('is_company')" class="mt-1" />
+                                    <input id="is_company" type="hidden" name="is_company" value="1">
                                 </div>
                                 <div>
                                     <x-input-label for="company_house_type" :value="__('Loại nhà')" class="mb-1" />
@@ -209,9 +204,9 @@
                     <div class="text-lg font-medium text-gray-900 mt-8 mb-4">Chi tiết chi phí</div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- Giá thuê -->
+                        <!-- Giá tiền -->
                         <div class="mb-4">
-                            <x-input-label for="rent_price" :value="__('Giá thuê (yên/tháng)')" />
+                            <x-input-label for="rent_price" :value="__('Giá tiền (yên/tháng)')" />
                             <x-text-input id="rent_price" class="block mt-1 w-full" type="number" name="rent_price" :value="old('rent_price')" min="0" required />
                             <x-input-error :messages="$errors->get('rent_price')" class="mt-2" />
                         </div>
@@ -292,6 +287,16 @@
         // Highlight option được chọn
         const selectedOption = document.querySelector('input[name="location_type"][value="' + type + '"]').closest('.location-option');
         selectedOption.querySelector('.location-indicator').classList.replace('bg-transparent', 'bg-indigo-600');
+        
+        // Xử lý trường hợp is_company
+        const isCompanyField = document.getElementById('is_company');
+        if (type === 'company') {
+            // Nếu chọn tab công ty, đảm bảo trường is_company có giá trị 1
+            isCompanyField.value = '1';
+        } else {
+            // Nếu chọn tab khác, đặt giá trị is_company thành rỗng để không gửi khi submit form
+            isCompanyField.value = '';
+        }
     }
     
     // Thiết lập giá trị ban đầu dựa vào radio đã chọn

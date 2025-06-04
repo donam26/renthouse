@@ -60,9 +60,9 @@
             </div>
 
             <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Lọc theo khoảng giá thuê -->
+                <!-- Lọc theo khoảng giá tiền -->
                 <div>
-                    <label for="min_price" class="form-label">Giá thuê từ</label>
+                    <label for="min_price" class="form-label">Giá tiền từ</label>
                     <div class="mt-1 flex rounded-md shadow-sm">
                         <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
                         ¥
@@ -137,15 +137,7 @@
                                                 {{ $house->house_type }}
                                             </span>
                                         </div>
-                                        <p class="mt-1 text-sm text-gray-500 flex items-center">
-                                            <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
-                                            {{ $house->address }}
-                                        </p>
                                         <div class="mt-1 flex items-center">
-                                            <p class="text-sm text-gray-500 mr-4 flex items-center">
-                                                <i class="fas fa-user mr-1 text-gray-400"></i>
-                                                {{ $house->user->name }}
-                                            </p>
                                             <p class="text-sm text-gray-500 mr-4 flex items-center">
                                                 <i class="fas fa-money-bill-wave mr-1 text-gray-400"></i>
                                                 {{ number_format($house->rent_price) }} ¥

@@ -213,14 +213,14 @@
                 <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Apply giá cả</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                    <!-- Giá thuê -->
+                    <!-- Giá tiền -->
                     <div>
-                        <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá thuê mới</label>
+                            <label for="min_price" class="block mb-2 text-sm font-medium text-gray-700">Giá tiền mới</label>
                         <div class="flex">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">¥</span>
                             <select name="min_price" id="min_price" 
                                 class="block w-full rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-gray-700 text-sm">
-                                <option value="">Chọn giá thuê</option>
+                                <option value="">Chọn giá tiền</option>
                                 <option value="20000" {{ request('min_price') == '20000' ? 'selected' : '' }}>20,000</option>
                                 <option value="30000" {{ request('min_price') == '30000' ? 'selected' : '' }}>30,000</option>
                                 <option value="40000" {{ request('min_price') == '40000' ? 'selected' : '' }}>40,000</option>
@@ -359,9 +359,9 @@
                                     </p>
                                 </div>
                                 
-                                <!-- Giá thuê -->
+                                <!-- Giá tiền -->
                                 <div>
-                                    <p class="text-sm text-gray-600">Giá thuê:</p>
+                                    <p class="text-sm text-gray-600">Giá tiền:</p>
                                     <p class="font-bold text-green-600 text-lg">
                                         @if(isset($house->adjusted_rent_price))
                                             {{ number_format($house->adjusted_rent_price) }}
@@ -383,9 +383,9 @@
                                 </div>
                             </div>
                             
-                            <!-- Thông tin áp dụng -->
+                            <!-- Thông tin nhà -->
                             <div class="mb-4 bg-gray-50 p-3 rounded-md">
-                                <p class="text-sm font-medium text-gray-700 mb-2">Thông tin áp dụng:</p>
+                                <p class="text-sm font-medium text-gray-700 mb-2">Thông tin nhà:</p>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                     @if (request('ga_chinh') || $house->ga_chinh)
                                     <div>

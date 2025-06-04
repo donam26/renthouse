@@ -132,14 +132,10 @@
                                     <div class="min-w-0 flex-1 px-4">
                                         <div>
                                             <div class="flex items-center">
-                                                <p class="text-sm font-medium text-indigo-600 truncate">{{ $house->name }}</p>
                                                 <span class="ml-2 badge {{ $house->status === 'available' ? 'badge-success' : 'badge-danger' }}">
                                                     {{ $house->status === 'available' ? 'Còn trống' : 'Đã thuê' }}
                                                 </span>
                                             </div>
-                                            <p class="mt-1 text-sm text-gray-500">
-                                                <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i> {{ $house->address }}
-                                            </p>
                                             <p class="mt-1 text-sm text-gray-500">
                                                 <span class="font-medium">{{ number_format($house->rent_price) }} ¥</span>
                                                 @if($house->house_type)

@@ -18,9 +18,9 @@
 
                 <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   
-                    <!-- Giá thuê -->
+                    <!-- Giá tiền -->
                     <div class="sm:col-span-2">
-                        <label for="rent_price" class="block text-sm font-medium text-gray-700">Giá thuê (¥)</label>
+                        <label for="rent_price" class="block text-sm font-medium text-gray-700">Giá tiền (¥)</label>
                         <div class="mt-1">
                             <input type="number" name="rent_price" id="rent_price" value="{{ old('rent_price') }}" required
                                 class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md @error('rent_price') border-red-500 @enderror">
