@@ -167,6 +167,12 @@
                                             </div>
                                             <span>Hồ sơ</span>
                                         </a>
+                                        <a href="{{ route('media.index') }}" class="dropdown-item">
+                                            <div class="submenu-icon text-indigo-500">
+                                                <i class="fas fa-photo-video"></i>
+                                            </div>
+                                            <span>Quản lý Media</span>
+                                        </a>
                                         <form method="POST" action="{{ route('logout') }}">
                                             @csrf
                                             <button type="submit" class="dropdown-item w-full">
@@ -227,6 +233,12 @@
                                 <i class="fas fa-user-edit"></i>
                             </div>
                             <span>Hồ sơ</span>
+                        </a>
+                        <a href="{{ route('media.index') }}" class="block navbar-item py-3">
+                            <div class="icon-wrapper text-indigo-500">
+                                <i class="fas fa-photo-video"></i>
+                            </div>
+                            <span>Quản lý Media</span>
                         </a>
                         <form method="POST" action="{{ route('logout') }}" class="block">
                             @csrf

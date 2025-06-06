@@ -192,10 +192,10 @@
                     <div class="relative h-56 overflow-hidden">
                         @if ($house->images && $house->images->where('is_primary', true)->first())
                             <img src="{{ asset('storage/' . $house->images->where('is_primary', true)->first()->image_path) }}" 
-                                 alt="{{ $house->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                 alt="{{ $house->name }}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
                         @elseif ($house->image_path)
                             <img src="{{ asset('storage/' . $house->image_path) }}" 
-                                 alt="{{ $house->name }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                                 alt="{{ $house->name }}" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300">
                         @else
                             <div class="flex items-center justify-center h-full bg-gray-100 group-hover:bg-gray-200 transition-colors">
                                 <i class="fas fa-home text-6xl text-gray-300"></i>

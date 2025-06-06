@@ -84,19 +84,62 @@
                     <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
                         <div class="grid grid-cols-1 md:grid-cols-3">
                             <!-- Phần ảnh nhà (Chiếm 1/3 bên trái khi ở màn hình lớn) -->
-                            <div class="h-64 md:h-full relative overflow-hidden">
-                                @if ($house->images && $house->images->where('is_primary', true)->first())
-                                    <img src="{{ asset('storage/' . $house->images->where('is_primary', true)->first()->image_path) }}" 
-                                        alt="{{ $house->name }}" class="w-full h-full object-cover">
-                                @elseif ($house->image_path)
-                                    <img src="{{ asset('storage/' . $house->image_path) }}" 
-                                        alt="{{ $house->name }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="flex items-center justify-center h-full bg-gray-100">
-                                        <i class="fas fa-home text-6xl text-gray-300"></i>
+                            <div class="relative">
+                                <!-- Phần ảnh chính -->
+                                <div class="h-48 md:h-56 md:max-h-64 relative overflow-hidden rounded-t-lg">
+                                    @if ($house->images && $house->images->where('is_primary', true)->first())
+                                        <img src="{{ asset('storage/' . $house->images->where('is_primary', true)->first()->image_path) }}" 
+                                            alt="{{ $house->name }}" class="w-full h-full object-contain md:object-cover object-center cursor-pointer"
+                                            data-fancybox="house-{{ $house->id }}" data-caption="Ảnh chính">
+                                    @elseif ($house->image_path)
+                                        <img src="{{ asset('storage/' . $house->image_path) }}" 
+                                            alt="{{ $house->name }}" class="w-full h-full object-contain md:object-cover object-center cursor-pointer"
+                                            data-fancybox="house-{{ $house->id }}" data-caption="Ảnh chính">
+                                    @else
+                                        <div class="flex items-center justify-center h-full bg-gray-100">
+                                            <i class="fas fa-home text-6xl text-gray-300"></i>
+                                        </div>
+                                    @endif
+                                    
+                                    @if($house->images && $house->images->count() > 0)
+                                    <div class="absolute top-2 right-2 bg-black bg-opacity-60 text-white rounded-full h-8 w-8 flex items-center justify-center">
+                                        <span class="text-xs">1/{{ $house->images->count() + 1 }}</span>
                                     </div>
+                                    @endif
+                                </div>
+                                
+                                <!-- Phần ảnh phụ -->
+                                @if($house->images && $house->images->count() > 0)
+                                <div class="flex overflow-x-auto gap-1 py-1 bg-gray-100 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 rounded-b-lg">
+                                    <!-- Ảnh chính -->
+                                    <div class="flex-shrink-0 w-16 h-16">
+                                        @if ($house->images->where('is_primary', true)->first())
+                                            <img src="{{ asset('storage/' . $house->images->where('is_primary', true)->first()->image_path) }}" 
+                                                alt="Ảnh chính" 
+                                                class="w-full h-full object-cover object-center border-2 border-indigo-500 rounded cursor-pointer" 
+                                                data-fancybox="house-{{ $house->id }}"
+                                                data-caption="Ảnh chính">
+                                        @elseif ($house->image_path)
+                                            <img src="{{ asset('storage/' . $house->image_path) }}" 
+                                                alt="Ảnh chính" 
+                                                class="w-full h-full object-cover object-center border-2 border-indigo-500 rounded cursor-pointer" 
+                                                data-fancybox="house-{{ $house->id }}"
+                                                data-caption="Ảnh chính">
+                                        @endif
+                                    </div>
+                                    
+                                    <!-- Các ảnh phụ -->
+                                    @foreach($house->images->where('is_primary', false) as $image)
+                                    <div class="flex-shrink-0 w-16 h-16">
+                                        <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                            alt="{{ $image->caption ?? 'Ảnh phụ' }}" 
+                                            class="w-full h-full object-cover object-center hover:opacity-90 rounded cursor-pointer" 
+                                            data-fancybox="house-{{ $house->id }}"
+                                            data-caption="{{ $image->caption ?? 'Ảnh phụ' }}">
+                                    </div>
+                                    @endforeach
+                                </div>
                                 @endif
-                           
                             </div>
                             
                             <!-- Phần thông tin (Chiếm 2/3 bên phải khi ở màn hình lớn) -->
@@ -275,6 +318,107 @@
             </div>
         @endif
         
+        <!-- Phần media của chủ nhà -->
+        @if(($videos && $videos->count() > 0) || ($licenses && $licenses->count() > 0) || ($interactions && $interactions->count() > 0))
+        <div class="mt-8 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 p-6">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-6 text-center">Thông tin bổ sung</h2>
+            
+            <!-- Phần Video -->
+            @if($videos && $videos->count() > 0)
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                    <i class="fas fa-video mr-2 text-indigo-600"></i> Video giới thiệu
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @foreach($videos as $video)
+                    <div class="bg-gray-50 rounded-lg overflow-hidden shadow-md">
+                        <div class="aspect-video">
+                            <video 
+                                class="w-full h-full object-cover" 
+                                controls 
+                                preload="none" 
+                                poster="{{ asset('storage/' . str_replace('.mp4', '.jpg', $video->file_path)) }}"
+                            >
+                                <source src="{{ asset('storage/' . $video->file_path) }}" type="video/mp4">
+                                Trình duyệt của bạn không hỗ trợ tag video.
+                            </video>
+                        </div>
+                        @if($video->title)
+                        <div class="p-3 bg-white">
+                            <h4 class="font-medium text-gray-800">{{ $video->title }}</h4>
+                            @if($video->description)
+                            <p class="text-sm text-gray-600 mt-1">{{ $video->description }}</p>
+                            @endif
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+            
+            <!-- Phần Giấy phép -->
+            @if($licenses && $licenses->count() > 0)
+            <div class="mb-8">
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                    <i class="fas fa-certificate mr-2 text-indigo-600"></i> Giấy phép & Chứng chỉ
+                </h3>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    @foreach($licenses as $license)
+                    <div class="bg-gray-50 rounded-lg overflow-hidden shadow-md">
+                        <a href="{{ asset('storage/' . $license->file_path) }}" 
+                           class="block" 
+                           target="_blank" 
+                           data-fancybox="licenses"
+                           data-caption="{{ $license->title }}">
+                            <img 
+                                src="{{ asset('storage/' . $license->file_path) }}" 
+                                alt="{{ $license->title }}" 
+                                class="w-full h-48 object-cover object-center hover:opacity-90 transition-opacity"
+                            >
+                        </a>
+                        @if($license->title)
+                        <div class="p-3 bg-white">
+                            <h4 class="font-medium text-gray-800 text-sm">{{ $license->title }}</h4>
+                        </div>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+            
+            <!-- Phần Hình ảnh tương tác với khách -->
+            @if($interactions && $interactions->count() > 0)
+            <div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+                    <i class="fas fa-users mr-2 text-indigo-600"></i> Tương tác với khách hàng
+                </h3>
+                
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                    @foreach($interactions as $interaction)
+                    <div class="bg-gray-50 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <a href="{{ asset('storage/' . $interaction->file_path) }}" 
+                           class="block" 
+                           target="_blank" 
+                           data-fancybox="interactions"
+                           data-caption="{{ $interaction->title }}">
+                            <img 
+                                src="{{ asset('storage/' . $interaction->file_path) }}" 
+                                alt="{{ $interaction->title }}" 
+                                class="w-full h-32 object-cover object-center hover:opacity-90 transition-opacity"
+                            >
+                        </a>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+            @endif
+        </div>
+        @endif
+        
         <div class="flex justify-center mt-8">
             <div class="text-center">
                 <p class="text-gray-600 text-sm">© {{ date('Y') }} WINHOMES - Nền tảng quản lý cho thuê nhà ở Nhật Bản</p>
@@ -288,6 +432,20 @@
                 alert('Đã sao chép link vào clipboard!');
             });
         }
+    </script>
+    
+    <!-- Fancybox JS cho popup ảnh lớn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Khởi tạo Fancybox nếu có
+            if (typeof Fancybox !== 'undefined') {
+                Fancybox.bind("[data-fancybox]", {
+                    // Cấu hình Fancybox
+                });
+            }
+        });
     </script>
 </body>
 </html> 

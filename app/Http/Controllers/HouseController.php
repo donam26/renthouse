@@ -475,6 +475,11 @@ class HouseController extends Controller
         // Tìm người dùng
         $user = User::findOrFail($userId);
         
+        // Lấy media của chủ nhà
+        $videos = $user->videos()->limit(2)->get(); // Giới hạn 2 video
+        $licenses = $user->licenses()->limit(4)->get(); // Giới hạn 4 ảnh giấy phép
+        $interactions = $user->interactions()->limit(10)->get(); // Lấy 10 ảnh tương tác
+        
         // Lưu từ khóa tìm kiếm nếu có
         $searchKeyword = null;
         if ($request->filled('search')) {
@@ -570,7 +575,7 @@ class HouseController extends Controller
             'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
         ]);
         
-        return view('houses.shared-search', compact('houses', 'user', 'searchKeyword', 'searchParams'));
+        return view('houses.shared-search', compact('houses', 'user', 'searchKeyword', 'searchParams', 'videos', 'licenses', 'interactions'));
     }
 
     /**
@@ -584,7 +589,13 @@ class HouseController extends Controller
         // Lấy tất cả ảnh của nhà
         $images = $house->images;
         
+        // Lấy media của chủ nhà
+        $user = $house->user;
+        $videos = $user->videos()->limit(2)->get(); // Giới hạn 2 video
+        $licenses = $user->licenses()->limit(4)->get(); // Giới hạn 4 ảnh giấy phép
+        $interactions = $user->interactions()->limit(10)->get(); // Lấy 10 ảnh tương tác
+        
         // Trả về view chi tiết nhà không yêu cầu đăng nhập
-        return view('houses.share', compact('house', 'images'));
+        return view('houses.share', compact('house', 'images', 'videos', 'licenses', 'interactions'));
     }
 }

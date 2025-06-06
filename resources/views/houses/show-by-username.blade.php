@@ -309,15 +309,45 @@
                 <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 hover:shadow-lg transition-shadow duration-300">
                     <div class="grid grid-cols-1 md:grid-cols-3">
                         <!-- Phần ảnh nhà (Chiếm 1/3 bên trái khi ở màn hình lớn) -->
-                        <div class="h-64 md:h-full relative overflow-hidden">
-                            @if ($house->image_path)
-                                <img src="{{ asset('storage/' . $house->image_path) }}" alt="{{ $house->name }}" class="w-full h-full object-cover">
-                            @else
-                                <div class="flex items-center justify-center h-full bg-gray-100">
-                                    <i class="fas fa-home text-6xl text-gray-300"></i>
+                        <div class="relative">
+                            <!-- Phần ảnh chính -->
+                            <div class="h-48 md:h-56 md:max-h-64 relative overflow-hidden rounded-t-lg">
+                                @if ($house->image_path)
+                                    <img src="{{ asset('storage/' . $house->image_path) }}" alt="{{ $house->name }}" class="w-full h-full object-contain md:object-cover object-center cursor-pointer" data-fancybox="house-{{ $house->id }}" data-caption="Ảnh chính">
+                                @else
+                                    <div class="flex items-center justify-center h-full bg-gray-100">
+                                        <i class="fas fa-home text-6xl text-gray-300"></i>
+                                    </div>
+                                @endif
+                                <div class="absolute top-2 right-2 bg-black bg-opacity-60 text-white rounded-full h-8 w-8 flex items-center justify-center">
+                                    <span class="text-xs">1/{{ $house->images->count() > 0 ? $house->images->count() + 1 : 1 }}</span>
                                 </div>
+                            </div>
+                            
+                            <!-- Phần ảnh phụ -->
+                            @if($house->images && $house->images->count() > 0)
+                            <div class="flex overflow-x-auto gap-1 py-1 bg-gray-100 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-100 rounded-b-lg">
+                                <!-- Ảnh chính -->
+                                <div class="flex-shrink-0 w-16 h-16">
+                                    <img src="{{ asset('storage/' . $house->image_path) }}" 
+                                        alt="Ảnh chính" 
+                                        class="w-full h-full object-cover object-center border-2 border-indigo-500 rounded cursor-pointer" 
+                                        data-fancybox="house-{{ $house->id }}"
+                                        data-caption="Ảnh chính">
+                                </div>
+                                
+                                <!-- Các ảnh phụ -->
+                                @foreach($house->images as $image)
+                                <div class="flex-shrink-0 w-16 h-16">
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" 
+                                        alt="{{ $image->caption ?? 'Ảnh phụ' }}" 
+                                        class="w-full h-full object-cover object-center hover:opacity-90 rounded cursor-pointer" 
+                                        data-fancybox="house-{{ $house->id }}"
+                                        data-caption="{{ $image->caption ?? 'Ảnh phụ' }}">
+                                </div>
+                                @endforeach
+                            </div>
                             @endif
-                         
                         </div>
                         
                         <!-- Phần thông tin (Chiếm 2/3 bên phải khi ở màn hình lớn) -->
@@ -497,7 +527,25 @@
 @endsection
 
 @push('scripts')
+<!-- Fancybox JS cho popup ảnh lớn -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo Fancybox cho gallery ảnh
+        if (typeof Fancybox !== 'undefined') {
+            Fancybox.bind("[data-fancybox]", {
+                // Cấu hình hiển thị gallery
+                Carousel: {
+                    transition: "fade",
+                },
+                Thumbs: {
+                    type: "classic",
+                },
+            });
+        }
+    });
+
     function shareSearchResults() {
         // Lấy URL hiện tại
         const currentUrl = window.location.href;

@@ -35,6 +35,15 @@ Route::middleware('auth')->group(function () {
     
     // Resource routes cho quản lý nhà
     Route::resource('houses', HouseController::class);
+
+    // Routes cho quản lý media
+    Route::get('/media', [App\Http\Controllers\UserMediaController::class, 'index'])->name('media.index');
+    Route::get('/media/create', [App\Http\Controllers\UserMediaController::class, 'create'])->name('media.create');
+    Route::post('/media', [App\Http\Controllers\UserMediaController::class, 'store'])->name('media.store');
+    Route::get('/media/{media}/edit', [App\Http\Controllers\UserMediaController::class, 'edit'])->name('media.edit');
+    Route::put('/media/{media}', [App\Http\Controllers\UserMediaController::class, 'update'])->name('media.update');
+    Route::delete('/media/{media}', [App\Http\Controllers\UserMediaController::class, 'destroy'])->name('media.destroy');
+    Route::post('/media/update-order', [App\Http\Controllers\UserMediaController::class, 'updateOrder'])->name('media.update-order');
 });
 
 // Tải các route admin từ file admin.php

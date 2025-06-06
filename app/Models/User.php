@@ -53,4 +53,36 @@ class User extends Authenticatable
     {
         return $this->hasMany(House::class);
     }
+
+    /**
+     * Quan hệ User có nhiều UserMedia
+     */
+    public function media()
+    {
+        return $this->hasMany(UserMedia::class);
+    }
+
+    /**
+     * Lấy video của user
+     */
+    public function videos()
+    {
+        return $this->media()->where('media_type', 'video')->where('is_active', true)->orderBy('sort_order');
+    }
+
+    /**
+     * Lấy ảnh giấy phép của user
+     */
+    public function licenses()
+    {
+        return $this->media()->where('media_type', 'license')->where('is_active', true)->orderBy('sort_order');
+    }
+
+    /**
+     * Lấy ảnh tương tác của user
+     */
+    public function interactions()
+    {
+        return $this->media()->where('media_type', 'interaction')->where('is_active', true)->orderBy('sort_order');
+    }
 }
