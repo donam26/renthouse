@@ -95,8 +95,11 @@ class HouseController extends Controller
         // Lấy tất cả nhà, không lọc theo transportation
         $houses = $query->get();
         
-        // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
-        if ($request->filled('min_price') && $houses->count() > 0) {
+        // Xác định vị trí apply dữ liệu ảo (chỉ được chọn 1 trong 4 loại)
+        $applyLocation = $request->apply_location; // ga_chinh, ga_ben_canh, ga_di_tau_toi, company
+        
+        // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê và chọn vị trí apply
+        if ($request->filled('min_price') && $applyLocation && $houses->count() > 0) {
             $basePrice = (float)$request->min_price;
             
             // Áp dụng giá mới cho tất cả nhà
@@ -109,8 +112,8 @@ class HouseController extends Controller
             }
         }
         
-        // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào
-        if ($request->filled('input_price') && $houses->count() > 0) {
+        // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào và chọn vị trí apply
+        if ($request->filled('input_price') && $applyLocation && $houses->count() > 0) {
             $baseDeposit = (float)$request->input_price;
             
             // Áp dụng giá đầu vào mới cho tất cả nhà
@@ -123,8 +126,8 @@ class HouseController extends Controller
             }
         }
         
-        // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách
-        if ($request->filled('distance') && $houses->count() > 0) {
+        // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách và chọn vị trí apply
+        if ($request->filled('distance') && $applyLocation && $houses->count() > 0) {
             $baseDistance = (int)$request->distance;
             
             // Áp dụng khoảng cách mới cho tất cả nhà
@@ -135,11 +138,37 @@ class HouseController extends Controller
             }
         }
         
+        // Áp dụng dữ liệu ảo cho vị trí được chọn
+        if ($applyLocation && $houses->count() > 0) {
+            foreach ($houses as $house) {
+                switch ($applyLocation) {
+                    case 'ga_chinh':
+                        if ($request->filled('ga_chinh_value')) {
+                            $house->setAttribute('applied_ga_chinh', $request->ga_chinh_value);
+                        }
+                        break;
+                    case 'ga_ben_canh':
+                        if ($request->filled('ga_ben_canh_value')) {
+                            $house->setAttribute('applied_ga_ben_canh', $request->ga_ben_canh_value);
+                        }
+                        break;
+                    case 'ga_di_tau_toi':
+                        if ($request->filled('ga_di_tau_toi_value')) {
+                            $house->setAttribute('applied_ga_di_tau_toi', $request->ga_di_tau_toi_value);
+                        }
+                        break;
+                    case 'company':
+                        $house->setAttribute('applied_is_company', true);
+                        break;
+                }
+            }
+        }
+        
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
             'search', 'house_type', 'house_type_source', 'min_price', 'input_price', 
-            'distance', 'transportation', 'sort_by', 'ga_chinh', 
-            'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
+            'distance', 'transportation', 'sort_by', 'apply_location',
+            'ga_chinh_value', 'ga_ben_canh_value', 'ga_di_tau_toi_value'
         ]);
         
         return view('houses.show-by-username', compact('houses', 'user', 'searchKeyword', 'searchParams'));
@@ -528,8 +557,11 @@ class HouseController extends Controller
         // Lấy danh sách nhà
         $houses = $query->get();
         
-        // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê
-        if ($request->filled('min_price') && $houses->count() > 0) {
+        // Xác định vị trí apply dữ liệu ảo (chỉ được chọn 1 trong 4 loại)
+        $applyLocation = $request->apply_location; // ga_chinh, ga_ben_canh, ga_di_tau_toi, company
+        
+        // Áp dụng giá mới cho tất cả các nhà nếu có nhập giá thuê và chọn vị trí apply
+        if ($request->filled('min_price') && $applyLocation && $houses->count() > 0) {
             $basePrice = (float)$request->min_price;
             
             // Áp dụng giá mới cho tất cả nhà
@@ -542,8 +574,8 @@ class HouseController extends Controller
             }
         }
         
-        // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào
-        if ($request->filled('input_price') && $houses->count() > 0) {
+        // Áp dụng giá đầu vào mới cho tất cả các nhà nếu có nhập giá đầu vào và chọn vị trí apply
+        if ($request->filled('input_price') && $applyLocation && $houses->count() > 0) {
             $baseDeposit = (float)$request->input_price;
             
             // Áp dụng giá đầu vào mới cho tất cả nhà
@@ -556,8 +588,8 @@ class HouseController extends Controller
             }
         }
         
-        // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách
-        if ($request->filled('distance') && $houses->count() > 0) {
+        // Áp dụng số phút di chuyển ngẫu nhiên nếu có nhập khoảng cách và chọn vị trí apply
+        if ($request->filled('distance') && $applyLocation && $houses->count() > 0) {
             $baseDistance = (int)$request->distance;
             
             // Áp dụng khoảng cách mới cho tất cả nhà
@@ -568,11 +600,37 @@ class HouseController extends Controller
             }
         }
         
+        // Áp dụng dữ liệu ảo cho vị trí được chọn
+        if ($applyLocation && $houses->count() > 0) {
+            foreach ($houses as $house) {
+                switch ($applyLocation) {
+                    case 'ga_chinh':
+                        if ($request->filled('ga_chinh_value')) {
+                            $house->setAttribute('applied_ga_chinh', $request->ga_chinh_value);
+                        }
+                        break;
+                    case 'ga_ben_canh':
+                        if ($request->filled('ga_ben_canh_value')) {
+                            $house->setAttribute('applied_ga_ben_canh', $request->ga_ben_canh_value);
+                        }
+                        break;
+                    case 'ga_di_tau_toi':
+                        if ($request->filled('ga_di_tau_toi_value')) {
+                            $house->setAttribute('applied_ga_di_tau_toi', $request->ga_di_tau_toi_value);
+                        }
+                        break;
+                    case 'company':
+                        $house->setAttribute('applied_is_company', true);
+                        break;
+                }
+            }
+        }
+        
         // Lấy lại tất cả tham số tìm kiếm để truyền cho view
         $searchParams = $request->only([
             'search', 'house_type', 'house_type_source', 'min_price', 'input_price', 
-            'distance', 'transportation', 'sort_by', 'ga_chinh', 
-            'ga_ben_canh', 'ga_di_tau_toi', 'is_company'
+            'distance', 'transportation', 'sort_by', 'apply_location',
+            'ga_chinh_value', 'ga_ben_canh_value', 'ga_di_tau_toi_value'
         ]);
         
         return view('houses.shared-search', compact('houses', 'user', 'searchKeyword', 'searchParams', 'videos', 'licenses', 'interactions'));
@@ -581,7 +639,7 @@ class HouseController extends Controller
     /**
      * Hiển thị thông tin nhà theo share_link (không cần đăng nhập)
      */
-    public function showByShareLink($shareLink)
+    public function showByShareLink(Request $request, $shareLink)
     {
         // Tìm nhà dựa vào share_link
         $house = House::where('share_link', $shareLink)->firstOrFail();
@@ -595,7 +653,68 @@ class HouseController extends Controller
         $licenses = $user->licenses()->limit(4)->get(); // Giới hạn 4 ảnh giấy phép
         $interactions = $user->interactions()->limit(10)->get(); // Lấy 10 ảnh tương tác
         
+        // Xử lý dữ liệu ảo từ URL parameters
+        $applyLocation = $request->apply_location;
+        
+        // Áp dụng giá thuê ảo nếu có
+        if ($request->filled('min_price') && $applyLocation) {
+            $basePrice = (float)$request->min_price;
+            // Tạo số ngẫu nhiên từ 1000 đến 10000
+            $randomAmount = rand(1000, 10000);
+            // Làm tròn đến đơn vị 1000
+            $adjustedRentPrice = round(($basePrice + $randomAmount) / 1000) * 1000;
+            $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
+        }
+        
+        // Áp dụng giá đầu vào ảo nếu có
+        if ($request->filled('input_price') && $applyLocation) {
+            $baseDeposit = (float)$request->input_price;
+            // Tạo giá ngẫu nhiên trong khoảng 30000-100000
+            $randomAmount = rand(30000, 100000);
+            // Làm tròn đến đơn vị 1000
+            $adjustedInputPrice = round(($baseDeposit + $randomAmount) / 1000) * 1000;
+            $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
+        }
+        
+        // Áp dụng khoảng cách ảo nếu có
+        if ($request->filled('distance') && $applyLocation) {
+            $baseDistance = (int)$request->distance;
+            // Tạo thêm số phút ngẫu nhiên từ 1-10
+            $randomMinutes = rand(1, 10);
+            $house->setAttribute('adjusted_distance', $baseDistance + $randomMinutes);
+        }
+        
+        // Áp dụng dữ liệu ảo cho vị trí được chọn
+        if ($applyLocation) {
+            switch ($applyLocation) {
+                case 'ga_chinh':
+                    if ($request->filled('ga_chinh_value')) {
+                        $house->setAttribute('applied_ga_chinh', $request->ga_chinh_value);
+                    }
+                    break;
+                case 'ga_ben_canh':
+                    if ($request->filled('ga_ben_canh_value')) {
+                        $house->setAttribute('applied_ga_ben_canh', $request->ga_ben_canh_value);
+                    }
+                    break;
+                case 'ga_di_tau_toi':
+                    if ($request->filled('ga_di_tau_toi_value')) {
+                        $house->setAttribute('applied_ga_di_tau_toi', $request->ga_di_tau_toi_value);
+                    }
+                    break;
+                case 'company':
+                    $house->setAttribute('applied_is_company', true);
+                    break;
+            }
+        }
+        
+        // Lấy tất cả tham số để truyền cho view
+        $searchParams = $request->only([
+            'apply_location', 'ga_chinh_value', 'ga_ben_canh_value', 
+            'ga_di_tau_toi_value', 'min_price', 'input_price', 'distance'
+        ]);
+        
         // Trả về view chi tiết nhà không yêu cầu đăng nhập
-        return view('houses.share', compact('house', 'images', 'videos', 'licenses', 'interactions'));
+        return view('houses.share', compact('house', 'images', 'videos', 'licenses', 'interactions', 'searchParams'));
     }
 }

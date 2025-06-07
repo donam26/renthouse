@@ -43,17 +43,6 @@
 </head>
 <body class="bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 py-8">
-        <!-- Header -->
-        <div class="bg-indigo-600 py-6 px-6 rounded-lg shadow-md mb-8">
-            <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
-                <div>
-                    <h1 class="text-2xl md:text-3xl font-bold text-white">Chi tiết nhà cho thuê</h1>
-                </div>
-                <a href="{{ route('login') }}" class="btn-primary inline-flex items-center self-start">
-                    <i class="fas fa-sign-in-alt mr-2"></i> Đăng nhập
-                </a>
-            </div>
-        </div>
 
         <!-- Chi tiết nhà -->
         <div class="bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
@@ -117,28 +106,35 @@
                     <div class="grid grid-cols-2 gap-6 mb-6">
                         <div>
                             <h2 class="text-sm text-gray-600 mb-1">Giá tiền:</h2>
-                            <p class="text-2xl font-bold text-green-600">{{ number_format($house->rent_price) }} <span class="text-base font-normal">¥</span></p>
+                            <p class="text-2xl font-bold text-green-600 flex items-center">
+                                @if(isset($house->adjusted_rent_price))
+                                    {{ number_format($house->adjusted_rent_price) }}
+                                @else
+                                    {{ number_format($house->rent_price) }}
+                                @endif
+                                <span class="text-base font-normal ml-1">¥</span>
+                            </p>
                         </div>
                         
                         <div>
                             <h2 class="text-sm text-gray-600 mb-1">Giá đầu vào:</h2>
-                            <p class="text-xl font-bold text-gray-800">{{ number_format($house->input_price) }} <span class="text-sm font-normal">¥</span></p>
+                            <p class="text-xl font-bold text-gray-800 flex items-center">
+                                @if(isset($house->adjusted_input_price))
+                                    {{ number_format($house->adjusted_input_price) }}
+                                @else
+                                    {{ number_format($house->input_price) }}
+                                @endif
+                                <span class="text-sm font-normal ml-1">¥</span>
+                            </p>
                         </div>
                     </div>
 
-                    <!-- Mô tả chi tiết -->
-                    @if ($house->description)
-                    <div class="mb-6">
-                        <h2 class="text-sm text-gray-600 mb-1">Mô tả chi tiết:</h2>
-                        <div class="mt-2 p-4 bg-gray-50 rounded-lg text-gray-700">
-                            {{ $house->description }}
-                        </div>
-                    </div>
-                    @endif
+                  
                     
                     <!-- Thông tin ga tàu và loại nhà -->
+                    @if(!isset($searchParams['apply_location']) || !$searchParams['apply_location'])
                     <div class="mt-6 bg-gray-50 p-4 rounded-lg">
-                        <h2 class="text-md font-bold text-gray-700 mb-3">Thông tin ga và loại nhà</h2>
+                        <h2 class="text-md font-bold text-gray-700 mb-3">Thông tin ga tàu</h2>
                         <div class="space-y-3">
                             @if ($house->ga_chinh)
                             <div class="flex justify-between items-center p-2 border-b border-gray-200">
@@ -183,7 +179,7 @@
                             @endif
                             
                             @if ($house->is_company)
-                            <div class="flex justify-between items-center p-2">
+                            <div class="flex justify-between items-center p-2 border-b border-gray-200">
                                 <div>
                                     <span class="text-xs text-gray-500">Công ty:</span>
                                     <p class="text-sm font-medium">{{ $house->is_company ? 'Có' : 'Không' }}</p>
@@ -195,32 +191,127 @@
                                 @endif
                             </div>
                             @endif
+                            
+                            <!-- Thời gian đi lại -->
+                            <div class="p-2">
+                                <div>
+                                    <span class="text-xs text-gray-500">Thời gian đi lại:</span>
+                                    <p class="text-sm font-medium flex items-center">
+                                        @if(isset($house->adjusted_distance))
+                                            {{ $house->adjusted_distance }} phút
+                                        @elseif($house->distance)
+                                            {{ $house->distance }} phút
+                                        @else
+                                            12 phút
+                                        @endif
+                                        
+                                        @if ($house->transportation == 'Đi bộ')
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-walking mr-1"></i> đi bộ
+                                            </span>
+                                        @elseif ($house->transportation == 'Xe đạp')
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-bicycle mr-1"></i> bằng xe đạp
+                                            </span>
+                                        @elseif ($house->transportation == 'Tàu')
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-train mr-1"></i> bằng tàu
+                                            </span>
+                                        @else
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-walking mr-1"></i> đi bộ
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class="mb-6">
-                        <h2 class="text-sm text-gray-600 mb-1">Phương tiện đi lại:</h2>
-                        <p class="text-gray-800 font-medium">
-                            @if ($house->transportation == 'Đi bộ')
-                                <span class="flex items-center text-indigo-700">
-                                    <i class="fas fa-walking mr-1"></i> Đi bộ
-                                </span>
-                            @elseif ($house->transportation == 'Xe đạp')
-                                <span class="flex items-center text-indigo-700">
-                                    <i class="fas fa-bicycle mr-1"></i> Xe đạp
-                                </span>
-                            @elseif ($house->transportation == 'Tàu')
-                                <span class="flex items-center text-indigo-700">
-                                    <i class="fas fa-train mr-1"></i> Tàu
-                                </span>
-                            @else
-                                <span class="flex items-center text-indigo-700">
-                                    <i class="fas fa-walking mr-1"></i> Đi bộ
-                                </span>
+                    @else
+                    <!-- Chỉ hiển thị thông tin ga đã apply -->
+                    <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+                        <h2 class="text-md font-bold text-gray-700 mb-3">Thông tin ga tàu</h2>
+                        <div class="space-y-3">
+                            @if($searchParams['apply_location'] == 'ga_chinh' && isset($searchParams['ga_chinh_value']) && $searchParams['ga_chinh_value'])
+                            <div class="flex justify-between items-center p-2 border-b border-gray-200">
+                                <div>
+                                    <span class="text-xs text-gray-500">Ga chính:</span>
+                                    <p class="text-sm font-medium">{{ $searchParams['ga_chinh_value'] }}</p>
+                                </div>
+                                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">2K-2DK</span>
+                            </div>
+                            @elseif($searchParams['apply_location'] == 'ga_ben_canh' && isset($searchParams['ga_ben_canh_value']) && $searchParams['ga_ben_canh_value'])
+                            <div class="flex justify-between items-center p-2 border-b border-gray-200">
+                                <div>
+                                    <span class="text-xs text-gray-500">Ga bên cạnh:</span>
+                                    <p class="text-sm font-medium">{{ $searchParams['ga_ben_canh_value'] }}</p>
+                                </div>
+                                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">2K-2DK</span>
+                            </div>
+                            @elseif($searchParams['apply_location'] == 'ga_di_tau_toi' && isset($searchParams['ga_di_tau_toi_value']) && $searchParams['ga_di_tau_toi_value'])
+                            <div class="flex justify-between items-center p-2 border-b border-gray-200">
+                                <div>
+                                    <span class="text-xs text-gray-500">Ga tàu tới:</span>
+                                    <p class="text-sm font-medium">{{ $searchParams['ga_di_tau_toi_value'] }}</p>
+                                </div>
+                                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">2K-2DK</span>
+                            </div>
+                            @elseif($searchParams['apply_location'] == 'company')
+                            <div class="flex justify-between items-center p-2 border-b border-gray-200">
+                                <div>
+                                    <span class="text-xs text-gray-500">Địa điểm:</span>
+                                    <p class="text-sm font-medium">Công ty</p>
+                                </div>
+                                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-800">2K-2DK</span>
+                            </div>
                             @endif
-                        </p>
+                            
+                            <!-- Thời gian đi lại cho virtual data -->
+                            <div class="p-2">
+                                <div>
+                                    <span class="text-xs text-gray-500">Thời gian đi lại:</span>
+                                    <p class="text-sm font-medium flex items-center">
+                                        @if(isset($house->adjusted_distance))
+                                            {{ $house->adjusted_distance }} phút
+                                        @elseif($house->distance)
+                                            {{ $house->distance }} phút
+                                        @else
+                                            12 phút
+                                        @endif
+                                        
+                                        @if ($house->transportation == 'Đi bộ')
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-walking mr-1"></i> đi bộ
+                                            </span>
+                                        @elseif ($house->transportation == 'Xe đạp')
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-bicycle mr-1"></i> bằng xe đạp
+                                            </span>
+                                        @elseif ($house->transportation == 'Tàu')
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-train mr-1"></i> bằng tàu
+                                            </span>
+                                        @else
+                                            <span class="flex items-center text-indigo-700 ml-2">
+                                                <i class="fas fa-walking mr-1"></i> đi bộ
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    
+                    @endif
+
+                      <!-- Mô tả chi tiết -->
+                      @if ($house->description)
+                    <div class="mb-6">
+                        <h2 class="text-sm text-gray-600 mb-1">Mô tả chi tiết:</h2>
+                        <div class="mt-2 p-4 bg-gray-50 rounded-lg text-gray-700">
+                            {{ $house->description }}
+                        </div>
+                    </div>
+                    @endif
                     <div class="pt-6 mt-6 border-t border-gray-200">
                         <h2 class="text-sm text-gray-600 mb-2">Chủ sở hữu:</h2>
                         <div class="flex items-center">
@@ -242,13 +333,11 @@
         
         <!-- Phần media của chủ nhà -->
         <div class="mt-8 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 p-6">
-            <h2 class="text-2xl font-bold text-indigo-700 mb-6 text-center">Thông tin bổ sung</h2>
-            
             <!-- Phần Video -->
             @if($videos && $videos->count() > 0)
             <div class="mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
-                    <i class="fas fa-video mr-2 text-indigo-600"></i> Video giới thiệu
+                    <i class="fas fa-video mr-2 text-indigo-600"></i> Giới thiệu
                 </h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

@@ -204,86 +204,87 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Thông tin ga tàu -->
-                                @if (request('ga_chinh') || request('ga_ben_canh') || request('ga_di_tau_toi') || request('is_company') == '1' || request('house_type') || request('transportation') || request('distance'))
+                                <!-- Thông tin được apply -->
+                                @if (request('apply_location'))
                                 <div class="mb-4 bg-gray-50 p-3 rounded-md">
-                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin nhà:</p>
+                                    <p class="text-sm font-medium text-gray-700 mb-2">Thông tin được apply:</p>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                                        @if (request('ga_chinh'))
+                                        @if (request('apply_location') == 'ga_chinh' && request('ga_chinh_value'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Ga chính:</p>
-                                            <p class="text-sm font-medium text-indigo-700">{{ request('ga_chinh') }}</p>
+                                            <p class="text-xs text-gray-500">Ga chính (Applied):</p>
+                                            <p class="text-sm font-medium text-indigo-700 flex items-center">
+                                                <i class="fas fa-train mr-1"></i>
+                                                {{ request('ga_chinh_value') }}
+                                            </p>
                                         </div>
-                                        @endif
-                                        
-                                        @if (request('ga_ben_canh'))
+                                        @elseif (request('apply_location') == 'ga_ben_canh' && request('ga_ben_canh_value'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Ga bên cạnh:</p>
-                                            <p class="text-sm font-medium text-indigo-700">{{ request('ga_ben_canh') }}</p>
+                                            <p class="text-xs text-gray-500">Ga bên cạnh (Applied):</p>
+                                            <p class="text-sm font-medium text-indigo-700 flex items-center">
+                                                <i class="fas fa-subway mr-1"></i>
+                                                {{ request('ga_ben_canh_value') }}
+                                            </p>
                                         </div>
-                                        @endif
-                                        
-                                        @if (request('ga_di_tau_toi'))
+                                        @elseif (request('apply_location') == 'ga_di_tau_toi' && request('ga_di_tau_toi_value'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Ga đi tàu tới:</p>
-                                            <p class="text-sm font-medium text-indigo-700">{{ request('ga_di_tau_toi') }}</p>
+                                            <p class="text-xs text-gray-500">Ga tàu tới (Applied):</p>
+                                            <p class="text-sm font-medium text-indigo-700 flex items-center">
+                                                <i class="fas fa-route mr-1"></i>
+                                                {{ request('ga_di_tau_toi_value') }}
+                                            </p>
+                                        </div>
+                                        @elseif (request('apply_location') == 'company')
+                                        <div>
+                                            <p class="text-xs text-gray-500">Địa điểm (Applied):</p>
+                                            <p class="text-sm font-medium text-indigo-700 flex items-center">
+                                                <i class="fas fa-building mr-1"></i>
+                                                Công ty
+                                            </p>
                                         </div>
                                         @endif
                                         
                                         @if (request('distance'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Khoảng cách:</p>
-                                            <p class="text-sm font-medium text-indigo-700">
+                                            <p class="text-xs text-gray-500">Khoảng cách (Applied):</p>
+                                            <p class="text-sm font-medium text-indigo-700 flex items-center">
+                                                <i class="fas fa-clock mr-1"></i>
                                                 @php
                                                     $displayDistance = isset($house->adjusted_distance) ? $house->adjusted_distance : request('distance');
                                                     $displayDistance = is_numeric($displayDistance) ? round($displayDistance) : $displayDistance;
+                                                    
+                                                    $transportationText = 'đi bộ';
+                                                    if (request('transportation') == 'bicycle') {
+                                                        $transportationText = 'bằng xe đạp';
+                                                    } elseif (request('transportation') == 'train') {
+                                                        $transportationText = 'bằng tàu';
+                                                    }
                                                 @endphp
-                                                {{ $displayDistance }} phút đi bộ
+                                                {{ $displayDistance }} phút {{ $transportationText }}
                                             </p>
                                         </div>
                                         @endif
                                         
-                                        @if (request('house_type'))
+                                        @if (request('house_type') || $house->default_house_type)
                                         <div>
-                                            <p class="text-xs text-gray-500">
-                                                @if(request('house_type_source') == 'ga_chinh')
-                                                    Ga chính (Dạng nhà):
-                                                @elseif(request('house_type_source') == 'ga_ben_canh')
-                                                    Ga bên cạnh (Dạng nhà):
-                                                @elseif(request('house_type_source') == 'ga_di_tau_toi')
-                                                    Ga tàu tới (Dạng nhà):
-                                                @elseif(request('house_type_source') == 'company')
-                                                    Công ty (Dạng nhà):
-                                                @else
-                                                    Dạng nhà:
-                                                @endif
-                                            </p>
-                                            <p class="text-sm font-medium text-indigo-700">
+                                            <p class="text-xs text-gray-500">Dạng nhà:</p>
+                                            <p class="text-sm font-medium text-indigo-700 flex items-center">
+                                                <i class="fas fa-home mr-1"></i>
                                                 @if(request('house_type'))
                                                     {{ request('house_type') }}
-                                                @elseif(request('house_type_source') == 'ga_chinh' && $house->ga_chinh_house_type)
-                                                    {{ $house->ga_chinh_house_type }}
-                                                @elseif(request('house_type_source') == 'ga_ben_canh' && $house->ga_ben_canh_house_type)
-                                                    {{ $house->ga_ben_canh_house_type }}
-                                                @elseif(request('house_type_source') == 'ga_di_tau_toi' && $house->ga_di_tau_toi_house_type)
-                                                    {{ $house->ga_di_tau_toi_house_type }}
-                                                @elseif(request('house_type_source') == 'company' && $house->company_house_type)
-                                                    {{ $house->company_house_type }}
                                                 @else
                                                     {{ $house->default_house_type }}
                                                 @endif
                                             </p>
                                         </div>
                                         @endif
-                                        
-                                        @if (request('is_company') == '1')
-                                        <div>
-                                            <p class="text-xs text-gray-500">Địa điểm:</p>
-                                            <p class="text-sm font-medium text-indigo-700">Công ty</p>
-                                        </div>
-                                        @endif
-                                    
                                     </div>
+                                </div>
+                                @else
+                                <div class="mb-4 bg-yellow-50 border border-yellow-200 rounded-md p-3">
+                                    <p class="text-sm text-yellow-700 flex items-center">
+                                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                                        Chưa có thông tin apply nào được thiết lập.
+                                    </p>
                                 </div>
                                 @endif
                                 
@@ -305,7 +306,41 @@
                                 <!-- Phần nút hành động -->
                                 @if ($house->share_link)
                                 <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                                    <a href="{{ route('houses.share', $house->share_link) }}" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium flex items-center shadow-sm transition-colors duration-200">
+                                    @php
+                                        // Tạo URL với virtual data parameters
+                                        $shareUrl = route('houses.share', $house->share_link);
+                                        $params = [];
+                                        
+                                        if (request('apply_location')) {
+                                            $params['apply_location'] = request('apply_location');
+                                        }
+                                        if (request('ga_chinh_value')) {
+                                            $params['ga_chinh_value'] = request('ga_chinh_value');
+                                        }
+                                        if (request('ga_ben_canh_value')) {
+                                            $params['ga_ben_canh_value'] = request('ga_ben_canh_value');
+                                        }
+                                        if (request('ga_di_tau_toi_value')) {
+                                            $params['ga_di_tau_toi_value'] = request('ga_di_tau_toi_value');
+                                        }
+                                        if (request('min_price')) {
+                                            $params['min_price'] = request('min_price');
+                                        }
+                                        if (request('input_price')) {
+                                            $params['input_price'] = request('input_price');
+                                        }
+                                        if (request('distance')) {
+                                            $params['distance'] = request('distance');
+                                        }
+                                        if (request('transportation')) {
+                                            $params['transportation'] = request('transportation');
+                                        }
+                                        
+                                        if (!empty($params)) {
+                                            $shareUrl .= '?' . http_build_query($params);
+                                        }
+                                    @endphp
+                                    <a href="{{ $shareUrl }}" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium flex items-center shadow-sm transition-colors duration-200">
                                         <span>Xem chi tiết</span>
                                         <i class="fas fa-arrow-right ml-2 text-sm"></i>
                                     </a>
@@ -321,13 +356,11 @@
         <!-- Phần media của chủ nhà -->
         @if(($videos && $videos->count() > 0) || ($licenses && $licenses->count() > 0) || ($interactions && $interactions->count() > 0))
         <div class="mt-8 bg-white rounded-lg shadow-md overflow-hidden border border-gray-200 p-6">
-            <h2 class="text-2xl font-bold text-indigo-700 mb-6 text-center">Thông tin bổ sung</h2>
-            
             <!-- Phần Video -->
             @if($videos && $videos->count() > 0)
             <div class="mb-8">
                 <h3 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
-                    <i class="fas fa-video mr-2 text-indigo-600"></i> Video giới thiệu
+                    <i class="fas fa-video mr-2 text-indigo-600"></i> Giới thiệu
                 </h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
