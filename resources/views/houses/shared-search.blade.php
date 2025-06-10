@@ -462,7 +462,9 @@
     <script>
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Đã sao chép link vào clipboard!');
+                window.toast.success('Đã sao chép link vào clipboard!', 'Copy thành công');
+            }).catch(() => {
+                window.toast.error('Không thể sao chép link!', 'Lỗi copy');
             });
         }
     </script>

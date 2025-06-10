@@ -563,11 +563,11 @@
         // Sao chép vào clipboard
         navigator.clipboard.writeText(shareUrl.toString())
             .then(() => {
-                alert('Đã sao chép đường dẫn chia sẻ vào clipboard!');
+                window.toast.success('Đã sao chép đường dẫn chia sẻ vào clipboard!', 'Copy thành công');
             })
             .catch(err => {
                 console.error('Không thể sao chép: ', err);
-                alert('Không thể sao chép đường dẫn. Vui lòng thử lại.');
+                window.toast.error('Không thể sao chép đường dẫn. Vui lòng thử lại.', 'Lỗi copy');
             });
     }
 

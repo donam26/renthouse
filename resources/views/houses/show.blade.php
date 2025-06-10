@@ -205,9 +205,9 @@
         // Hàm sao chép đường dẫn vào clipboard
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(function() {
-                alert('Đã copy link thành công!');
+                window.toast.success('Đã copy link thành công!', 'Copy thành công');
             }, function() {
-                alert('Không thể copy link!');
+                window.toast.error('Không thể copy link!', 'Lỗi copy');
             });
         }
 
