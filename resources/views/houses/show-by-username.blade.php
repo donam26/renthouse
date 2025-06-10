@@ -59,11 +59,11 @@
           
             <!-- NHÓM 1: CHỌN VỊ TRÍ APPLY DỮ LIỆU ẢO -->
             <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Chọn vị trí apply dữ liệu ảo</h3>
+                <h3 class="text-md font-medium text-gray-800 mb-3 border-b pb-2">Chọn vị trí apply dữ liệu</h3>
                 
                 <!-- Chọn loại vị trí -->
                 <div class="mb-4">
-                    <label class="block mb-2 text-sm font-medium text-gray-700">Chọn 1 vị trí để apply dữ liệu ảo:</label>
+                    <label class="block mb-2 text-sm font-medium text-gray-700">Chọn 1 vị trí để apply dữ liệu:</label>
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <label class="inline-flex items-center px-4 py-3 border-2 border-gray-300 rounded-lg text-sm cursor-pointer hover:bg-gray-50 {{ request('apply_location') == 'ga_chinh' ? 'bg-indigo-50 border-indigo-500 text-indigo-700' : 'text-gray-700' }}" onclick="updateApplyLocation(this)">
                             <input type="radio" name="apply_location" value="ga_chinh" class="hidden apply-location-input" {{ request('apply_location') == 'ga_chinh' ? 'checked' : '' }}>
@@ -480,7 +480,7 @@
                                             <div class="bg-yellow-50 border border-yellow-200 rounded-md p-3">
                                                 <p class="text-sm text-yellow-700 flex items-center">
                                                     <i class="fas fa-exclamation-triangle mr-2"></i>
-                                                    Chưa chọn vị trí để apply dữ liệu ảo. Vui lòng chọn một trong 4 vị trí ở phần filter.
+                                                    Chưa chọn vị trí để apply dữ liệu. Vui lòng chọn một trong 4 vị trí ở phần filter.
                                                 </p>
                                             </div>
                                         </div>
@@ -697,7 +697,7 @@
          // Sao chép vào clipboard
          navigator.clipboard.writeText(shareUrl.toString())
              .then(() => {
-                 alert('Đã sao chép link chia sẻ nhà với dữ liệu ảo vào clipboard!');
+                 alert('Đã sao chép link chia sẻ nhà với dữ liệu vào clipboard!');
              })
              .catch(err => {
                  console.error('Không thể sao chép: ', err);
@@ -718,7 +718,7 @@
          
          // Validate apply location
          if (!applyLocation) {
-             errors.push('• Vui lòng chọn vị trí để apply dữ liệu ảo');
+             errors.push('• Vui lòng chọn vị trí để apply dữ liệu');
          } else {
              // Validate tên ga/công ty tương ứng với vị trí đã chọn
              const locationValue = applyLocation.value;

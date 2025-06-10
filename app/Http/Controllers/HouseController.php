@@ -11,6 +11,41 @@ use Illuminate\Support\Facades\Storage;
 class HouseController extends Controller
 {
     /**
+     * Tính giá thuê ảo dựa trên house ID để đảm bảo giá trị nhất quán
+     */
+    private function calculateVirtualRentPrice($houseId, $basePrice)
+    {
+        // Sử dụng house ID để tạo seed cho random, đảm bảo giá trị nhất quán
+        mt_srand($houseId + 12345); // Thêm offset để tránh seed = 0
+        $randomAmount = mt_rand(1000, 10000);
+        // Làm tròn đến đơn vị 1000
+        return round(($basePrice + $randomAmount) / 1000) * 1000;
+    }
+
+    /**
+     * Tính giá đầu vào ảo dựa trên house ID để đảm bảo giá trị nhất quán
+     */
+    private function calculateVirtualInputPrice($houseId, $basePrice)
+    {
+        // Sử dụng house ID với offset khác để có giá trị khác với rent price
+        mt_srand($houseId + 67890);
+        $randomAmount = mt_rand(30000, 100000);
+        // Làm tròn đến đơn vị 1000
+        return round(($basePrice + $randomAmount) / 1000) * 1000;
+    }
+
+    /**
+     * Tính khoảng cách ảo dựa trên house ID để đảm bảo giá trị nhất quán
+     */
+    private function calculateVirtualDistance($houseId, $baseDistance)
+    {
+        // Sử dụng house ID với offset cho khoảng cách
+        mt_srand($houseId + 99999);
+        $randomMinutes = mt_rand(1, 10);
+        return $baseDistance + $randomMinutes;
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
@@ -104,10 +139,7 @@ class HouseController extends Controller
             
             // Áp dụng giá mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                // Tạo số ngẫu nhiên từ 1000 đến 10000
-                $randomAmount = rand(1000, 10000);
-                // Làm tròn đến đơn vị 1000
-                $adjustedRentPrice = round(($basePrice + $randomAmount) / 1000) * 1000;
+                $adjustedRentPrice = $this->calculateVirtualRentPrice($house->id, $basePrice);
                 $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
             }
         }
@@ -118,10 +150,7 @@ class HouseController extends Controller
             
             // Áp dụng giá đầu vào mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                // Tạo giá ngẫu nhiên trong khoảng 30000-100000
-                $randomAmount = rand(30000, 100000);
-                // Làm tròn đến đơn vị 1000
-                $adjustedInputPrice = round(($baseDeposit + $randomAmount) / 1000) * 1000;
+                $adjustedInputPrice = $this->calculateVirtualInputPrice($house->id, $baseDeposit);
                 $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
             }
         }
@@ -132,9 +161,8 @@ class HouseController extends Controller
             
             // Áp dụng khoảng cách mới cho tất cả nhà
             foreach ($houses as $house) {
-                // Tạo thêm số phút ngẫu nhiên từ 1-10
-                $randomMinutes = rand(1, 10);
-                $house->setAttribute('adjusted_distance', $baseDistance + $randomMinutes);
+                $adjustedDistance = $this->calculateVirtualDistance($house->id, $baseDistance);
+                $house->setAttribute('adjusted_distance', $adjustedDistance);
             }
         }
         
@@ -566,10 +594,7 @@ class HouseController extends Controller
             
             // Áp dụng giá mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                // Tạo số ngẫu nhiên từ 1000 đến 10000
-                $randomAmount = rand(1000, 10000);
-                // Làm tròn đến đơn vị 1000
-                $adjustedRentPrice = round(($basePrice + $randomAmount) / 1000) * 1000;
+                $adjustedRentPrice = $this->calculateVirtualRentPrice($house->id, $basePrice);
                 $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
             }
         }
@@ -580,10 +605,7 @@ class HouseController extends Controller
             
             // Áp dụng giá đầu vào mới cho tất cả nhà
             foreach ($houses as $index => $house) {
-                // Tạo giá ngẫu nhiên trong khoảng 30000-100000
-                $randomAmount = rand(30000, 100000);
-                // Làm tròn đến đơn vị 1000
-                $adjustedInputPrice = round(($baseDeposit + $randomAmount) / 1000) * 1000;
+                $adjustedInputPrice = $this->calculateVirtualInputPrice($house->id, $baseDeposit);
                 $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
             }
         }
@@ -594,9 +616,8 @@ class HouseController extends Controller
             
             // Áp dụng khoảng cách mới cho tất cả nhà
             foreach ($houses as $house) {
-                // Tạo thêm số phút ngẫu nhiên từ 1-10
-                $randomMinutes = rand(1, 10);
-                $house->setAttribute('adjusted_distance', $baseDistance + $randomMinutes);
+                $adjustedDistance = $this->calculateVirtualDistance($house->id, $baseDistance);
+                $house->setAttribute('adjusted_distance', $adjustedDistance);
             }
         }
         
@@ -659,29 +680,22 @@ class HouseController extends Controller
         // Áp dụng giá thuê ảo nếu có
         if ($request->filled('min_price') && $applyLocation) {
             $basePrice = (float)$request->min_price;
-            // Tạo số ngẫu nhiên từ 1000 đến 10000
-            $randomAmount = rand(1000, 10000);
-            // Làm tròn đến đơn vị 1000
-            $adjustedRentPrice = round(($basePrice + $randomAmount) / 1000) * 1000;
+            $adjustedRentPrice = $this->calculateVirtualRentPrice($house->id, $basePrice);
             $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
         }
         
         // Áp dụng giá đầu vào ảo nếu có
         if ($request->filled('input_price') && $applyLocation) {
             $baseDeposit = (float)$request->input_price;
-            // Tạo giá ngẫu nhiên trong khoảng 30000-100000
-            $randomAmount = rand(30000, 100000);
-            // Làm tròn đến đơn vị 1000
-            $adjustedInputPrice = round(($baseDeposit + $randomAmount) / 1000) * 1000;
+            $adjustedInputPrice = $this->calculateVirtualInputPrice($house->id, $baseDeposit);
             $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
         }
         
         // Áp dụng khoảng cách ảo nếu có
         if ($request->filled('distance') && $applyLocation) {
             $baseDistance = (int)$request->distance;
-            // Tạo thêm số phút ngẫu nhiên từ 1-10
-            $randomMinutes = rand(1, 10);
-            $house->setAttribute('adjusted_distance', $baseDistance + $randomMinutes);
+            $adjustedDistance = $this->calculateVirtualDistance($house->id, $baseDistance);
+            $house->setAttribute('adjusted_distance', $adjustedDistance);
         }
         
         // Áp dụng dữ liệu ảo cho vị trí được chọn
