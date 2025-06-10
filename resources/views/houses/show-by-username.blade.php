@@ -141,7 +141,7 @@
                                 class="block w-full pr-12 py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-sm text-gray-700"
                                 placeholder="Nhập khoảng cách">
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-gray-500 text-sm">
-                                vđ 5Phút
+                                vd 5Phút
                             </div>
                         </div>
                     </div>
@@ -400,12 +400,12 @@
                             
                             <!-- Thông tin nhà -->
                             <div class="mb-4 bg-gray-50 p-3 rounded-md">
-                                <p class="text-sm font-medium text-gray-700 mb-2">Thông tin được apply:</p>
+                                <p class="text-sm font-medium text-gray-700 mb-2">Thông tin:</p>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                     @if (request('apply_location'))
                                         @if (request('apply_location') == 'ga_chinh' && request('ga_chinh_value'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Ga chính (Applied):</p>
+                                            <p class="text-xs text-gray-500">Ga chính:</p>
                                             <p class="text-sm font-medium text-indigo-700 flex items-center">
                                                 <i class="fas fa-train mr-1"></i>
                                                 {{ request('ga_chinh_value') }}
@@ -413,7 +413,7 @@
                                         </div>
                                         @elseif (request('apply_location') == 'ga_ben_canh' && request('ga_ben_canh_value'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Ga bên cạnh (Applied):</p>
+                                            <p class="text-xs text-gray-500">Ga bên cạnh:</p>
                                             <p class="text-sm font-medium text-indigo-700 flex items-center">
                                                 <i class="fas fa-subway mr-1"></i>
                                                 {{ request('ga_ben_canh_value') }}
@@ -421,7 +421,7 @@
                                         </div>
                                         @elseif (request('apply_location') == 'ga_di_tau_toi' && request('ga_di_tau_toi_value'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Ga tàu tới (Applied):</p>
+                                            <p class="text-xs text-gray-500">Ga tàu tới:</p>
                                             <p class="text-sm font-medium text-indigo-700 flex items-center">
                                                 <i class="fas fa-route mr-1"></i>
                                                 {{ request('ga_di_tau_toi_value') }}
@@ -429,7 +429,7 @@
                                         </div>
                                         @elseif (request('apply_location') == 'company')
                                         <div>
-                                            <p class="text-xs text-gray-500">Địa điểm (Applied):</p>
+                                            <p class="text-xs text-gray-500">Địa điểm:</p>
                                             <p class="text-sm font-medium text-indigo-700 flex items-center">
                                                 <i class="fas fa-building mr-1"></i>
                                                 Công ty
@@ -439,7 +439,7 @@
                                         
                                         @if (request('distance'))
                                         <div>
-                                            <p class="text-xs text-gray-500">Khoảng cách (Applied):</p>
+                                            <p class="text-xs text-gray-500">Khoảng cách:</p>
                                             <p class="text-sm font-medium text-indigo-700 flex items-center">
                                                 <i class="fas fa-clock mr-1"></i>
                                                 @php
@@ -495,12 +495,7 @@
                                         <span>Xem chi tiết</span>
                                         <i class="fas fa-arrow-right ml-2 text-sm"></i>
                                     </a>
-                                    
-                                    @if($house->share_link && request('apply_location'))
-                                    <button onclick="shareHouseWithAppliedData('{{ $house->share_link }}')" class="px-3 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 font-medium flex items-center shadow-sm transition-colors duration-200 text-sm">
-                                        <i class="fas fa-share mr-1"></i> Share với data ảo
-                                    </button>
-                                    @endif
+                                   
                                 </div>
                                 
                                 @if (Auth::user()->id === $house->user_id)
