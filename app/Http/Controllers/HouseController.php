@@ -674,24 +674,24 @@ class HouseController extends Controller
         $licenses = $user->licenses()->limit(4)->get(); // Giới hạn 4 ảnh giấy phép
         $interactions = $user->interactions()->limit(10)->get(); // Lấy 10 ảnh tương tác
         
-        // Xử lý dữ liệu ảo từ URL parameters
-        $applyLocation = $request->apply_location;
+        // Xác định vị trí apply dữ liệu ảo (chỉ được chọn 1 trong 4 loại)
+        $applyLocation = $request->apply_location; // ga_chinh, ga_ben_canh, ga_di_tau_toi, company
         
-        // Áp dụng giá thuê ảo nếu có
+        // Áp dụng giá thuê ảo nếu có nhập giá thuê và chọn vị trí apply
         if ($request->filled('min_price') && $applyLocation) {
             $basePrice = (float)$request->min_price;
             $adjustedRentPrice = $this->calculateVirtualRentPrice($house->id, $basePrice);
             $house->setAttribute('adjusted_rent_price', $adjustedRentPrice);
         }
         
-        // Áp dụng giá đầu vào ảo nếu có
+        // Áp dụng giá đầu vào ảo nếu có nhập giá đầu vào và chọn vị trí apply
         if ($request->filled('input_price') && $applyLocation) {
             $baseDeposit = (float)$request->input_price;
             $adjustedInputPrice = $this->calculateVirtualInputPrice($house->id, $baseDeposit);
             $house->setAttribute('adjusted_input_price', $adjustedInputPrice);
         }
         
-        // Áp dụng khoảng cách ảo nếu có
+        // Áp dụng số phút di chuyển ảo nếu có nhập khoảng cách và chọn vị trí apply
         if ($request->filled('distance') && $applyLocation) {
             $baseDistance = (int)$request->distance;
             $adjustedDistance = $this->calculateVirtualDistance($house->id, $baseDistance);

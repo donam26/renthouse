@@ -490,13 +490,6 @@
                       
                             <!-- Phần nút hành động -->
                             <div class="mt-4 pt-4 border-t border-gray-100 flex justify-between items-center">
-                                <div class="flex space-x-2">
-                                    <a href="{{ route('houses.show', $house) }}" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 font-medium flex items-center shadow-sm transition-colors duration-200">
-                                        <span>Xem chi tiết</span>
-                                        <i class="fas fa-arrow-right ml-2 text-sm"></i>
-                                    </a>
-                                   
-                                </div>
                                 
                                 @if (Auth::user()->id === $house->user_id)
                                 <div class="space-x-2 flex items-center">
