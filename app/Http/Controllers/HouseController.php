@@ -232,7 +232,7 @@ class HouseController extends Controller
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
             'description' => 'nullable|string',
-            'distance' => 'nullable|integer|min:0',
+            'distance' => 'nullable|numeric|min:0',
         ];
 
         // Bổ sung rules tùy theo loại vị trí được chọn
@@ -368,7 +368,7 @@ class HouseController extends Controller
             'share_link' => 'nullable|string|max:255',
             'transportation' => 'nullable|string|in:Đi bộ,Xe đạp,Tàu',
             'description' => 'nullable|string',
-            'distance' => 'nullable|integer|min:0',
+            'distance' => 'nullable|numeric|min:0',
         ];
 
         // Bổ sung rules tùy theo loại vị trí được chọn
