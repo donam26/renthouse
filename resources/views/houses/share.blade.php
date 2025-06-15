@@ -312,21 +312,6 @@
                         </div>
                     </div>
                     @endif
-                    <div class="pt-6 mt-6 border-t border-gray-200">
-                        <h2 class="text-sm text-gray-600 mb-2">Chủ sở hữu:</h2>
-                        <div class="flex items-center">
-                            <div class="h-12 w-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white flex-shrink-0 shadow-md">
-                                <span class="text-lg font-bold">{{ substr($house->user->name, 0, 1) }}</span>
-                            </div>
-                            <div class="ml-3">
-                                <p class="font-bold text-gray-800">{{ $house->user->name }}</p>
-                                @if ($house->user->phone_number)
-                                    <p class="text-sm text-gray-600">{{ $house->user->phone_number }}</p>
-                                @endif
-                                <p class="text-sm text-gray-600">{{ $house->user->email }}</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
