@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     // Nếu đã đăng nhập, chuyển đến trang quản lý nhà
     if (Auth::check()) {
-        return redirect()->route('houses.by.username');
+        return redirect()->route('houses.by.username', ['username' => auth()->user()->username]);
     }
     // Nếu chưa đăng nhập, hiển thị trang welcome
     return view('welcome');
