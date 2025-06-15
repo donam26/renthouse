@@ -50,26 +50,7 @@ class HouseController extends Controller
      */
     public function index(Request $request)
     {
-        // Lưu từ khóa tìm kiếm nếu có
-        $searchKeyword = null;
-        if ($request->filled('search')) {
-            $searchKeyword = $request->search;
-        }
-        
-        // Tạo query cơ bản
-        $query = House::query()->where('user_id', Auth::id());
-     
-
-        // Nếu có từ khóa tìm kiếm, lấy 10 phòng ngẫu nhiên
-        if ($searchKeyword) {
-            $houses = $query->inRandomOrder()->limit(10)->get();
-        } else {
-            $houses = $query->get();
-        }
-        
-     
-        
-        return view('houses.index', compact('houses', 'searchKeyword'));
+        return redirect()->route('houses.by.username', ['username' => auth()->user()->username]);
     }
 
     /**
