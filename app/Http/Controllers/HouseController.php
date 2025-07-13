@@ -17,7 +17,7 @@ class HouseController extends Controller
     {
         // Sử dụng house ID để tạo seed cho random, đảm bảo giá trị nhất quán
         mt_srand($houseId + 12345); // Thêm offset để tránh seed = 0
-        $randomAmount = mt_rand(1000, 10000);
+        $randomAmount = mt_rand(1000, 5000);
         // Làm tròn đến đơn vị 1000
         return round(($basePrice + $randomAmount) / 1000) * 1000;
     }
@@ -29,7 +29,7 @@ class HouseController extends Controller
     {
         // Sử dụng house ID với offset khác để có giá trị khác với rent price
         mt_srand($houseId + 67890);
-        $randomAmount = mt_rand(30000, 100000);
+        $randomAmount = mt_rand(30000, 50000);
         // Làm tròn đến đơn vị 1000
         return round(($basePrice + $randomAmount) / 1000) * 1000;
     }

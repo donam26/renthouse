@@ -230,16 +230,28 @@
                                 class="block w-full rounded-none rounded-r-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm text-gray-700 text-sm">
                                 <option value="">Chọn giá tiền</option>
                                 <option value="20000" {{ request('min_price') == '20000' ? 'selected' : '' }}>20,000</option>
+                                <option value="25000" {{ request('min_price') == '25000' ? 'selected' : '' }}>25,000</option>
                                 <option value="30000" {{ request('min_price') == '30000' ? 'selected' : '' }}>30,000</option>
+                                <option value="35000" {{ request('min_price') == '35000' ? 'selected' : '' }}>35,000</option>
                                 <option value="40000" {{ request('min_price') == '40000' ? 'selected' : '' }}>40,000</option>
+                                <option value="45000" {{ request('min_price') == '45000' ? 'selected' : '' }}>45,000</option>
                                 <option value="50000" {{ request('min_price') == '50000' ? 'selected' : '' }}>50,000</option>
+                                <option value="55000" {{ request('min_price') == '55000' ? 'selected' : '' }}>55,000</option>
                                 <option value="60000" {{ request('min_price') == '60000' ? 'selected' : '' }}>60,000</option>
+                                <option value="65000" {{ request('min_price') == '65000' ? 'selected' : '' }}>65,000</option>
                                 <option value="70000" {{ request('min_price') == '70000' ? 'selected' : '' }}>70,000</option>
+                                <option value="75000" {{ request('min_price') == '75000' ? 'selected' : '' }}>75,000</option>
                                 <option value="80000" {{ request('min_price') == '80000' ? 'selected' : '' }}>80,000</option>
+                                <option value="85000" {{ request('min_price') == '85000' ? 'selected' : '' }}>85,000</option>
                                 <option value="90000" {{ request('min_price') == '90000' ? 'selected' : '' }}>90,000</option>
+                                <option value="95000" {{ request('min_price') == '95000' ? 'selected' : '' }}>95,000</option>
                                 <option value="100000" {{ request('min_price') == '100000' ? 'selected' : '' }}>100,000</option>
+                                <option value="105000" {{ request('min_price') == '105000' ? 'selected' : '' }}>105,000</option>
                                 <option value="110000" {{ request('min_price') == '110000' ? 'selected' : '' }}>110,000</option>
+                                <option value="115000" {{ request('min_price') == '115000' ? 'selected' : '' }}>115,000</option>
                                 <option value="120000" {{ request('min_price') == '120000' ? 'selected' : '' }}>120,000</option>
+                                <option value="125000" {{ request('min_price') == '125000' ? 'selected' : '' }}>125,000</option>
+                                <option value="130000" {{ request('min_price') == '130000' ? 'selected' : '' }}>130,000</option>
                             </select>
                         </div>
                         <p class="text-xs text-gray-500 mt-1">Giá sẽ tăng thêm 1000 cho mỗi nhà tiếp theo</p>
