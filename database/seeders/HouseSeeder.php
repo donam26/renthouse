@@ -17,10 +17,10 @@ class HouseSeeder extends Seeder
         // Xóa ảnh cũ trong storage trước khi tạo mới
         Storage::disk('public')->deleteDirectory('houses');
         Storage::disk('public')->makeDirectory('houses');
-        
+
         // Lấy user đầu tiên
         $user = User::first();
-        
+
         if (!$user) {
             $user = User::factory()->create([
                 'name' => 'Admin',
@@ -29,11 +29,11 @@ class HouseSeeder extends Seeder
                 'is_admin' => true,
             ]);
         }
-        
+
         // Tạo dữ liệu nhà mẫu
         $this->createHouseData($user);
     }
-    
+
     /**
      * Tạo dữ liệu mẫu
      */
@@ -44,15 +44,15 @@ class HouseSeeder extends Seeder
             'user_id' => $user->id,
             'rent_price' => 58000,
             'input_price' => 58000,
-            'house_type' => '1r-1K',
+            'default_house_type' => '1R-1K',
             'share_link' => 'house_kawasaki',
-           
+
         ]);
-        
+
         // Tạo ảnh mẫu cho các nhà (chỉ giả định, cần tạo ảnh thật)
         $this->createSampleImages($house1);
     }
-    
+
     /**
      * Tạo ảnh mẫu cho nhà
      */
@@ -64,11 +64,11 @@ class HouseSeeder extends Seeder
             'is_primary' => true,
             'sort_order' => -1,
         ]);
-        
+
         $house->images()->create([
             'image_path' => 'houses/sample_' . $house->id . '_2.jpg',
             'is_primary' => false,
             'sort_order' => 1,
         ]);
     }
-} 
+}
