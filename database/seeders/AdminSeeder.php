@@ -22,7 +22,7 @@ class AdminSeeder extends Seeder
                 'username' => 'admin',
                 'email' => 'admin@gmail.com',
                 'email_verified_at' => now(),
-                'password' => Hash::make('password'),
+                'password' => Hash::make('12345678'),
                 'phone_number' => null,
                 'is_admin' => true,
             ]);
